@@ -1,3 +1,6 @@
+import { ImageProps } from "./global.types";
+import { UserProps } from "./users.types";
+
 export type PropertyDetailProps = {
   id: bigint;
   nightly_price: number;
@@ -19,22 +22,6 @@ export type PropertyDetailProps = {
   booking_date: Date[];
   categories: Category[];
   tag: Tag;
-};
-
-export type ImageProps = {
-  name: string;
-  path: string;
-};
-
-export type UserProps = {
-  id: number;
-  firstname: string;
-  lastname: string;
-  email: string;
-  enabled: boolean;
-  created_at: Date;
-  updated_at: Date;
-  avatar?: ImageProps;
 };
 
 export enum Category {
