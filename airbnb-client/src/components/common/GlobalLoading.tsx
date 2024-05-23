@@ -1,7 +1,14 @@
+import { useAuth } from "@/context/useAuth";
+
 export const GlobalLoading = () => {
+  const { isLoading } = useAuth();
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center">
-      GlobalLoading
-    </div>
+    <>
+      {isLoading && (
+        <div className="fixed inset-0 flex flex-col items-center justify-center">
+          GlobalLoading
+        </div>
+      )}
+    </>
   );
 };

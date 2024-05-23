@@ -1,4 +1,4 @@
-import { UserProps } from "./users.types";
+import { LoginReqProps, RegisterReqProps, UserProps } from "./users.types";
 
 export type ResultProps = {
   code: number;
@@ -17,7 +17,11 @@ export type ContextProviderProps = {
 };
 
 export type ContextProps = {
-  user: UserProps;
-  login: (inputs: { email: string; password: string }) => Promise<void>;
-  logout: () => Promise<void>;
+  user: UserProps | null;
+  token: string | null;
+  registerUser: (inputs: RegisterReqProps) => Promise<void>;
+  loginUser: (inputs: LoginReqProps) => Promise<void>;
+  logoutUser: () => void;
+  isLoggedIn: () => boolean;
+  isLoading: boolean;
 };

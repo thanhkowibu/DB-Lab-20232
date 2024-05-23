@@ -1,5 +1,6 @@
 import { ResultProps } from "@/types/global.types";
 import publicClient from "../client/public.client";
+import { LoginReqProps, RegisterReqProps } from "@/types/users.types";
 
 const authEndpoints = {
   login: "auth/login",
@@ -9,7 +10,7 @@ const authEndpoints = {
 };
 
 const authApi = {
-  login: async ({ email, password }: { email: string; password: string }) => {
+  login: async ({ email, password }: LoginReqProps) => {
     const res: ResultProps = await publicClient.post(authEndpoints.login, {
       email,
       password,
@@ -21,12 +22,7 @@ const authApi = {
     lastname,
     email,
     password,
-  }: {
-    firstname: string;
-    lastname: string;
-    email: string;
-    password: string;
-  }) => {
+  }: RegisterReqProps) => {
     const res: ResultProps = await publicClient.post(authEndpoints.login, {
       firstname,
       lastname,

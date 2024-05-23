@@ -11,6 +11,17 @@ export type UserProps = {
   avatar?: ImageProps;
 };
 
+export type RegisterReqProps = {
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+};
+export type LoginReqProps = {
+  email: string;
+  password: string;
+};
+
 export type LoginInfoProps = {
   access_token: string;
   user_info: UserProps;
