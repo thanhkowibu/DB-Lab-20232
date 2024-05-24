@@ -80,3 +80,44 @@ body,
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes fadeIn {
+  from {
+    z-index: 10;
+  }
+  to {
+    z-index: 50;
+  }
+}
+
+.fade-out-delay {
+  animation-name: fadeOut;
+  animation-duration: 0.1s;
+  animation-fill-mode: forwards;
+  animation-delay: 0.3s; /* same as the duration of the slide animation */
+}
+.fade-in-delay {
+  animation-name: fadeIn;
+  animation-duration: 0.1s;
+  animation-fill-mode: forwards;
+  animation-delay: 0.3s; /* same as the duration of the slide animation */
+}
+
+.darken-background::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(0.5px);
+}
