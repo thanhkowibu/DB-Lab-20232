@@ -6,8 +6,8 @@ import { GlobalContextProvider } from "./context/useAuth";
 function App() {
   return (
     <>
-      <GlobalContextProvider>
-        <BrowserRouter>
+      <BrowserRouter>
+        <GlobalContextProvider>
           <Routes>
             <Route path="/" element={<MainLayout />}>
               {routes.map((route, index) =>
@@ -28,8 +28,8 @@ function App() {
               )}
             </Route>
           </Routes>
-        </BrowserRouter>
-      </GlobalContextProvider>
+        </GlobalContextProvider>
+      </BrowserRouter>
     </>
   );
 }

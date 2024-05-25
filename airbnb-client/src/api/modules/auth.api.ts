@@ -23,7 +23,7 @@ const authApi = {
     email,
     password,
   }: RegisterReqProps) => {
-    const res: ResultProps = await publicClient.post(authEndpoints.login, {
+    const res: ResultProps = await publicClient.post(authEndpoints.register, {
       firstname,
       lastname,
       email,

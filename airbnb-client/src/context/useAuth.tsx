@@ -7,6 +7,7 @@ import {
   UserProps,
 } from "@/types/users.types";
 import React, { createContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const GlobalContext = createContext({} as ContextProps);
 
@@ -14,6 +15,8 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
   const [user, setUser] = useState<UserProps | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const user = localStorage.getItem("user");
@@ -31,13 +34,19 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
     email,
     password,
   }: RegisterReqProps) => {
-    const res = await authApi.register({
-      firstname,
-      lastname,
-      email,
-      password,
-    });
-    if (res) {
+    try {
+      const res = await authApi.register({
+        firstname,
+        lastname,
+        email,
+        password,
+      });
+      if (res) {
+        console.log(res);
+      }
+    } catch (err: any) {
+      console.log(err);
+      throw err;
     }
   };
 
@@ -50,9 +59,11 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
         localStorage.setItem("user", JSON.stringify(data.user_info));
         setToken(data.access_token);
         setUser(data.user_info);
+        navigate("/");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
+      throw err;
     }
   };
 

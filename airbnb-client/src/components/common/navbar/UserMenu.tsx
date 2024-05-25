@@ -2,8 +2,13 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { Avatar } from "../Avatar";
 import { useCallback, useState } from "react";
 import { DropdownItem } from "./DropdownItem";
+import { useAuth } from "@/context/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export const UserMenu = () => {
+  const navigate = useNavigate();
+
+  const { user, isLoggedIn, logoutUser } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = useCallback(() => {
@@ -11,7 +16,7 @@ export const UserMenu = () => {
   }, []);
 
   return (
-    <div className="relative">
+    <div className="relative select-none">
       <div className="flex justify-end gap-3">
         <div
           onClick={() => {}}
@@ -25,17 +30,41 @@ export const UserMenu = () => {
         >
           <AiOutlineMenu />
           <div className="hidden md:block">
-            <Avatar />
+            <Avatar path={user?.avatar?.path} />
           </div>
         </div>
       </div>
       {isOpen && (
-        <div className="absolute rounded-xl shadow-md w-[40vw] md:w-3/4 bg-white overflow-hidden right-0 top-12 text-sm">
+        <div className="absolute rounded-xl shadow-md w-[40vw] md:w-3/5 bg-white overflow-hidden right-0 top-14 text-sm">
           <div className="flex flex-col cursor-pointer">
-            <>
-              <DropdownItem onClick={() => {}} label="Login" />
-              <DropdownItem onClick={() => {}} label="Register" />
-            </>
+            {isLoggedIn() ? (
+              <>
+                <DropdownItem onClick={() => {}} label="Trips" isBold />
+                <DropdownItem onClick={() => {}} label="Wishlists" isBold />
+                <DropdownItem onClick={() => {}} label="Manage listings" />
+                <DropdownItem onClick={() => {}} label="Account" />
+                <DropdownItem onClick={() => {}} label="Help" />
+                <DropdownItem onClick={logoutUser} label="Logout" />
+              </>
+            ) : (
+              <>
+                <DropdownItem
+                  onClick={() => {
+                    navigate("/auth", { state: { isToggled: true } });
+                  }}
+                  label="Register"
+                  isBold
+                />
+                <DropdownItem
+                  onClick={() => {
+                    navigate("/auth", { state: { isToggled: false } });
+                  }}
+                  label="Login"
+                />
+                <DropdownItem onClick={() => {}} label="Suck your dick" />
+                <DropdownItem onClick={() => {}} label="Help" />
+              </>
+            )}
           </div>
         </div>
       )}
