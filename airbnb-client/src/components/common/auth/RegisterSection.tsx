@@ -5,7 +5,7 @@ import { useAuth } from "@/context/useAuth";
 import { RegisterReqProps } from "@/types/users.types";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Modal } from "../navbar/modals/Modal";
+import { useState } from "react";
 
 const validation = Yup.object().shape({
   firstname: Yup.string().required("This field is required"),
@@ -17,13 +17,16 @@ const validation = Yup.object().shape({
 export const RegisterSection = ({ isToggled }: { isToggled: boolean }) => {
   const { registerUser } = useAuth();
 
-  const handleRegister = (form: RegisterReqProps) => {
-    registerUser({
+  const handleRegister = async (form: RegisterReqProps) => {
+    const res = await registerUser({
       firstname: form.firstname,
       lastname: form.lastname,
       email: form.email,
       password: form.password,
     });
+    if (res) {
+      console.log("registersection:", res);
+    }
   };
 
   const {
@@ -31,6 +34,9 @@ export const RegisterSection = ({ isToggled }: { isToggled: boolean }) => {
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterReqProps>({ resolver: yupResolver(validation) });
+
+  const [showMsg, setShowMsg] = useState(false);
+
   return (
     <div
       className={cn(
@@ -89,7 +95,7 @@ export const RegisterSection = ({ isToggled }: { isToggled: boolean }) => {
             <p className="text-red-500 ml-4">{errors.password.message}</p>
           )}
         </div>
-        {true && (
+        {showMsg && (
           <p className="text-blue-500 w-full text-start ml-4">
             Check email and activate your account{" "}
             <span className="underline font-semibold cursor-pointer">here</span>

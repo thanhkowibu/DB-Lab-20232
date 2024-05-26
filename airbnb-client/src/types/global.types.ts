@@ -19,7 +19,7 @@ export type ContextProviderProps = {
 export type ContextProps = {
   user: UserProps | null;
   token: string | null;
-  registerUser: (inputs: RegisterReqProps) => Promise<void>;
+  registerUser: (inputs: RegisterReqProps) => Promise<ResultProps | undefined>;
   loginUser: (inputs: LoginReqProps) => Promise<void>;
   logoutUser: () => void;
   isLoggedIn: () => boolean;

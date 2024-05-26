@@ -1,35 +1,86 @@
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { IoMdClose } from "react-icons/io";
+import AuthCode from "react-auth-code-input";
+import { AnimatePresence, motion } from "framer-motion";
 
-export const ActivateTokenModal = () => {
+export const ActivateTokenModal = ({
+  isOpen,
+  handleCloseModal,
+}: {
+  isOpen: boolean;
+  handleCloseModal: () => void;
+}) => {
+  const [otp, setOtp] = useState("");
+  const handleOnChange = (res: string) => {
+    setOtp(res);
+  };
+  const handleSubmit = () => {
+    console.log(otp);
+  };
   return (
-    <div className="fixed inset-0 z-10 bg-black/30 backdrop-blur-[1px] grid place-items-center">
-      <div className="bg-white rounded-2xl flex flex-col items-center justify-center">
-        <div className="translate h-full lg:h-auto md:h-auto border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-          {/* HEADER */}
-          <div className="relative p-4 rounded-t border-b-2 flex justify-center items-center">
-            <div className="text-lg font-semibold">Account activation</div>
-          </div>
-          {/* BODY */}
-          <div className="relative p-6 flex-auto flex flex-col items-center">
-            <div>We've sent you the token via your email</div>
-            <input />
-            <div>Please enter your token here.</div>
-            <div>
-              Didn't received your mail? Click{" "}
-              <span className="text-blue-500 underline cursor-pointer">
-                here
-              </span>{" "}
-              to resend
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-10 bg-black/30 backdrop-blur-[1px] grid place-items-center"
+        >
+          <motion.div
+            initial={{ y: 400 }}
+            animate={{
+              y: 0,
+              transition: { ease: "easeInOut", duration: 0.35 },
+            }}
+            exit={{ y: 400 }}
+            className="bg-white rounded-3xl flex flex-col items-center justify-center"
+          >
+            <div className="translate h-full lg:h-auto md:h-auto border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+              {/* HEADER */}
+              <div className="relative p-4 rounded-t border-b-2 flex justify-center items-center">
+                <button
+                  onClick={handleCloseModal}
+                  className="p-1 border-0 rounded-full hover:bg-neutral-200 transition absolute right-4"
+                >
+                  <IoMdClose size={18} />
+                </button>
+                <div className="text-2xl font-semibold">Account activation</div>
+              </div>
+              {/* BODY */}
+              <div className="relative px-6 py-4 flex-auto flex flex-col items-center justify-between">
+                {/* <div>We've sent you the OTP code via your email</div> */}
+                <div className="font-semibold text-center text-neutral-600 text-lg mb-4">
+                  The verification code has been sent to your email
+                  <br />
+                  u**r@gmail.com. Enter the code to activate your account.
+                </div>
+                <div className="min-w-fit flex">
+                  <AuthCode
+                    onChange={handleOnChange}
+                    inputClassName="size-16 border-2 border-neutral-400 rounded-xl mx-2 my-2 text-center text-xl font-semibold align-middle"
+                  />
+                </div>
+                <div className="mt-6 text-neutral-800">
+                  Didn't received your mail? Click{" "}
+                  <span className="text-blue-500 underline cursor-pointer">
+                    here
+                  </span>{" "}
+                  to resend
+                </div>
+              </div>
+              {/* FOOTER */}
+              <div className="flex flex-col gap-2 px-6 pb-4">
+                <div className="w-full gap-4 flex flex-col items-center">
+                  <Button onClick={handleSubmit} variant="airbnb">
+                    Activate
+                  </Button>
+                </div>
+              </div>
             </div>
-          </div>
-          {/* FOOTER */}
-          <div className="flex flex-col gap-2 p-6">
-            <div className="w-full gap-4 flex flex-col items-center">
-              <Button variant="airbnb">Activate</Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };

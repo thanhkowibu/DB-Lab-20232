@@ -38,6 +38,11 @@ export const AuthPage = () => {
     }
   }, []);
 
+  const [isOpen, setIsOpen] = useState(true);
+  const handleCloseModal = () => {
+    setIsOpen(false);
+  };
+
   return (
     <div className="bg-neutral-100 w-full h-screen flex flex-col items-center justify-center sm:p-4">
       <div className="bg-white relative w-full max-w-xs md:max-w-2xl lg:max-w-4xl min-h-[540px] rounded-xl shadow-2xl drop-shadow-2xl overflow-hidden">
@@ -45,7 +50,7 @@ export const AuthPage = () => {
         {!isInitialRender && <RegisterSection isToggled={isToggled} />}
         <OverlaySection handleToggle={handleToggle} isToggled={isToggled} />
       </div>
-      {<ActivateTokenModal />}
+      <ActivateTokenModal isOpen={isOpen} handleCloseModal={handleCloseModal} />
     </div>
   );
 };

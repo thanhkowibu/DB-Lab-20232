@@ -43,6 +43,7 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
       });
       if (res) {
         console.log(res);
+        return res;
       }
     } catch (err: any) {
       console.log(err);
