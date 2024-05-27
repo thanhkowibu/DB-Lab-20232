@@ -21,6 +21,8 @@ export type ContextProps = {
   token: string | null;
   registerUser: (inputs: RegisterReqProps) => Promise<ResultProps | undefined>;
   loginUser: (inputs: LoginReqProps) => Promise<void>;
+  resendToken: (email: string) => Promise<ResultProps | undefined>;
+  activate: (token: string) => Promise<ResultProps | undefined>;
   logoutUser: () => void;
   isLoggedIn: () => boolean;
   isLoading: boolean;

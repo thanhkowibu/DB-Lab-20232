@@ -38,19 +38,38 @@ export const AuthPage = () => {
     }
   }, []);
 
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const handleOpenModal = (account: { email: string; password: string }) => {
+    setAccount(account);
+    setIsOpen(true);
+  };
   const handleCloseModal = () => {
     setIsOpen(false);
   };
 
+  const [account, setAccount] = useState({ email: "", password: "" });
+
   return (
     <div className="bg-neutral-100 w-full h-screen flex flex-col items-center justify-center sm:p-4">
       <div className="bg-white relative w-full max-w-xs md:max-w-2xl lg:max-w-4xl min-h-[540px] rounded-xl shadow-2xl drop-shadow-2xl overflow-hidden">
-        <LoginSection isToggled={isToggled} isZIndexLowered={isZIndexLowered} />
-        {!isInitialRender && <RegisterSection isToggled={isToggled} />}
+        <LoginSection
+          isToggled={isToggled}
+          isZIndexLowered={isZIndexLowered}
+          handleOpenModal={handleOpenModal}
+        />
+        {!isInitialRender && (
+          <RegisterSection
+            isToggled={isToggled}
+            handleOpenModal={handleOpenModal}
+          />
+        )}
         <OverlaySection handleToggle={handleToggle} isToggled={isToggled} />
       </div>
-      <ActivateTokenModal isOpen={isOpen} handleCloseModal={handleCloseModal} />
+      <ActivateTokenModal
+        isOpen={isOpen}
+        handleCloseModal={handleCloseModal}
+        account={account}
+      />
     </div>
   );
 };

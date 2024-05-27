@@ -1,4 +1,3 @@
-import { ProtectedPage } from "@/components/common/ProtectedPage";
 import { AuthPage } from "@/pages/AuthPage";
 import { BookingPage } from "@/pages/BookingPage";
 import { FavouristList } from "@/pages/FavouristList";
@@ -7,6 +6,7 @@ import { PropertyDetail } from "@/pages/PropertyDetail";
 import { PropertyList } from "@/pages/PropertyList";
 import { PasswordUpdate } from "@/pages/PasswordUpdate";
 import { UserDetail } from "@/pages/UserDetail";
+import ProtectedRoute from "./ProtectedRoute";
 
 export const routesGen = {
   home: "/",
@@ -42,27 +42,27 @@ const routes = [
   {
     path: "/booking",
     element: (
-      <ProtectedPage>
+      <ProtectedRoute>
         <BookingPage />
-      </ProtectedPage>
+      </ProtectedRoute>
     ),
     state: "booking",
   },
   {
     path: "/favourites",
     element: (
-      <ProtectedPage>
+      <ProtectedRoute>
         <FavouristList />
-      </ProtectedPage>
+      </ProtectedRoute>
     ),
     state: "favourites",
   },
   {
     path: "/password_update",
     element: (
-      <ProtectedPage>
+      <ProtectedRoute>
         <PasswordUpdate />
-      </ProtectedPage>
+      </ProtectedRoute>
     ),
     state: "password.update",
   },

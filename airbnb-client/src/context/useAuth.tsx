@@ -68,6 +68,32 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
+  const resendToken = async (email: string) => {
+    try {
+      const res = await authApi.resend(email);
+      if (res) {
+        console.log(res);
+        return res;
+      }
+    } catch (err: any) {
+      console.log(err);
+      throw err;
+    }
+  };
+
+  const activate = async (token: string) => {
+    try {
+      const res = await authApi.activate(token);
+      if (res) {
+        console.log(res);
+        return res;
+      }
+    } catch (err: any) {
+      console.log(err);
+      throw err;
+    }
+  };
+
   const isLoggedIn = () => {
     return !!user;
   };
@@ -87,6 +113,8 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
         isLoggedIn,
         loginUser,
         registerUser,
+        resendToken,
+        activate,
         logoutUser,
         isLoading,
       }}

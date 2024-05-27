@@ -15,22 +15,33 @@ const validation = Yup.object().shape({
 export const LoginSection = ({
   isToggled,
   isZIndexLowered,
+  handleOpenModal,
 }: {
   isToggled: boolean;
   isZIndexLowered: boolean;
+  handleOpenModal: (account: { email: string; password: string }) => void;
 }) => {
-  const { loginUser } = useAuth();
+  const { loginUser, resendToken } = useAuth();
   const [err, setErr] = useState("");
+  const [showMsg, setShowMsg] = useState(false);
+  const [loginFormData, setLoginFormData] = useState<{
+    email: string;
+    password: string;
+  } | null>(null);
 
   const handleLogin = async (form: LoginReqProps) => {
     try {
+      setErr("");
+      setShowMsg(false);
       await loginUser({ email: form.email, password: form.password });
     } catch (err: any) {
-      if (err.data) {
+      if (err.message === "User is disabled") {
+        await resendToken(form.email);
+        setShowMsg(true);
+        setLoginFormData(form);
+      } else if (err.data) {
         if (err.code === 401) setErr(err.message);
         else setErr(err.data.email || err.data.password);
-      } else {
-        setErr(err.message);
       }
     }
   };
@@ -79,6 +90,22 @@ export const LoginSection = ({
           )}
           {err && <p className="text-red-500 mt-4 ml-2">{err}</p>}
         </div>
+        {showMsg && (
+          <p className="text-blue-500 w-full text-start ml-4">
+            Check email and activate your account{" "}
+            <span
+              onClick={() => {
+                if (loginFormData) {
+                  setShowMsg(false);
+                  handleOpenModal(loginFormData);
+                }
+              }}
+              className="underline font-semibold cursor-pointer"
+            >
+              here
+            </span>
+          </p>
+        )}
         <div className="flex items-center justify-between">
           <Button variant="link">Forgot password?</Button>
         </div>

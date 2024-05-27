@@ -1,9 +1,10 @@
 import { AiOutlineMenu } from "react-icons/ai";
 import { Avatar } from "../Avatar";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { DropdownItem } from "./DropdownItem";
 import { useAuth } from "@/context/useAuth";
 import { useNavigate } from "react-router-dom";
+import { useOnClickOutside } from "@/hooks/useClickOutside";
 
 export const UserMenu = () => {
   const navigate = useNavigate();
@@ -15,8 +16,11 @@ export const UserMenu = () => {
     setIsOpen((prev) => !prev);
   }, []);
 
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  useOnClickOutside(dropdownRef, () => setIsOpen(false));
+
   return (
-    <div className="relative select-none">
+    <div ref={dropdownRef} className="relative select-none">
       <div className="flex justify-end gap-3">
         <div
           onClick={() => {}}

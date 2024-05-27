@@ -14,18 +14,37 @@ const validation = Yup.object().shape({
   password: Yup.string().required("This field is required"),
 });
 
-export const RegisterSection = ({ isToggled }: { isToggled: boolean }) => {
+export const RegisterSection = ({
+  isToggled,
+  handleOpenModal,
+}: {
+  isToggled: boolean;
+  handleOpenModal: (account: { email: string; password: string }) => void;
+}) => {
   const { registerUser } = useAuth();
+  const [err, setErr] = useState("");
+  const [showMsg, setShowMsg] = useState(false);
+  const [registerFormData, setRegisterFormData] = useState<{
+    email: string;
+    password: string;
+  } | null>(null);
 
   const handleRegister = async (form: RegisterReqProps) => {
-    const res = await registerUser({
-      firstname: form.firstname,
-      lastname: form.lastname,
-      email: form.email,
-      password: form.password,
-    });
-    if (res) {
-      console.log("registersection:", res);
+    try {
+      setErr("");
+      setShowMsg(false);
+      const res = await registerUser({
+        firstname: form.firstname,
+        lastname: form.lastname,
+        email: form.email,
+        password: form.password,
+      });
+      if (res) {
+        setRegisterFormData(form);
+        setShowMsg(true);
+      }
+    } catch (err: any) {
+      if (err.data) setErr(err.data);
     }
   };
 
@@ -34,8 +53,6 @@ export const RegisterSection = ({ isToggled }: { isToggled: boolean }) => {
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterReqProps>({ resolver: yupResolver(validation) });
-
-  const [showMsg, setShowMsg] = useState(false);
 
   return (
     <div
@@ -94,11 +111,22 @@ export const RegisterSection = ({ isToggled }: { isToggled: boolean }) => {
           {errors.password && (
             <p className="text-red-500 ml-4">{errors.password.message}</p>
           )}
+          {err && <p className="text-red-500 mt-4 ml-2">{err}</p>}
         </div>
         {showMsg && (
           <p className="text-blue-500 w-full text-start ml-4">
             Check email and activate your account{" "}
-            <span className="underline font-semibold cursor-pointer">here</span>
+            <span
+              onClick={() => {
+                if (registerFormData) {
+                  setShowMsg(false);
+                  handleOpenModal(registerFormData);
+                }
+              }}
+              className="underline font-semibold cursor-pointer"
+            >
+              here
+            </span>
           </p>
         )}
         <Button
