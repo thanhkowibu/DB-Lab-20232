@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/context/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useOnClickOutside } from "@/hooks/useClickOutside";
+import toast from "react-hot-toast";
 
 export const ActivateTokenModal = ({
   isOpen,
@@ -50,28 +51,29 @@ export const ActivateTokenModal = ({
   };
 
   const handleSubmit = async () => {
-    console.log(otp);
+    // console.log(otp);
     try {
       const res = await activate(otp);
       if (res) {
         if (res.code === 202)
-          alert("The OTP code has expired. Please check your mail again");
+          toast.error("The OTP code has expired. Please check your mail again");
         else {
-          alert(res.message);
+          toast.success(res.data);
           handleCloseModal();
           await loginUser({ email: account.email, password: account.password });
           navigate("/");
+          toast.success("Logged in successfully");
         }
       }
     } catch (err: any) {
-      alert(err.message);
+      toast.error(err.message);
     }
   };
   const handleResend = async () => {
     const res = await resendToken(account.email);
     if (res) {
-      console.log(res);
-      alert("Token resent");
+      // console.log(res);
+      toast.success("Token resent");
     }
   };
 

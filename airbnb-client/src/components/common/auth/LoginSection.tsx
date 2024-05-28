@@ -6,6 +6,7 @@ import { LoginReqProps } from "@/types/users.types";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const validation = Yup.object().shape({
   email: Yup.string().required("This field is required"),
@@ -22,7 +23,6 @@ export const LoginSection = ({
   handleOpenModal: (account: { email: string; password: string }) => void;
 }) => {
   const { loginUser, resendToken } = useAuth();
-  const [err, setErr] = useState("");
   const [showMsg, setShowMsg] = useState(false);
   const [loginFormData, setLoginFormData] = useState<{
     email: string;
@@ -31,7 +31,6 @@ export const LoginSection = ({
 
   const handleLogin = async (form: LoginReqProps) => {
     try {
-      setErr("");
       setShowMsg(false);
       await loginUser({ email: form.email, password: form.password });
     } catch (err: any) {
@@ -40,8 +39,8 @@ export const LoginSection = ({
         setShowMsg(true);
         setLoginFormData(form);
       } else if (err.data) {
-        if (err.code === 401) setErr(err.message);
-        else setErr(err.data.email || err.data.password);
+        if (err.code === 401) toast.error(err.message);
+        else toast.error(err.data.email || err.data.password);
       }
     }
   };
@@ -88,7 +87,6 @@ export const LoginSection = ({
           {errors.password && (
             <p className="text-red-500 ml-4">{errors.password.message}</p>
           )}
-          {err && <p className="text-red-500 mt-4 ml-2">{err}</p>}
         </div>
         {showMsg && (
           <p className="text-blue-500 w-full text-start ml-4">
