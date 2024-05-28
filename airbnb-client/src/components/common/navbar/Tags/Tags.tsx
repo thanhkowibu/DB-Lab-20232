@@ -10,6 +10,7 @@ import {
   MdOutlineVilla,
 } from "react-icons/md";
 import { PiFarm } from "react-icons/pi";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 export const tagsArray = [
   {
@@ -65,6 +66,15 @@ export const tagsArray = [
 ];
 
 export const Tags = () => {
+  const [params] = useSearchParams();
+  const tag = params?.get("tag");
+  const { pathname } = useLocation();
+
+  const isMainPage = pathname === "/properties";
+  if (!isMainPage) {
+    return null;
+  }
+
   return (
     <Container>
       <div className="pt-2 flex items-center justify-between overflow-x-auto">
@@ -73,7 +83,7 @@ export const Tags = () => {
             key={item.label}
             label={item.label}
             icon={item.icon}
-            desc={item.desc}
+            selected={tag === item.label}
           />
         ))}
       </div>
