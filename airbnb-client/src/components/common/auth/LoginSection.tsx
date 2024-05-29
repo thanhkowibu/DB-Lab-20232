@@ -33,6 +33,7 @@ export const LoginSection = ({
     try {
       setShowMsg(false);
       await loginUser({ email: form.email, password: form.password });
+      toast.success("Login successfully");
     } catch (err: any) {
       if (err.message === "User is disabled") {
         await resendToken(form.email);

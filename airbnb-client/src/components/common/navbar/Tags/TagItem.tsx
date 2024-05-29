@@ -6,10 +6,12 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 export const TagItem = ({
   label,
   icon: Icon,
+  value,
   selected,
 }: {
   label: string;
   icon: IconType;
+  value: string;
   selected?: boolean;
 }) => {
   const navigate = useNavigate();
@@ -23,9 +25,9 @@ export const TagItem = ({
     }
     const updateQuery: any = {
       ...currentQuery,
-      tag: label,
+      tag: value,
     };
-    if (params?.get("tag") === label) {
+    if (params?.get("tag") === value) {
       delete updateQuery.tag;
     }
     const url = queryString.stringifyUrl(

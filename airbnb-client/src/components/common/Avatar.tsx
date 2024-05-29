@@ -1,5 +1,3 @@
-import apiConfigs from "@/api/configs/api.configs";
-
 export const Avatar = ({ path }: { path: string | undefined }) => {
   return (
     <img
@@ -7,7 +5,7 @@ export const Avatar = ({ path }: { path: string | undefined }) => {
       height="30"
       width="30"
       alt="Avatar"
-      src={path ? apiConfigs.imgPath(path) : "/images/sensei-face.jpg"}
+      src={path ? path : "/images/sensei-face.jpg"}
     />
   );
 };

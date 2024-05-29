@@ -5,23 +5,23 @@ export type PropertyDetailProps = {
   id: bigint;
   nightly_price: number;
   name: string;
-  max_guests: number;
-  num_beds: number;
-  num_bedrooms: number;
-  num_bathrooms: number;
   longtitude: number;
   latitude: number;
-  description: string;
-  address_line: string;
+  max_guests: number;
   created_at: Date;
   updated_at: Date;
+  num_beds: number;
   images: ImageProps[];
-  host: UserProps;
   average_rating: number;
-  total_rating: number;
-  booking_date: Date[];
-  categories: Category[];
-  tag: Tag;
+  num_bedrooms?: number;
+  num_bathrooms?: number;
+  description?: string;
+  address_line?: string;
+  host?: UserProps;
+  total_rating?: number;
+  booking_date?: Date[];
+  categories?: Category[];
+  tag?: Tag;
 };
 
 export enum Category {

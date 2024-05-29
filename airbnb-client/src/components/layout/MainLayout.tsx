@@ -3,6 +3,7 @@ import { GlobalLoading } from "../common/GlobalLoading";
 import { Navbar } from "../common/navbar/Navbar";
 import { Footer } from "../common/Footer";
 import { ToasterProvider } from "@/providers/ToasterProvider";
+import { cn } from "@/lib/utils";
 
 export const MainLayout = () => {
   const location = useLocation();
@@ -12,11 +13,11 @@ export const MainLayout = () => {
 
   return (
     <>
-      <GlobalLoading />
+      {/* <GlobalLoading /> */}
       <ToasterProvider />
       <div className="">
         {shouldShowNavbar && <Navbar />}
-        <div className={shouldShowNavbar ? "pt-48" : ""}>
+        <div className={cn("px-8", { "pt-24": shouldShowNavbar })}>
           <Outlet />
         </div>
         <Footer />
