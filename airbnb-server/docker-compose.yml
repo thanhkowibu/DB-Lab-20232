@@ -1,0 +1,49 @@
+services:
+  app:
+    container_name: airbnb_server
+    image: tranhuy105/airbnb-clone:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/airbnb_db
+      SPRING_MAIL_HOST: mail-dev
+    networks:
+      - app-network
+
+  mysql:
+    container_name: mysqldb
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: airbnb_db
+      MYSQL_USER: username
+      MYSQL_PASSWORD: password
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      - app-network
+    restart: unless-stopped
+  mail-dev:
+    container_name: mail-dev
+    image: maildev/maildev
+    ports:
+      - 1080:1080
+      - 1025:1025
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge
+
+
+  #docker-compose -f docker-compose.yml build
+  #docker-compose -f docker-compose.yml push
+  #docker-compose up mysql mail-dev
