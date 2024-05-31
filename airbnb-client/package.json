@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.4.2",
+    "@mapbox/mapbox-sdk": "^0.16.0",
     "@radix-ui/react-slot": "^1.0.2",
     "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
@@ -32,6 +33,7 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@types/mapbox__mapbox-sdk": "^0.14.0",
     "@types/node": "^20.12.8",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",

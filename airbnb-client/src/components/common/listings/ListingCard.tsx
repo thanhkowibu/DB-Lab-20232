@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import mbxGeocoding from "@mapbox/mapbox-sdk/services/geocoding";
 import { PropertyDetailProps } from "@/types/properties.types";
 import { UserProps } from "@/types/users.types";
 import { useNavigate } from "react-router-dom";
@@ -8,9 +10,37 @@ type Props = {
   data: PropertyDetailProps;
   currentUser: UserProps | null;
 };
+
 export const ListingCard = ({ currentUser, data }: Props) => {
   const navigate = useNavigate();
-  console.log(data);
+  const [location, setLocation] = useState("Unnamed location");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const geocodingClient = mbxGeocoding({
+        accessToken: import.meta.env.VITE_PUBLIC_MAPBOX_ACCESS_TOKEN,
+      });
+
+      try {
+        const response = await geocodingClient
+          .reverseGeocode({
+            query: [data.longitude, data.latitude],
+            types: ["country", "region"],
+          })
+          .send();
+
+        if (response.body.features.length > 0) {
+          const match = response.body.features[0];
+          setLocation(match.place_name);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, [data]);
+
   return (
     <div
       onClick={() => navigate(`/properties/${data.id}`)}
@@ -23,9 +53,7 @@ export const ListingCard = ({ currentUser, data }: Props) => {
         </div>
       </div>
       <div className="flex justify-between">
-        <div className="font-semibold text-lg">
-          {"Viet Nam"}, {"Ha Noi"}
-        </div>
+        <div className="font-semibold text-lg">{location}</div>
         <div className="mr-1">★{data.average_rating}</div>
       </div>
       <div className="text-neutral-500 font-light truncate">{data.name}</div>

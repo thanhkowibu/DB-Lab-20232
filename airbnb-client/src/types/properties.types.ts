@@ -5,7 +5,7 @@ export type PropertyDetailProps = {
   id: bigint;
   nightly_price: number;
   name: string;
-  longtitude: number;
+  longitude: number;
   latitude: number;
   max_guests: number;
   created_at: Date;
@@ -42,22 +42,22 @@ export enum Category {
   CARBON_MONOXIDE_DETECTOR,
   FIRE_EXTINGUISHER,
   FIRST_AID_KIT,
-  ESSENTIALS,
+  PIANO,
   SHAMPOO,
   HANGERS,
 }
 export enum Tag {
   BEACHFRONT,
-  PET_FRIENDLY,
-  FAMILY_FRIENDLY,
+  CASTLE,
+  CAVE,
   ROMANTIC_GETAWAY,
   LUXURY,
   COZY,
   SECLUDED,
-  URBAN,
-  HISTORIC,
-  MODERN,
-  ECO_FRIENDLY,
+  HOUSEBOAT,
+  TENT,
+  TOWER,
+  WINDMILL,
   MOUNTAIN_VIEW,
   LAKEFRONT,
   SKI_IN_SKI_OUT,
@@ -92,4 +92,20 @@ export type PropertyListParams = {
   tag?: Tag;
   sort_direction?: "desc" | "asc";
   sort_column?: "averageRating" | "updatedAt" | "nightlyPrice";
+};
+
+export type PropertyReqProps = {
+  nightly_price: number;
+  name: string;
+  longitude: number;
+  latitude: number;
+  max_guests: number;
+  num_beds: number;
+  num_bedrooms: number;
+  num_bathrooms: number;
+  description: string;
+  address_line: string;
+  categories: string[];
+  tag: string;
+  images: ImageProps[];
 };
