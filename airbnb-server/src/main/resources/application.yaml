@@ -1,0 +1,21 @@
+spring:
+  devtools:
+    livereload:
+      enabled: false
+    restart:
+      enabled: false
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+
+  profiles:
+    active: dev
+
+firebase:
+  bucket-name: thcsdl-airbnb.appspot.com
+  image-url: https://firebasestorage.googleapis.com/v0/b/${firebase.bucket-name}/o/%s?alt=media
+
+springdoc:
+  api-docs:
+    enabled: true
