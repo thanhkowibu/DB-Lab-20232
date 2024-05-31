@@ -20,7 +20,7 @@ export const PropertyList = () => {
   useEffect(() => {
     const fetchData = async () => {
       const { properties, err } = await getListings(tag);
-      console.log(properties);
+      // console.log(properties);
       if (properties) setListings(properties);
       if (err) toast.error(err.message);
       setIsLoading(false);

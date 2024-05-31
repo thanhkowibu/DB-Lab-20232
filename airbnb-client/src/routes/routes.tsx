@@ -7,6 +7,7 @@ import { PropertyList } from "@/pages/PropertyList";
 import { PasswordUpdate } from "@/pages/PasswordUpdate";
 import { UserDetail } from "@/pages/UserDetail";
 import ProtectedRoute from "./ProtectedRoute";
+import { CreateProperty } from "@/pages/CreateProperty";
 
 export const routesGen = {
   home: "/",
@@ -33,6 +34,14 @@ const routes = [
   {
     path: "/properties/:id",
     element: <PropertyDetail />,
+  },
+  {
+    path: "/properties/create",
+    element: (
+      <ProtectedRoute>
+        <CreateProperty />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/users/:id",

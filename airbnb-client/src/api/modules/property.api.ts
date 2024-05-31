@@ -31,12 +31,6 @@ const propertyApi = {
     );
     return res;
   },
-  unlike: async (userId: number, propertyId: bigint) => {
-    const res: ResultProps = await privateClient.delete(
-      propertyEndpoints.like(userId, propertyId)
-    );
-    return res;
-  },
   getLiked: async (userId: number) => {
     const res: ResultProps = await privateClient.get(
       propertyEndpoints.listLiked(userId)
