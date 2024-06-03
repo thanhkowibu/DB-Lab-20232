@@ -40,7 +40,7 @@ public class SecurityConfiguration {
                                 .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers(HttpMethod.GET, "/api/v1/properties/**", "/api/v1/users/*")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/properties/**", "/api/v1/users/**")
                         .permitAll()
                         .requestMatchers(
                                 "/api/v1/auth/**",

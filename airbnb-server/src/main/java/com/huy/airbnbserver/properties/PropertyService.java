@@ -158,11 +158,31 @@ public class PropertyService {
                 .toList();
     }
 
+
+    public List<PropertyOverviewProjection> findALlByUserId(Integer userId, long limit, long offset) {
+        return propertyRepository.findAllByUserId(userId, limit, offset)
+                .stream()
+                .map(this::mapToPropertyOverviewProjection)
+                .toList();
+    }
+
     public List<PropertyOverviewProjection> findTopRatingPropertiesForHost(Integer userId) {
         return propertyRepository.findTopRatingPropertyFromHost(userId)
                 .stream()
                 .map(this::mapToPropertyOverviewProjection)
                 .toList();
+    }
+
+    public Long getTotalProperty() {
+        return propertyRepository.countAll();
+    }
+
+    public Long getTotalLikedByUserId(Integer userId) {
+        return propertyRepository.countAllLikedForUserId(userId);
+    }
+
+    public Long getTotalByUserId(Integer userId) {
+        return propertyRepository.countAllForUserId(userId);
     }
 
     public List<PropertyOverviewProjection> findAll(
@@ -175,6 +195,7 @@ public class PropertyService {
             Integer minBeds,
             Integer minBathrooms,
             Integer minBedrooms,
+            Integer maxGuest,
             long limit,
             long offset,
             SortColumn sortColumn,
@@ -189,8 +210,10 @@ public class PropertyService {
         String _category2 = category2 == null ? null : category2.name();
         String _tag = tag == null ? null : tag.name();
 
+        System.out.println(sortColumn.name());
+
         List<Object[]> results = nativePropertyRepository.findAllNative(
-                sortColumn.name(),
+                sortColumn.getName(),
                 sortDirection.name(),
                 _category1,
                 _category2,
@@ -205,6 +228,7 @@ public class PropertyService {
                 minBeds,
                 minBathrooms,
                 minBedrooms,
+                maxGuest,
                 limit,
                 offset
         );
@@ -285,10 +309,6 @@ public class PropertyService {
             public BigDecimal getAverageRating() {
                 return (BigDecimal) result[11];
             }
-
-            public Long getTotalProperty() {
-                return (Long) result[12];
-            }
         };
     }
 
@@ -363,9 +383,6 @@ public class PropertyService {
         }
         return property;
     }
-
-
-
 
 
     @Transactional
