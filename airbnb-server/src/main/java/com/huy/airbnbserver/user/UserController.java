@@ -4,12 +4,14 @@ package com.huy.airbnbserver.user;
 import com.huy.airbnbserver.properties.Property;
 import com.huy.airbnbserver.properties.PropertyService;
 import com.huy.airbnbserver.properties.converter.PropertyOverProjectionToPropertyOverProjectionDto;
+import com.huy.airbnbserver.properties.dto.PropertyOverviewPageDto;
+import com.huy.airbnbserver.properties.dto.PropertyOverviewProjection;
+import com.huy.airbnbserver.properties.dto.PropertyOverviewProjectionDto;
 import com.huy.airbnbserver.report.Issue;
 import com.huy.airbnbserver.report.ReportService;
 import com.huy.airbnbserver.report.dto.ReportDto;
-import com.huy.airbnbserver.system.Result;
-import com.huy.airbnbserver.system.StatusCode;
-import com.huy.airbnbserver.system.Utils;
+import com.huy.airbnbserver.system.*;
+import com.huy.airbnbserver.system.exception.InvalidSearchQueryException;
 import com.huy.airbnbserver.user.converter.UserToUserDtoConverter;
 import com.huy.airbnbserver.user.dto.UserDto;
 import com.huy.airbnbserver.user.dto.UserWithPropertyDto;
@@ -59,6 +61,43 @@ public class UserController {
         var userDto = userToUserDtoConverter.convert(user);
         return new Result(true, StatusCode.SUCCESS, "Success",
                 new UserWithPropertyDto(userDto,topProperties));
+    }
+
+    @GetMapping("/{userId}/properties")
+    public Result getAllHostedProperties(
+            @PathVariable Integer userId,
+            @RequestParam(value = "page", required = false) Long page,
+            @RequestParam(value = "page_size", required = false) Long pageSize
+    ) {
+        if (page != null && page < 1) {
+            throw new InvalidSearchQueryException("Page must be greater than zero");
+        }
+
+        if (pageSize != null && pageSize < 5) {
+            throw new InvalidSearchQueryException("Page size must be at least 5");
+        }
+
+        Page pageObject = new Page(page,pageSize);
+        List<PropertyOverviewProjection> propertyOverviewProjections =
+                propertyService.findALlByUserId(userId, pageObject.getLimit(), pageObject.getOffset());
+
+        Long totalProperty = propertyService.getTotalByUserId(userId);
+        PageMetadata pageData = new PageMetadata(pageObject.getPage(), pageObject.getPageSize(), totalProperty);
+
+        List<PropertyOverviewProjectionDto> propertyOverviewProjectionDtos =
+                propertyOverviewProjections.stream()
+                        .map(converter::convert)
+                        .toList();
+
+        return new Result(
+                true,
+                200,
+                "Success",
+                new PropertyOverviewPageDto(
+                        pageData,
+                        propertyOverviewProjectionDtos
+                )
+        );
     }
 
     @PutMapping("/{userId}")

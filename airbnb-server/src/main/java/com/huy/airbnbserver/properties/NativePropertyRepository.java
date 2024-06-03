@@ -21,7 +21,7 @@ public class NativePropertyRepository {
                                         String category1, String category2, String tag, Area area,
                                         Double minLongitude, Double maxLongitude, Double minLatitude, Double maxLatitude,
                                         Double minNightlyPrice, Double maxNightlyPrice,
-                                        Integer minBeds, Integer minBathrooms, Integer minBedrooms,
+                                        Integer minBeds, Integer minBathrooms, Integer minBedrooms, Integer maxGuest,
                                         Long limit, Long offset) {
         String sql = """
         SELECT
@@ -36,8 +36,7 @@ public class NativePropertyRepository {
             GROUP_CONCAT(DISTINCT i.id) AS imageIds,
             GROUP_CONCAT(DISTINCT i.url) AS imageUrls,
             GROUP_CONCAT(DISTINCT i.name) AS imageNames,
-            COALESCE(AVG(c.rating), 0) AS averageRating,
-            COUNT(*) OVER()
+            COALESCE(AVG(c.rating), 0) AS averageRating
         FROM property p
         LEFT JOIN image i ON p.id = i.property_id
         LEFT JOIN comment c ON p.id = c.property_id
@@ -54,6 +53,7 @@ public class NativePropertyRepository {
         AND (:minBeds IS NULL OR p.num_beds >= :minBeds)
         AND (:minBathrooms IS NULL OR p.num_bathrooms >= :minBathrooms)
         AND (:minBedrooms IS NULL OR p.num_bedrooms >= :minBedrooms)
+        AND (:maxGuest IS NULL OR p.max_guests <= :maxGuest)
         GROUP BY p.id
         ORDER BY""" + " " + sortColumn +" "+ sortDirection +
         " \nLIMIT :limit OFFSET :offset";
@@ -76,6 +76,7 @@ public class NativePropertyRepository {
         query.setParameter("minBedrooms", minBedrooms);
         query.setParameter("limit", limit);
         query.setParameter("offset", offset);
+        query.setParameter("maxGuest", maxGuest);
 
         return query.getResultList();
     }

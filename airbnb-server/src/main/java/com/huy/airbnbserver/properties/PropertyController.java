@@ -1,5 +1,6 @@
 package com.huy.airbnbserver.properties;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huy.airbnbserver.properties.converter.PropertyOverProjectionToPropertyOverProjectionDto;
 import com.huy.airbnbserver.properties.dto.*;
 import com.huy.airbnbserver.properties.enm.*;
@@ -55,6 +56,7 @@ public class PropertyController {
             @RequestParam(value = "min_beds", required = false) Integer minBeds,
             @RequestParam(value = "min_bedrooms", required = false) Integer minBedrooms,
             @RequestParam(value = "min_bathrooms", required = false) Integer minBathrooms,
+            @RequestParam(value = "max_guest", required = false) Integer maxGuest,
             @RequestParam(value = "min_nightly_price", required = false) Double minNightlyPrice,
             @RequestParam(value = "max_nightly_price", required = false) Double maxNightlyPrice,
             @RequestParam(value = "page", required = false) Long page,
@@ -74,6 +76,10 @@ public class PropertyController {
 
         if (minBeds != null && minBeds <= 0) {
             throw new InvalidSearchQueryException("instance of min_beds must be greater than zero");
+        }
+
+        if (maxGuest != null && maxGuest <= 0) {
+            throw new InvalidSearchQueryException("instance of max_guest must be greater than zero");
         }
 
         if (minBedrooms != null && minBedrooms <= 0) {
@@ -101,6 +107,7 @@ public class PropertyController {
         }
 
         SortDirection sortDirection;
+
         if (sortDirectionParam == null) {
             sortDirection = SortDirection.ASC;
         } else {
@@ -136,13 +143,14 @@ public class PropertyController {
                         minBeds,
                         minBathrooms,
                         minBedrooms,
+                        maxGuest,
                         pageObject.getLimit(),
                         pageObject.getOffset(),
                         sortColumn,
                         sortDirection);
 
 
-        Long totalProperty = properties.isEmpty() ? 0 : properties.get(0).getTotalProperty();
+        Long totalProperty = propertyService.getTotalProperty();
         PageMetadata pageData = new PageMetadata(pageObject.getPage(), pageObject.getPageSize(), totalProperty);
 
         return new Result(
@@ -163,15 +171,17 @@ public class PropertyController {
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     public Result save(@RequestParam(value = "images", required = false) List<MultipartFile> images,
-                       @Valid @RequestPart PropertyDetailDto propertyDetailDto,
+                       @Valid @RequestParam(value = "propertyDetailDto") String propertyDetailDtoString,
                        Authentication authentication) throws IOException {
         if (images != null && Utils.imageValidationFailed(images)) {
             return new Result(false, StatusCode.INVALID_ARGUMENT, "Invalid image files were provided", null);
         }
-
+        ObjectMapper objectMapper = new ObjectMapper();
+        PropertyDetailDto propertyDetailDto = objectMapper.readValue(propertyDetailDtoString, PropertyDetailDto.class);
 
         Property property = propertyDetailDtoToPropertyConverter.convert(propertyDetailDto);
-
+        assert images != null;
+        images.forEach(System.out::println);
 
         assert property != null;
         var savedProperty = propertyService.save(property, Utils.extractAuthenticationId(authentication), images);
@@ -180,16 +190,20 @@ public class PropertyController {
                 StatusCode.CREATED,
                 "Created Property Success",
                 propertyToPropertyDetailDtoConverter.convert(savedProperty));
+
     }
 
     @PutMapping("/properties/{propertyId}")
     public Result update(@RequestParam(value = "images", required = false) List<MultipartFile> images,
-                         @PathVariable Long propertyId,
-                         @Valid @RequestPart PropertyDetailDto propertyDetailDto) throws IOException {
+                         @Valid @RequestParam(value = "propertyDetailDto") String propertyDetailDtoString,
+                         @PathVariable Long propertyId
+                         ) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        PropertyDetailDto propertyDetailDto = objectMapper.readValue(propertyDetailDtoString, PropertyDetailDto.class);
+
         if (images != null && Utils.imageValidationFailed(images)) {
             return new Result(false, StatusCode.INVALID_ARGUMENT, "Invalid image files were provided", null);
         }
-
 
         return new Result(
                 true, 200, "Update Success",
@@ -257,7 +271,7 @@ public class PropertyController {
         var propertyList =  propertyService
                 .getAllLikedPropertiedByUserWithUserId(userId, pageObject.getLimit(), pageObject.getOffset());
 
-        Long totalProperty = propertyList.isEmpty() ? 0 : propertyList.get(0).getTotalProperty();
+        Long totalProperty = propertyService.getTotalLikedByUserId(userId);
         PageMetadata pageData = new PageMetadata(pageObject.getPage(), pageObject.getPageSize(), totalProperty);
 
         List<PropertyOverviewProjectionDto> propertyDetailDtos = propertyList
