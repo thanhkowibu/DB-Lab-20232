@@ -9,9 +9,9 @@ const publicClient = axios.create({
 publicClient.interceptors.request.use((config: any) => {
   return {
     ...config,
-    headers: {
-      "Content-Type": "application/json",
-    },
+    // headers: {
+    //   "Content-Type": "application/json",
+    // },
   };
 });
 

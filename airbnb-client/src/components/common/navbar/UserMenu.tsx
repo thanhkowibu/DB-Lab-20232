@@ -23,7 +23,9 @@ export const UserMenu = () => {
     <div ref={dropdownRef} className="relative select-none">
       <div className="flex justify-end gap-3">
         <div
-          onClick={() => {}}
+          onClick={() => {
+            navigate("/properties/create");
+          }}
           className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-200 transition cursor-pointer"
         >
           Suck your dick

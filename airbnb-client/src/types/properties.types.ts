@@ -30,6 +30,9 @@ export enum Category {
   KITCHEN,
   AIR_CONDITIONING,
   POOL,
+  SHAMPOO,
+  HANGERS,
+  PIANO,
   FREE_PARKING,
   BREAKFAST,
   WASHER,
@@ -42,9 +45,6 @@ export enum Category {
   CARBON_MONOXIDE_DETECTOR,
   FIRE_EXTINGUISHER,
   FIRST_AID_KIT,
-  PIANO,
-  SHAMPOO,
-  HANGERS,
 }
 export enum Tag {
   BEACHFRONT,
@@ -107,5 +107,5 @@ export type PropertyReqProps = {
   address_line: string;
   categories: string[];
   tag: string;
-  images: ImageProps[];
+  images: File[];
 };

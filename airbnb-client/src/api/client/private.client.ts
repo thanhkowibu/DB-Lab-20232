@@ -16,7 +16,7 @@ privateClient.interceptors.request.use((config: any) => {
   return {
     ...config,
     headers: {
-      "Content-Type": "application/json",
+      // "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   };

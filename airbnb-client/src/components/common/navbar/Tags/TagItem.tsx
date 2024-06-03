@@ -30,6 +30,7 @@ export const TagItem = ({
     if (params?.get("tag") === value) {
       delete updateQuery.tag;
     }
+
     const url = queryString.stringifyUrl(
       {
         url: "/properties",
