@@ -5,6 +5,7 @@ import { UserProps } from "@/types/users.types";
 import { useNavigate } from "react-router-dom";
 import { Image } from "../Image";
 import { HeartButton } from "../HeartButton";
+import { usePlacename } from "@/hooks/useGeocoding";
 
 type Props = {
   data: PropertyDetailProps;
@@ -13,33 +14,7 @@ type Props = {
 
 export const ListingCard = ({ currentUser, data }: Props) => {
   const navigate = useNavigate();
-  const [location, setLocation] = useState("Unnamed location");
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const geocodingClient = mbxGeocoding({
-        accessToken: import.meta.env.VITE_PUBLIC_MAPBOX_ACCESS_TOKEN,
-      });
-
-      try {
-        const response = await geocodingClient
-          .reverseGeocode({
-            query: [data.longitude, data.latitude],
-            types: ["country", "region"],
-          })
-          .send();
-
-        if (response.body.features.length > 0) {
-          const match = response.body.features[0];
-          setLocation(match.place_name);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, [data]);
+  const location = usePlacename(data.latitude, data.longitude);
 
   return (
     <div
