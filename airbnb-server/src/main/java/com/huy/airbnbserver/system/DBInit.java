@@ -1,12 +1,10 @@
 package com.huy.airbnbserver.system;
 
-
 import com.huy.airbnbserver.admin.FakerService;
-import com.huy.airbnbserver.properties.PropertyService;
-import com.huy.airbnbserver.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
 
 @Component
 @AllArgsConstructor

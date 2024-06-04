@@ -1,8 +1,10 @@
 package com.huy.airbnbserver.properties;
 
+import com.huy.airbnbserver.AWS.AWSBucketService;
 import com.huy.airbnbserver.image.Image;
 import com.huy.airbnbserver.image.ImageDto;
-import com.huy.airbnbserver.image.firebase.FirebaseImageService;
+import com.huy.airbnbserver.image.ImageInstruction;
+import com.huy.airbnbserver.image.ImageRepository;
 import com.huy.airbnbserver.properties.enm.*;
 import com.huy.airbnbserver.properties.dto.PropertyOverviewProjection;
 import com.huy.airbnbserver.system.SortDirection;
@@ -12,6 +14,7 @@ import com.huy.airbnbserver.user.User;
 import com.huy.airbnbserver.user.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.lang.Nullable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,8 +29,9 @@ import java.util.stream.Collectors;
 public class PropertyService {
     private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
-    private final FirebaseImageService firebaseImageService;
+    private final AWSBucketService awsBucketService;
     private final NativePropertyRepository nativePropertyRepository;
+    private final ImageRepository imageRepository;
 
     public Property findById(Long id) {
         List<Object[]> res = propertyRepository.findDetailByIdNative(id);
@@ -51,65 +55,97 @@ public class PropertyService {
     }
 
     @Transactional
-    public Property save(Property property, Integer userId, List<MultipartFile> images) throws IOException {
+    public void save(Property property, Integer userId, List<MultipartFile> images) throws IOException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ObjectNotFoundException("user", userId));
         List<Image> savedImages = new ArrayList<>();
         if (images != null) {
             for (MultipartFile image : images) {
-                var saveImage = firebaseImageService.save(image, property);
+                var saveImage = awsBucketService.uploadFile(image, property);
                 savedImages.add(saveImage);
             }
         }
 
         property.setHost(user);
         property.setImages(savedImages);
-//        return property;
-        return propertyRepository.save(property);
+        try {
+            propertyRepository.save(property);
+        } catch (Exception e) {
+            for (Image image : savedImages) {
+                awsBucketService.deleteFile(image);
+            }
+            throw e;
+        }
+
     }
 
     @Transactional
-    public Property update(Long propertyId, Property property, List<MultipartFile> images) throws IOException {
+    public void update(Long propertyId,
+                       Property property,
+                       @Nullable List<MultipartFile> images,
+                       List<ImageInstruction> imageInstructions) {
         Property savedProperty = propertyRepository.findDetailById(propertyId).orElseThrow(
                 () -> new ObjectNotFoundException("property", propertyId)
         );
 
-        List<Image> savedImages = new ArrayList<>();
+        List<Image> savedImages = savedProperty.getImages();
+        List<Image> newlySavedImages = new ArrayList<>();
+        List<Image> imagesToMarkForDeletion = new ArrayList<>();
+        try {
+            if (images != null) {
+                for (MultipartFile image : images) {
+                    Image savedImage = awsBucketService.uploadFile(image, savedProperty);
+                    savedImages.add(savedImage);
+                    newlySavedImages.add(savedImage);
+                }
+            }
 
-        if (images != null) {
-            for (MultipartFile image : images) {
-                Image saveImage = firebaseImageService.save(image, savedProperty);
-                savedImages.add(saveImage);
+            for (Image image : new ArrayList<>(savedImages)) {
+                if (imageInstructions
+                        .stream()
+                        .anyMatch(imageInstruction ->
+                                imageInstruction.is_remove() && imageInstruction.name().equals(image.getName()))
+                ) {
+                    imagesToMarkForDeletion.add(image);
+                    savedImages.remove(image);
+                    imageRepository.delete(image);
+                }
+            }
+
+            for (Category category : new HashSet<>(savedProperty.getCategories())) {
+                savedProperty.removeCategory(category);
+            }
+
+            for (Category category : property.getCategories()) {
+                savedProperty.addCategory(category);
+            }
+
+            savedProperty.setImages(savedImages);
+            savedProperty.setTag(property.getTag());
+            savedProperty.setName(property.getName());
+            savedProperty.setNightlyPrice(property.getNightlyPrice());
+            savedProperty.setMaxGuests(property.getMaxGuests());
+            savedProperty.setNumBeds(property.getNumBeds());
+            savedProperty.setNumBedrooms(property.getNumBedrooms());
+            savedProperty.setNumBathrooms(property.getNumBathrooms());
+            savedProperty.setLongitude(property.getLongitude());
+            savedProperty.setLatitude(property.getLatitude());
+            savedProperty.setDescription(property.getDescription());
+            savedProperty.setAddressLine(property.getAddressLine());
+
+            propertyRepository.save(savedProperty);
+            // Commit Firebase changes only after successful database transaction
+            for (Image image : imagesToMarkForDeletion) {
+                awsBucketService.deleteFile(image);
+            }
+        } catch (Exception e) {
+            // Rollback Firebase actions if saving the property fails
+            for (Image image : newlySavedImages) {
+                awsBucketService.deleteFile(image);
             }
         }
-
-        for (Image image: savedProperty.getImages()) {
-            firebaseImageService.delete(image);
-        }
-
-        for (Category category : new HashSet<>(savedProperty.getCategories())) {
-            savedProperty.removeCategory(category);
-        }
-
-        for (Category category : property.getCategories()) {
-            savedProperty.addCategory(category);
-        }
-
-
-        savedProperty.setImages(savedImages);
-        savedProperty.setTag(property.getTag());
-        savedProperty.setName(property.getName());
-        savedProperty.setNightlyPrice(property.getNightlyPrice());
-        savedProperty.setMaxGuests(property.getMaxGuests());
-        savedProperty.setNumBeds(property.getNumBeds());
-        savedProperty.setNumBedrooms(property.getNumBedrooms());
-        savedProperty.setNumBathrooms(property.getNumBathrooms());
-        savedProperty.setLongitude(property.getLongitude());
-        savedProperty.setLatitude(property.getLatitude());
-        savedProperty.setDescription(property.getDescription());
-        savedProperty.setAddressLine(property.getAddressLine());
-        return propertyRepository.save(savedProperty);
     }
+
 
     @Transactional
     public void delete(Long id, Integer userId) throws IOException {
@@ -120,7 +156,7 @@ public class PropertyService {
         }
 
         for (Image image: deletedProperty.getImages()){
-            firebaseImageService.delete(image);
+            awsBucketService.deleteFile(image);
         }
 
         for (User user : deletedProperty.getLikedByUsers()) {

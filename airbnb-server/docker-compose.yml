@@ -31,6 +31,7 @@ services:
     networks:
       - app-network
     restart: unless-stopped
+
   mail-dev:
     container_name: mail-dev
     image: maildev/maildev
@@ -39,6 +40,21 @@ services:
       - 1025:1025
     networks:
       - app-network
+
+  s3:
+    image: minio/minio
+    container_name: s3_storage
+    volumes:
+      - ./data/s3:/data
+    ports:
+      - "9000:9000"
+    environment:
+      MINIO_ACCESS_KEY: user
+      MINIO_SECRET_KEY: password
+    command: server /data
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
@@ -46,4 +62,4 @@ networks:
 
   #docker-compose -f docker-compose.yml build
   #docker-compose -f docker-compose.yml push
-  #docker-compose up mysql mail-dev
+  #docker-compose up mysql mail-dev s3 -d
