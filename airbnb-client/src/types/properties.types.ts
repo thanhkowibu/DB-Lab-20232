@@ -1,6 +1,20 @@
 import { ImageProps } from "./global.types";
 import { UserProps } from "./users.types";
 
+export type PropertyOverviewProps = {
+  id: bigint;
+  nightly_price: number;
+  name: string;
+  longitude: number;
+  latitude: number;
+  max_guests: number;
+  created_at: Date;
+  updated_at: Date;
+  num_beds: number;
+  images: ImageProps[];
+  average_rating: number;
+};
+
 export type PropertyDetailProps = {
   id: bigint;
   nightly_price: number;
@@ -13,15 +27,15 @@ export type PropertyDetailProps = {
   num_beds: number;
   images: ImageProps[];
   average_rating: number;
-  num_bedrooms?: number;
-  num_bathrooms?: number;
-  description?: string;
-  address_line?: string;
-  host?: UserProps;
-  total_rating?: number;
-  booking_date?: Date[];
-  categories?: Category[];
-  tag?: Tag;
+  num_bedrooms: number;
+  num_bathrooms: number;
+  description: string;
+  address_line: string;
+  host: UserProps;
+  total_rating: number;
+  booking_date: Date[];
+  categories: Category[];
+  tag: Tag;
 };
 
 export enum Category {
@@ -108,4 +122,15 @@ export type PropertyReqProps = {
   categories: string[];
   tag: string;
   images: File[];
+};
+
+export type BookingProps = {
+  check_in_date: Date;
+  check_out_date: Date;
+  num_alduts: number;
+  num_childrens: number;
+  num_pets: number;
+  nightly_fee: number;
+  clean_fee: number;
+  service_fee: number;
 };

@@ -21,6 +21,9 @@ import * as yup from "yup";
 import { PropertyReqProps } from "@/types/properties.types";
 import toast from "react-hot-toast";
 import { createListing } from "@/action/createListing";
+import { ResultProps } from "@/types/global.types";
+import { useAuth } from "@/context/useAuth";
+import { useNavigate } from "react-router-dom";
 
 // const schema = yup.object().shape({
 //   nightly_price: yup.number().required(),
@@ -56,6 +59,9 @@ export const CreateProperty = () => {
   const [imgs, setImgs] = useState<File[]>([]);
   const [imgUrls, setImgUrls] = useState<string[]>([]);
 
+  const { logoutUser } = useAuth();
+  const navigate = useNavigate();
+
   const totalSteps = 13;
   const progress = (step / totalSteps) * 100;
 
@@ -73,27 +79,9 @@ export const CreateProperty = () => {
   };
 
   const onSubmit = async (form: PropertyReqProps) => {
-    // handleNext();
     console.log(form);
 
     const formData = new FormData();
-    // formData.append(
-    //   "propertyDetailDto",
-    //   JSON.stringify({
-    //     tag: "BEACHFRONT",
-    //     latitude: 21.001799131176725,
-    //     longitude: 105.84658305929497,
-    //     address_line: "test",
-    //     max_guests: 2,
-    //     num_beds: 1,
-    //     num_bedrooms: 1,
-    //     num_bathrooms: 1,
-    //     categories: ["WIFI", "TV", "AIR_CONDITIONING", "POOL"],
-    //     name: "Test2",
-    //     description: "test",
-    //     nightly_price: 12,
-    //   })
-    // );
 
     // Stringify the form data copy and set it under the propertyDetailDto key
     formData.append("propertyDetailDto", JSON.stringify(form));
@@ -122,9 +110,19 @@ export const CreateProperty = () => {
       }
     }
     // Post data to API...
-    const { res, err } = await createListing(formData);
-    if (res) toast.success("New listing created successfully");
-    if (err) toast.error("Something went wrong");
+    try {
+      const res = await createListing(formData);
+      console.log(res);
+      toast.success("New listing created successfully");
+      handleNext();
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message);
+      if (err.code === 403) {
+        logoutUser();
+        navigate("/auth");
+      }
+    }
   };
 
   const onError = (errors: any) => console.log(errors);

@@ -21,7 +21,7 @@ export const usePlacename = (latitude: number, longitude: number) => {
 
         if (response.body.features.length > 0) {
           const match = response.body.features[0];
-          console.log(match);
+          // console.log(match);
           setLocation(match.place_name);
         }
       } catch (error) {

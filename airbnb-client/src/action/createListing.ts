@@ -5,6 +5,6 @@ export const createListing = async (input: FormData) => {
     const res = await propertyApi.create(input);
     return res.data;
   } catch (err: any) {
-    throw new Error(err);
+    throw err;
   }
 };
