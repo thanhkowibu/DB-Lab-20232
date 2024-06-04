@@ -17,7 +17,7 @@ export const ListingClient = ({ booking, listing }: Props) => {
 
   return (
     <Container>
-      <div className="max-w-screen-lg mx-auto">
+      <div className="max-w-[1150px] mx-auto">
         <div className="flex flex-col gap-6">
           <ListingHead
             title={listing.name}
