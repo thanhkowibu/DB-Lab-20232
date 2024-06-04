@@ -1,7 +1,13 @@
+import { celebrate } from "@/utils/confetti/celebrate";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const ListingCreated = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    celebrate();
+  }, []);
 
   return (
     <div className="flex flex-col gap-10 items-center justify-center h-full">

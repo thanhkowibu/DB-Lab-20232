@@ -7,6 +7,6 @@ export const getListings = async (params?: string) => {
     const data = listings.data;
     return data;
   } catch (err: any) {
-    throw new Error(err);
+    throw err;
   }
 };

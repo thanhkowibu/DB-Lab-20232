@@ -25,4 +25,5 @@ export type LoginReqProps = {
 export type LoginInfoProps = {
   access_token: string;
   user_info: UserProps;
+  favorites: number[];
 };

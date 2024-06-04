@@ -19,6 +19,8 @@ export type ContextProviderProps = {
 export type ContextProps = {
   user: UserProps | null;
   token: string | null;
+  fav: number[] | null;
+  setFav: React.Dispatch<React.SetStateAction<number[] | null>>;
   registerUser: (inputs: RegisterReqProps) => Promise<ResultProps | undefined>;
   loginUser: (inputs: LoginReqProps) => Promise<void>;
   resendToken: (email: string) => Promise<ResultProps | undefined>;

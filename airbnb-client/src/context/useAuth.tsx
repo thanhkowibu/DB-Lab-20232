@@ -14,6 +14,7 @@ export const GlobalContext = createContext({} as ContextProps);
 export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
   const [user, setUser] = useState<UserProps | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [fav, setFav] = useState<number[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
@@ -21,12 +22,20 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
   useEffect(() => {
     const user = localStorage.getItem("user");
     const token = localStorage.getItem("token");
+    const fav = JSON.parse(localStorage.getItem("favorites") || "[]");
     if (user && token) {
       setUser(JSON.parse(user));
       setToken(token);
     }
+    setFav(fav);
     setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    if (fav) {
+      localStorage.setItem("favorites", JSON.stringify(fav));
+    }
+  }, [fav]);
 
   const registerUser = async ({
     firstname,
@@ -56,11 +65,14 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
       const res = await authApi.login({ email, password });
       if (res) {
         const { data }: { data: LoginInfoProps } = res;
+        console.log(data.favorites);
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("user", JSON.stringify(data.user_info));
+        localStorage.setItem("favorites", JSON.stringify(data.favorites));
         setToken(data.access_token);
         setUser(data.user_info);
-        navigate("/");
+        setFav(data.favorites);
+        navigate("/properties?page=1&page_size=24");
       }
     } catch (err: any) {
       console.log(err);
@@ -101,8 +113,10 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
   const logoutUser = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("favorites");
     setUser(null);
     setToken("");
+    setFav([]);
   };
 
   return (
@@ -110,6 +124,8 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
       value={{
         user,
         token,
+        fav,
+        setFav,
         isLoggedIn,
         loginUser,
         registerUser,
