@@ -33,7 +33,6 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
                 GROUP_CONCAT(DISTINCT i.url) AS imageUrls,
                 GROUP_CONCAT(DISTINCT i.name) AS imageNames,
                 COALESCE(AVG(c.rating), 0) AS averageRating,
-                COUNT(*) OVER()
             FROM property p
             LEFT JOIN image i ON p.id = i.property_id
             LEFT JOIN comment c ON p.id = c.property_id
@@ -84,15 +83,14 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
             GROUP_CONCAT(DISTINCT i.id) AS imageIds,
             GROUP_CONCAT(DISTINCT i.url) AS imageUrls,
             GROUP_CONCAT(DISTINCT i.name) AS imageNames,
-            COALESCE(AVG(c.rating), 0) AS averageRating,
-            COUNT(*) OVER()
+            COALESCE(AVG(c.rating), 0) AS averageRating
         FROM property p
         LEFT JOIN image i ON p.id = i.property_id
         LEFT JOIN comment c ON p.id = c.property_id
         WHERE p.host_id = :userId
         GROUP BY p.id
         ORDER BY averageRating DESC
-        LIMIT 9
+        LIMIT 10
     """, nativeQuery = true)
     List<Object[]> findTopRatingPropertyFromHost(@NonNull Integer userId);
 
@@ -185,6 +183,30 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
         GROUP BY p.id""", nativeQuery = true)
     List<Object[]> findDetailByIdNative(@Param("id") Long id);
 
+    @Query(value = """
+        SELECT
+            p.id AS id,
+            p.nightly_price AS nightlyPrice,
+            p.name AS name,
+            p.longitude AS longitude,
+            p.latitude AS latitude,
+            p.created_at AS createdAt,
+            p.updated_at AS updatedAt,
+            p.num_beds AS numBeds,
+            GROUP_CONCAT(DISTINCT i.id) AS imageIds,
+            GROUP_CONCAT(DISTINCT i.url) AS imageUrls,
+            GROUP_CONCAT(DISTINCT i.name) AS imageNames,
+            COALESCE(AVG(c.rating), 0) AS averageRating
+        FROM property p
+        LEFT JOIN image i ON p.id = i.property_id
+        LEFT JOIN comment c ON p.id = c.property_id
+        WHERE p.host_id = :userId
+        GROUP BY p.id
+        ORDER BY updatedAt DESC
+        LIMIT :limit OFFSET :offset
+        """, nativeQuery = true)
+    List<Object[]> findAllByUserId(Integer userId, long limit, long offset);
+
     @Modifying
     @Query(value = "INSERT INTO liked_property (user_id, property_id) VALUES (:userId, :propertyId)", nativeQuery = true)
     void userLikeProperty(@NonNull Long propertyId, @NonNull Integer userId);
@@ -197,4 +219,13 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
     @Query(value = """
         SELECT property_id FROM liked_property WHERE user_id = :id""",nativeQuery = true)
     List<Object> getAllFavorites(Integer id);
+
+    @Query(value = "SELECT COUNT(p.id) FROM property p ", nativeQuery = true)
+    Long countAll();
+
+    @Query(value = "SELECT COUNT(p.id) FROM property p WHERE p.host_id = :userId", nativeQuery = true)
+    Long countAllForUserId(@NonNull Integer userId);
+
+    @Query(value = "SELECT COUNT(lp.property_id) FROM liked_property lp WHERE lp.user_id = :userId", nativeQuery = true)
+    Long countAllLikedForUserId(@NonNull Integer userId);
 }

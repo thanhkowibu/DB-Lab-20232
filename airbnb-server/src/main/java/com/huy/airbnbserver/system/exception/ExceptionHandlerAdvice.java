@@ -15,6 +15,7 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,6 +44,12 @@ public class ExceptionHandlerAdvice {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     Result handleUnsupportedImageFormatException(UnsupportedImageFormatException ex) {
         return new Result(false, 422, ex.getMessage());
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+    Result handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException ex) {
+        return new Result(false, 415, ex.getMessage());
     }
 
     @ExceptionHandler(UnprocessableEntityException.class)
