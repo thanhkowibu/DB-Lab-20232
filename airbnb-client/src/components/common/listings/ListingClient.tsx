@@ -1,4 +1,3 @@
-import { categoriesArray } from "@/data/categoriesArray";
 import { tagsArray } from "@/data/tagsArray";
 import {
   BookingProps,
@@ -9,7 +8,7 @@ import { Container } from "../Container";
 import { ListingHead } from "./ListingHead";
 
 type Props = {
-  booking: BookingProps[];
+  booking?: BookingProps[];
   listing: PropertyDetailProps;
 };
 
