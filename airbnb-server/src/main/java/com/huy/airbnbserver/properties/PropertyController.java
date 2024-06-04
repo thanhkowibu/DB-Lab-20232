@@ -1,15 +1,15 @@
 package com.huy.airbnbserver.properties;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.huy.airbnbserver.image.ImageInstruction;
 import com.huy.airbnbserver.properties.converter.PropertyOverProjectionToPropertyOverProjectionDto;
 import com.huy.airbnbserver.properties.dto.*;
 import com.huy.airbnbserver.properties.enm.*;
 import com.huy.airbnbserver.properties.converter.PropertyDetailDtoToPropertyConverter;
 import com.huy.airbnbserver.properties.converter.PropertyToPropertyDetailDtoConverter;
-import com.huy.airbnbserver.properties.converter.PropertyToPropertyOverviewDto;
 import com.huy.airbnbserver.report.Issue;
 import com.huy.airbnbserver.report.ReportService;
-import com.huy.airbnbserver.report.ReportableEntity;
 import com.huy.airbnbserver.report.dto.ReportDto;
 import com.huy.airbnbserver.system.*;
 import com.huy.airbnbserver.system.exception.InvalidSearchQueryException;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -109,7 +110,7 @@ public class PropertyController {
         SortDirection sortDirection;
 
         if (sortDirectionParam == null) {
-            sortDirection = SortDirection.ASC;
+            sortDirection = SortDirection.DESC;
         } else {
             try {
                 sortDirection = SortDirection.valueOf(sortDirectionParam.toUpperCase());
@@ -184,32 +185,43 @@ public class PropertyController {
         images.forEach(System.out::println);
 
         assert property != null;
-        var savedProperty = propertyService.save(property, Utils.extractAuthenticationId(authentication), images);
+        propertyService.save(property, Utils.extractAuthenticationId(authentication), images);
+//        var savedProperty = propertyService.save(property, Utils.extractAuthenticationId(authentication), images);
 
         return new Result(true,
                 StatusCode.CREATED,
-                "Created Property Success",
-                propertyToPropertyDetailDtoConverter.convert(savedProperty));
+                "Created Property Success"
+//                propertyToPropertyDetailDtoConverter.convert(savedProperty)
+
+        );
 
     }
 
     @PutMapping("/properties/{propertyId}")
     public Result update(@RequestParam(value = "images", required = false) List<MultipartFile> images,
-                         @Valid @RequestParam(value = "propertyDetailDto") String propertyDetailDtoString,
+                         @RequestParam(value = "propertyDetailDto") String propertyDetailDtoString,
+                         @RequestParam(value = "instruction", required = false) String instructionString,
                          @PathVariable Long propertyId
                          ) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         PropertyDetailDto propertyDetailDto = objectMapper.readValue(propertyDetailDtoString, PropertyDetailDto.class);
+        List<ImageInstruction> instructions = objectMapper.
+                readValue(instructionString, new TypeReference<>() {
+                });
 
         if (images != null && Utils.imageValidationFailed(images)) {
             return new Result(false, StatusCode.INVALID_ARGUMENT, "Invalid image files were provided", null);
         }
 
-        return new Result(
-                true, 200, "Update Success",
-                propertyToPropertyDetailDtoConverter.convert(
-                propertyService.update(propertyId, propertyDetailDtoToPropertyConverter.convert(propertyDetailDto), images))
+        propertyService.update(
+                propertyId,
+                propertyDetailDtoToPropertyConverter.convert(propertyDetailDto),
+                images,
+                instructions != null ? instructions : new ArrayList<>()
         );
+
+        return new Result(
+                true, 200, "Update Success");
 
     }
 

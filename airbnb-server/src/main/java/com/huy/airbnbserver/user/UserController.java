@@ -1,7 +1,7 @@
 package com.huy.airbnbserver.user;
 
-
-import com.huy.airbnbserver.properties.Property;
+import com.huy.airbnbserver.AWS.AWSBucketService;
+import com.huy.airbnbserver.image.Image;
 import com.huy.airbnbserver.properties.PropertyService;
 import com.huy.airbnbserver.properties.converter.PropertyOverProjectionToPropertyOverProjectionDto;
 import com.huy.airbnbserver.properties.dto.PropertyOverviewPageDto;
@@ -16,9 +16,9 @@ import com.huy.airbnbserver.user.converter.UserToUserDtoConverter;
 import com.huy.airbnbserver.user.dto.UserDto;
 import com.huy.airbnbserver.user.dto.UserWithPropertyDto;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 
+import lombok.NonNull;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -37,6 +37,7 @@ public class UserController {
     private final PropertyService propertyService;
     private final PropertyOverProjectionToPropertyOverProjectionDto converter;
     private final ReportService reportService;
+    private final AWSBucketService awsBucketService;
 
     @PreAuthorize("hasRole('ROLE_admin')")
     @GetMapping
@@ -118,17 +119,17 @@ public class UserController {
 
     @PutMapping(path = "/{userId}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Result assignAvatar(@PathVariable Integer userId,
-                               @NotNull @RequestParam("images") List<MultipartFile> files,
+                               @NonNull @RequestParam(value = "images") List<MultipartFile> files,
                                Authentication authentication) throws IOException {
         if (!userId.equals(Utils.extractAuthenticationId(authentication))) {
             return new Result(false,  StatusCode.UNAUTHORIZED, "Action Not Allow For This User");
         }
 
-        if (files != null && Utils.imageValidationFailed(files)) {
+        if (Utils.imageValidationFailed(files)) {
             return new Result(false, StatusCode.INVALID_ARGUMENT, "Invalid image files were provided");
         }
 
-        if (files != null && files.size() > 1) {
+        if (files.size() > 1) {
             new Result(false, StatusCode.INVALID_ARGUMENT, "Too many images were provided, only accept 1");
         }
 
@@ -152,5 +153,10 @@ public class UserController {
         );
 
         return new Result(true, 200, "Success");
+    }
+
+    @GetMapping("test")
+    public Image test(@RequestParam("file") MultipartFile multipartFile) throws IOException {
+        return awsBucketService.uploadFile(multipartFile, null);
     }
 }

@@ -1,0 +1,11 @@
+@echo off
+SET MINIO_CLI=.\mc.exe
+SET ALIAS_NAME=myminio
+SET MINIO_URL=http://localhost:9000
+SET ACCESS_KEY=user
+SET SECRET_KEY=password
+SET BUCKET_NAME=airbnb-media
+
+%MINIO_CLI% alias set %ALIAS_NAME% %MINIO_URL% %ACCESS_KEY% %SECRET_KEY%
+%MINIO_CLI% mb %ALIAS_NAME%/%BUCKET_NAME%
+%MINIO_CLI% anonymous set download %ALIAS_NAME%/%BUCKET_NAME%
