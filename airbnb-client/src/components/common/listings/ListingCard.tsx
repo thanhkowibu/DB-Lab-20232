@@ -1,4 +1,4 @@
-import { PropertyDetailProps } from "@/types/properties.types";
+import { PropertyOverviewProps } from "@/types/properties.types";
 import { useNavigate } from "react-router-dom";
 import { Image } from "../Image";
 import { HeartButton } from "../HeartButton";
@@ -7,17 +7,23 @@ import { EmblaOptionsType } from "embla-carousel";
 import EmblaCarousel from "../carousel/EmblaCarousel";
 
 type Props = {
-  data: PropertyDetailProps;
+  data: PropertyOverviewProps;
 };
 
 const OPTIONS: EmblaOptionsType = {};
 
 export const ListingCard = ({ data }: Props) => {
   const navigate = useNavigate();
-  const location = usePlacename(data.latitude, data.longitude);
+  const location = usePlacename(
+    data.latitude,
+    data.longitude
+  );
 
   const slides = data.images.map((image, index) => (
-    <div className="aspect-square w-full relative overflow-hidden" key={index}>
+    <div
+      className="aspect-square w-full relative overflow-hidden"
+      key={index}
+    >
       <Image path={image.path} />
     </div>
   ));
@@ -29,7 +35,10 @@ export const ListingCard = ({ data }: Props) => {
     >
       <div className="aspect-square w-full relative overflow-hidden rounded-xl">
         {slides.length > 0 ? (
-          <EmblaCarousel slides={slides} options={OPTIONS} />
+          <EmblaCarousel
+            slides={slides}
+            options={OPTIONS}
+          />
         ) : (
           <Image path={undefined} />
         )}
@@ -38,12 +47,20 @@ export const ListingCard = ({ data }: Props) => {
         </div>
       </div>
       <div className="flex justify-between">
-        <div className="font-semibold text-lg">{location}</div>
-        <div className="mr-1">★{Number(data.average_rating).toFixed(1)}</div>
+        <div className="font-semibold text-lg">
+          {location}
+        </div>
+        <div className="mr-1">
+          ★{Number(data.average_rating).toFixed(1)}
+        </div>
       </div>
-      <div className="text-neutral-500 font-light truncate">{data.name}</div>
+      <div className="text-neutral-500 font-light truncate">
+        {data.name}
+      </div>
       <div className="flex items-center gap-1 text-sm">
-        <div className="font-semibold">${data.nightly_price}</div>
+        <div className="font-semibold">
+          ${data.nightly_price}
+        </div>
         <div className="font-light"> night</div>
       </div>
     </div>
