@@ -1,6 +1,8 @@
 package com.huy.airbnbserver.user;
 
-import com.huy.airbnbserver.image.firebase.FirebaseImageService;
+import com.huy.airbnbserver.AWS.AWSBucketService;
+import com.huy.airbnbserver.image.Image;
+import com.huy.airbnbserver.image.ImageRepository;
 import com.huy.airbnbserver.system.exception.ObjectNotFoundException;
 import com.huy.airbnbserver.system.exception.UnprocessableEntityException;
 import com.huy.airbnbserver.user.dto.UserDto;
@@ -17,7 +19,8 @@ import java.util.List;
 @AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final FirebaseImageService firebaseImageService;
+    private final AWSBucketService awsBucketService;
+    private final ImageRepository imageRepository;
 
     public List<User> findAll() {
         return userRepository.findAllEagerAvatar();
@@ -41,14 +44,22 @@ public class UserService {
     @Transactional
     public void assignAvatar(Integer id, List<MultipartFile> files) throws IOException {
         var user = userRepository.findById(id).orElseThrow(()->new ObjectNotFoundException("user", id));
-        // remove current image
-        if (user.getAvatar() != null) {
-            firebaseImageService.delete(user.getAvatar());
-        }
 
-        var image = firebaseImageService.save(files.get(0), null);
-        user.setAvatar(image);
-        userRepository.save(user);
+        Image preAvatar = user.getAvatar();
+        Image newImage = awsBucketService.uploadFile(files.get(0), null);
+
+        try {
+            user.setAvatar(newImage);
+            userRepository.save(user);
+            if (preAvatar != null) {
+                imageRepository.delete(preAvatar);
+                awsBucketService.deleteFile(preAvatar);
+            }
+        } catch (Exception exception) {
+            awsBucketService.deleteFile(newImage);
+
+            throw exception;
+        }
     }
 
     @Transactional

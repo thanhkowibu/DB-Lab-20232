@@ -35,3 +35,10 @@ application:
     jwt:
       secretKey: mysupersecretkeyihavetomakeitlongoriwillgetanexceptionfortooshortlmao
       jwtExpiration: 8640000 # 1 day
+
+aws:
+  s3:
+    bucket-name: airbnb-media
+    endpoint: http://localhost:9000
+    access-key: "user"
+    secret-key: "password"
