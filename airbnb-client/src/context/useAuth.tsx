@@ -51,7 +51,7 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
         password,
       });
       if (res) {
-        console.log(res);
+        // console.log(res);
         return res;
       }
     } catch (err: any) {
@@ -65,14 +65,13 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
       const res = await authApi.login({ email, password });
       if (res) {
         const { data }: { data: LoginInfoProps } = res;
-        console.log(data.favorites);
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("user", JSON.stringify(data.user_info));
         localStorage.setItem("favorites", JSON.stringify(data.favorites));
         setToken(data.access_token);
         setUser(data.user_info);
         setFav(data.favorites);
-        navigate("/properties?page=1&page_size=24");
+        navigate("/properties?page_size=24");
       }
     } catch (err: any) {
       console.log(err);
@@ -84,7 +83,7 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
     try {
       const res = await authApi.resend(email);
       if (res) {
-        console.log(res);
+        // console.log(res);
         return res;
       }
     } catch (err: any) {
@@ -97,7 +96,7 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
     try {
       const res = await authApi.activate(token);
       if (res) {
-        console.log(res);
+        // console.log(res);
         return res;
       }
     } catch (err: any) {

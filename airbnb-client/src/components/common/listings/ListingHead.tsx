@@ -2,7 +2,6 @@ import { usePlacename } from "@/hooks/useGeocoding";
 import { ImageProps } from "@/types/global.types";
 import { HeartButton } from "../HeartButton";
 import { PiUploadSimpleBold } from "react-icons/pi";
-import { useAuth } from "@/context/useAuth";
 import { ImageGrid } from "../image/ImageGrid";
 
 type Props = {
@@ -21,8 +20,6 @@ export const ListingHead: React.FC<Props> = ({
   id,
 }) => {
   const location = usePlacename(latitude, longitude);
-
-  const { fav } = useAuth();
 
   return (
     <div className="">

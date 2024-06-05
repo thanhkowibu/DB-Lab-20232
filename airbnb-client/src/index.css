@@ -203,3 +203,16 @@ body,
   background-color: rgba(255, 255, 255, 1);
   scale: 1.1;
 }
+
+.rdrMonth {
+  width: 100% !important;
+}
+
+.rdrCalendarWrapper {
+  width: 100% !important;
+  font-size: 16px !important;
+}
+
+.rdrDayNumber span {
+  font-weight: 400;
+}
