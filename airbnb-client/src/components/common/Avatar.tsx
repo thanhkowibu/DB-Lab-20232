@@ -1,9 +1,15 @@
-export const Avatar = ({ path }: { path: string | undefined }) => {
+export const Avatar = ({
+  path,
+  size,
+}: {
+  path: string | undefined;
+  size?: string;
+}) => {
   return (
     <img
       className="rounded-full"
-      height="30"
-      width="30"
+      height={size ? size : "30"}
+      width={size ? size : "30"}
       alt="Avatar"
       src={path ? path : "/images/sensei-face.jpg"}
     />

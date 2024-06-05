@@ -45,11 +45,38 @@ export const UserMenu = () => {
           <div className="flex flex-col cursor-pointer">
             {isLoggedIn() ? (
               <>
-                <DropdownItem onClick={() => {}} label="Trips" isBold />
-                <DropdownItem onClick={() => {}} label="Wishlists" isBold />
-                <DropdownItem onClick={() => {}} label="Manage listings" />
-                <DropdownItem onClick={() => {}} label="Account" />
-                <DropdownItem onClick={() => {}} label="Help" />
+                <DropdownItem
+                  onClick={() => {
+                    navigate("/trips");
+                  }}
+                  label="Trips"
+                  isBold
+                />
+                <DropdownItem
+                  onClick={() => {
+                    navigate("/favourites");
+                  }}
+                  label="Wishlists"
+                  isBold
+                />
+                <DropdownItem
+                  onClick={() => {
+                    navigate("/hosting");
+                  }}
+                  label="Manage listings"
+                />
+                <DropdownItem
+                  onClick={() => {
+                    navigate(`/users/${user?.id}`);
+                  }}
+                  label="Account"
+                />
+                <DropdownItem
+                  onClick={() => {
+                    navigate("/help");
+                  }}
+                  label="Help"
+                />
                 <DropdownItem onClick={logoutUser} label="Logout" />
               </>
             ) : (

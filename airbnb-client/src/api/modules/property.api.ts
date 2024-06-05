@@ -1,6 +1,8 @@
+import { PAGE_SIZE } from "@/data/params";
 import privateClient from "../client/private.client";
 import publicClient from "../client/public.client";
 import { ResultProps } from "@/types/global.types";
+import queryString from "query-string";
 
 const propertyEndpoints = {
   base: () => "/properties",
@@ -13,8 +15,14 @@ const propertyEndpoints = {
 
 const propertyApi = {
   getList: async (params?: string) => {
+    const parsedParams = queryString.parse(params || "");
+    const newParams = queryString.stringify({
+      ...parsedParams,
+      page_size: PAGE_SIZE,
+    });
+
     const res: ResultProps = await publicClient.get(
-      propertyEndpoints.list(params || "?page=1&page_size=24")
+      propertyEndpoints.list("?" + newParams)
     );
     return res;
   },

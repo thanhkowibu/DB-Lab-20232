@@ -5,7 +5,10 @@ export const Logo = () => {
   const navigate = useNavigate();
   return (
     <img
-      onClick={() => navigate("/properties?page=1&page_size=24")}
+      onClick={() => {
+        navigate("/properties?page_size=24");
+        window.scrollTo({ top: 0 });
+      }}
       alt="Logo"
       className="hidden md:block cursor-pointer"
       height="50"
