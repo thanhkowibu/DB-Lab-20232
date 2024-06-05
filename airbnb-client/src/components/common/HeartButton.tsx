@@ -14,14 +14,9 @@ type Props = {
 export const HeartButton = ({ listingId }: Props) => {
   const navigate = useNavigate();
 
-  const { user, fav, setFav } = useAuth();
-
-  useEffect(() => {
-    console.log(fav);
-  }, [fav, user]);
+  const { user, fav, setFav, logoutUser } = useAuth();
 
   const hasFavourited = fav?.includes(Number(listingId));
-  // console.log(fav);
 
   const toggleFavourite = async (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -44,9 +39,13 @@ export const HeartButton = ({ listingId }: Props) => {
           toast.success("Added to favourites");
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
       toast.error("Failed to add favourite");
+      if (err.code === 403) {
+        logoutUser();
+        navigate("/auth");
+      }
     }
   };
 

@@ -39,6 +39,7 @@ export const TagItem = ({
       { skipNull: true }
     );
     navigate(url);
+    window.scrollTo({ top: 0 });
   };
 
   return (

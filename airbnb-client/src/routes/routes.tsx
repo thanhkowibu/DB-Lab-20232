@@ -1,5 +1,4 @@
 import { AuthPage } from "@/pages/AuthPage";
-import { BookingPage } from "@/pages/BookingPage";
 import { FavouristList } from "@/pages/FavouristList";
 import { HomePage } from "@/pages/HomePage";
 import { PropertyDetail } from "@/pages/PropertyDetail";
@@ -8,6 +7,10 @@ import { PasswordUpdate } from "@/pages/PasswordUpdate";
 import { UserDetail } from "@/pages/UserDetail";
 import ProtectedRoute from "./ProtectedRoute";
 import { CreateProperty } from "@/pages/CreateProperty";
+import TripPage from "@/pages/TripPage";
+import BookingPage from "@/pages/BookingPage";
+import HostingPage from "@/pages/HostingPage";
+import HelpPage from "@/pages/HelpPage";
 
 export const routesGen = {
   home: "/",
@@ -49,13 +52,31 @@ const routes = [
     state: "user.detail",
   },
   {
-    path: "/booking",
+    path: "/booking/:id",
     element: (
       <ProtectedRoute>
         <BookingPage />
       </ProtectedRoute>
     ),
     state: "booking",
+  },
+  {
+    path: "/trips",
+    element: (
+      <ProtectedRoute>
+        <TripPage />
+      </ProtectedRoute>
+    ),
+    state: "trips",
+  },
+  {
+    path: "/hosting",
+    element: (
+      <ProtectedRoute>
+        <HostingPage />
+      </ProtectedRoute>
+    ),
+    state: "hosting",
   },
   {
     path: "/favourites",
@@ -65,6 +86,14 @@ const routes = [
       </ProtectedRoute>
     ),
     state: "favourites",
+  },
+  {
+    path: "/help",
+    element: (
+      <ProtectedRoute>
+        <HelpPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/password_update",

@@ -1,6 +1,6 @@
 import { PropertyOverviewProps } from "@/types/properties.types";
 import { useNavigate } from "react-router-dom";
-import { Image } from "../Image";
+import { Image } from "../image/Image";
 import { HeartButton } from "../HeartButton";
 import { usePlacename } from "@/hooks/useGeocoding";
 import { EmblaOptionsType } from "embla-carousel";

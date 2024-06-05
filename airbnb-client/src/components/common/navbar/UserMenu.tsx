@@ -48,25 +48,35 @@ export const UserMenu = () => {
             {isLoggedIn() ? (
               <>
                 <DropdownItem
-                  onClick={() => {}}
+                  onClick={() => {
+                    navigate("/trips");
+                  }}
                   label="Trips"
                   isBold
                 />
                 <DropdownItem
-                  onClick={() => {}}
+                  onClick={() => {
+                    navigate("/favourites");
+                  }}
                   label="Wishlists"
                   isBold
                 />
                 <DropdownItem
-                  onClick={() => {}}
+                  onClick={() => {
+                    navigate("/hosting");
+                  }}
                   label="Manage listings"
                 />
                 <DropdownItem
-                  onClick={() => {}}
+                  onClick={() => {
+                    navigate(`/users/${user?.id}`);
+                  }}
                   label="Account"
                 />
                 <DropdownItem
-                  onClick={() => {}}
+                  onClick={() => {
+                    navigate("/help");
+                  }}
                   label="Help"
                 />
                 <DropdownItem
