@@ -1,4 +1,4 @@
-package com.huy.airbnbserver.system;
+package com.huy.airbnbserver.system.common;
 
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ public class Page {
 
     public Page(Long page, Long pageSize) {
         this.page = page == null ? 1 : page;
-        this.pageSize = pageSize == null ? 1 : pageSize;
+        this.pageSize = pageSize == null ? 24 : pageSize;
         this.limit = this.pageSize;
         this.offset = (this.page - 1) * this.limit;
     }

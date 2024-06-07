@@ -34,8 +34,12 @@ public class AWSBucketService {
                 .build();
     }
 
+//    public String getUrl(String key) {
+//        return  s3Client.getUrl(awsConfig.getBucketName(), key).toString();
+//    }
+
     public String getUrl(String key) {
-        return  s3Client.getUrl(awsConfig.getBucketName(), key).toString();
+        return awsConfig.getExternalEndpoint() + "/" + awsConfig.getBucketName() + "/" + key;
     }
 
     public Image uploadFile(MultipartFile multipartFile, @Nullable Property parent) throws IOException {

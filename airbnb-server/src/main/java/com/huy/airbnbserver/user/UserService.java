@@ -3,9 +3,13 @@ package com.huy.airbnbserver.user;
 import com.huy.airbnbserver.AWS.AWSBucketService;
 import com.huy.airbnbserver.image.Image;
 import com.huy.airbnbserver.image.ImageRepository;
+import com.huy.airbnbserver.notification.model.Notification;
+import com.huy.airbnbserver.notification.model.NotificationPreferences;
 import com.huy.airbnbserver.system.exception.ObjectNotFoundException;
 import com.huy.airbnbserver.system.exception.UnprocessableEntityException;
+import com.huy.airbnbserver.user.dto.NotificationPreferenceDto;
 import com.huy.airbnbserver.user.dto.UserDto;
+import com.huy.airbnbserver.user.model.User;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -90,5 +94,34 @@ public class UserService {
         }
         user.setBanned(false);
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateNotificationPreference(NotificationPreferenceDto dto, Integer userId) {
+        userRepository.updateNotificationPreference(
+                dto.notifyOnBookingStatusChange(),
+                dto.notifyOnHostedPropertyLike(),
+                dto.notifyOnHostedPropertyBooked(),
+                dto.notifyOnHostedPropertyRating(),
+                dto.notifyOnSpecialOffers(),
+                userId
+        );
+    }
+
+    public NotificationPreferenceDto getNotificationPreference(Integer userId) {
+        List<Object[]> q = userRepository.getNotificationPreference(userId);
+        if (q.isEmpty()) {
+            throw new ObjectNotFoundException("preference for user", userId);
+        }
+
+        Object[] res = q.get(0);
+
+        return new NotificationPreferenceDto(
+                (Boolean) res[0],
+                (Boolean) res[1],
+                (Boolean) res[2],
+                (Boolean) res[3],
+                (Boolean) res[4]
+        );
     }
 }

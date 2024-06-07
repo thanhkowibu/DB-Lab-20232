@@ -1,7 +1,9 @@
-package com.huy.airbnbserver.user;
+package com.huy.airbnbserver.user.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.huy.airbnbserver.notification.model.Notification;
+import com.huy.airbnbserver.notification.model.NotificationPreferences;
 import com.huy.airbnbserver.report.Report;
 import com.huy.airbnbserver.report.ReportableEntity;
 import com.huy.airbnbserver.booking.Booking;
@@ -9,6 +11,7 @@ import com.huy.airbnbserver.image.Image;
 import com.huy.airbnbserver.properties.Property;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -23,7 +26,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@Table(name = "USER_ACCOUNT", indexes = {
+@Table(name = "user_account", indexes = {
         @Index(name = "email_index", columnList = "email")
 })
 public class User implements ReportableEntity {
@@ -43,6 +46,11 @@ public class User implements ReportableEntity {
     @Column(nullable = false, unique = true, length = 200)
     @NotEmpty(message = "email is required")
     private String email;
+
+    @Column(length = 11)
+    private String phoneNumber;
+    private Date dob;
+    private String gender;
 
     @Column(nullable = false, length = 200)
     @NotEmpty
@@ -67,7 +75,13 @@ public class User implements ReportableEntity {
     @Column(nullable = false)
     private boolean isBanned;
 
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @JsonManagedReference
+    private NotificationPreferences notificationPreferences;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @JsonManagedReference
+    private Card card;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
@@ -80,6 +94,9 @@ public class User implements ReportableEntity {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL) @JsonBackReference
     private List<Booking> bookings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL) @JsonBackReference
+    private List<Notification> notifications = new ArrayList<>();
 
     @OneToMany(mappedBy = "reporter", fetch = FetchType.LAZY, cascade = CascadeType.ALL) @JsonBackReference
     private List<Report> reports = new ArrayList<>();

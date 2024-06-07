@@ -1,6 +1,12 @@
 package com.huy.airbnbserver.user;
 
+import com.huy.airbnbserver.notification.model.Notification;
+import com.huy.airbnbserver.notification.model.NotificationPreferences;
+import com.huy.airbnbserver.user.dto.NotificationPreferenceDto;
+import com.huy.airbnbserver.user.model.User;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.NonNull;
 
@@ -8,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
+
     @Query(value = "SELECT * FROM user_account u WHERE u.email = :email", nativeQuery = true)
     Optional<User> findByEmail(String email);
 
@@ -17,6 +24,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT u FROM User u " +
             "LEFT JOIN FETCH u.avatar " +
+            "JOIN FETCH u.notificationPreferences "+
             "WHERE u.id = :id")
     Optional<User> findByIdEager(@NonNull Integer id);
 
@@ -41,4 +49,36 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query(value = "SELECT COUNT(*) FROM user_account WHERE YEAR(created_at) = :year", nativeQuery = true)
     long countUsersCreatedInYear(@NonNull int year);
+
+    @Transactional
+    @Modifying
+    @Query(value = """
+        UPDATE
+            notification_preferences
+        SET
+            notify_on_booking_status_change = :a,
+            notify_on_hosted_property_like = :b,
+            notify_on_hosted_property_booked = :c,
+            notify_on_hosted_property_rating = :d,
+            notify_on_special_offers = :e
+        WHERE
+            user_id = :userId""", nativeQuery = true
+    )
+    void updateNotificationPreference(@NonNull Boolean a,
+                                      @NonNull Boolean b,
+                                      @NonNull Boolean c,
+                                      @NonNull Boolean d,
+                                      @NonNull Boolean e,
+                                      @NonNull Integer userId);
+
+    @Query(value = """
+        SELECT
+            np.notify_on_hosted_property_rating,
+            np.notify_on_hosted_property_like,
+            np.notify_on_hosted_property_booked,
+            np.notify_on_booking_status_change,
+            np.notify_on_special_offers
+        FROM notification_preferences np
+        WHERE user_id = :userId""",nativeQuery = true)
+    List<Object[]> getNotificationPreference(Integer userId);
 }

@@ -5,10 +5,12 @@ import com.huy.airbnbserver.booking.converter.BookingToBookingDtoConverter;
 import com.huy.airbnbserver.booking.dto.BookingDto;
 import com.huy.airbnbserver.booking.dto.BookingPageDto;
 import com.huy.airbnbserver.system.*;
-import com.huy.airbnbserver.system.exception.InvalidDateArgumentException;
+import com.huy.airbnbserver.system.common.Page;
+import com.huy.airbnbserver.system.common.PageMetadata;
+import com.huy.airbnbserver.system.common.Result;
+import com.huy.airbnbserver.system.common.StatusCode;
 import com.huy.airbnbserver.system.exception.InvalidSearchQueryException;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -37,6 +39,9 @@ public class BookingController {
                 Utils.extractAuthenticationId(authentication),
                 propertyId
         );
+
+        // publishEvent
+
         return new Result(
                 true,
                 StatusCode.SUCCESS,
@@ -103,21 +108,50 @@ public class BookingController {
     }
 
     @DeleteMapping("/bookings/{id}")
-    public Result deleteBooking(
+    public Result cancelBooking(
             @PathVariable Long id,
             Authentication authentication
     ) {
-        bookingService.delete(id, Utils.extractAuthenticationId(authentication));
-        return new Result(true, StatusCode.SUCCESS, "Delete booking success");
+        bookingService.handleCancelBooking(id, Utils.extractAuthenticationId(authentication));
+//        bookingService.delete(id, 2);
+        return new Result(true, StatusCode.SUCCESS, "cancel booking success");
     }
 
     @PutMapping("/bookings/{id}")
     public Result confirmBooking(
             @PathVariable Long id,
-            Authentication authentication
+            Authentication authentication,
+            @RequestParam(value = "confirm", required = false) Boolean isConfirm
     ) {
-        bookingService.confirm(id, Utils.extractAuthenticationId(authentication));
-        return new Result(true, StatusCode.SUCCESS, "Confirm booking success");
+        if (isConfirm==null) {
+            isConfirm = true;
+        }
+
+        var hostId = Utils.extractAuthenticationId(authentication);
+
+        if (isConfirm) {
+            bookingService.confirm(id, hostId);
+        } else {
+            bookingService.reject(id, hostId);
+        }
+
+        return new Result(true, StatusCode.SUCCESS,
+                isConfirm ? "Confirm booking success" : "Reject booking success");
+    }
+
+    @PutMapping("/bookings/{id}/check-out")
+    public Result checkoutBooking(
+            @PathVariable Long id,
+            Authentication authentication,
+            @RequestParam(value = "checkout", required = false) Boolean isCheckOut
+    ) {
+        if (isCheckOut == null) {
+            isCheckOut = true;
+        }
+
+        var hostId = Utils.extractAuthenticationId(authentication);
+        bookingService.handleHostConfirmationForCheckOut(id, isCheckOut, hostId);
+        return new Result(true, 200, "Check out successful");
     }
 
     private void pageSizeCheck(Long page, Long pageSize) {
@@ -128,5 +162,15 @@ public class BookingController {
         if (pageSize != null && pageSize < 5) {
             throw new InvalidSearchQueryException("Page size must be at least 5");
         }
+    }
+
+    @GetMapping("/bookings/{id}")
+    public Result getBookingDetail(@PathVariable Long id) {
+        return new Result(true, 200, "Success", bookingService.findBookingDetail(id));
+    }
+
+    @GetMapping("/bookings/test")
+    public void test() {
+        bookingService.detectNoShows();
     }
 }

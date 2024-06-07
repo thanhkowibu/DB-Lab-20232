@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class AWSConfig {
     private String bucketName;
     private String endpoint;
+    private String externalEndpoint;
     private String accessKey;
     private String secretKey;
 }

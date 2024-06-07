@@ -2,20 +2,28 @@ package com.huy.airbnbserver.admin;
 
 import com.github.javafaker.Faker;
 import com.huy.airbnbserver.booking.Booking;
-import com.huy.airbnbserver.booking.BookingService;
-import com.huy.airbnbserver.comment.Comment;
-import com.huy.airbnbserver.comment.CommentService;
+import com.huy.airbnbserver.booking.BookingRepository;
 import com.huy.airbnbserver.image.Image;
 import com.huy.airbnbserver.properties.Property;
 import com.huy.airbnbserver.properties.PropertyRepository;
 import com.huy.airbnbserver.properties.PropertyService;
 import com.huy.airbnbserver.properties.enm.Category;
 import com.huy.airbnbserver.properties.enm.Tag;
+import com.huy.airbnbserver.review.Review;
+import com.huy.airbnbserver.review.ReviewRepository;
+import com.huy.airbnbserver.user.UserRepository;
+import com.huy.airbnbserver.user.model.User;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -25,31 +33,10 @@ import java.util.concurrent.TimeUnit;
 @AllArgsConstructor
 public class FakerService {
     private final Faker faker;
-    private final CommentService commentService;
-    private final BookingService bookingService;
+    private final BookingRepository bookingRepository;
     private final PropertyService propertyService;
     private final PropertyRepository propertyRepository;
-
-    @Transactional
-    public Comment generateComment() {
-        Comment fakeComment = new Comment();
-        // Generate fake content
-        String content = faker.lorem().paragraph(3);
-        fakeComment.setContent(content);
-
-        // Generate a random rating between 1 and 5
-        Integer rating = faker.number().numberBetween(1, 6);
-        fakeComment.setRating(rating);
-
-        List<Long> propertyIds = propertyRepository.findAll()
-                .stream()
-                .map(Property::getId)
-                .toList();
-
-        Long propertyId = propertyIds.get(faker.random().nextInt(propertyIds.size()));
-
-        return commentService.addComment(fakeComment, propertyId, 2);
-    }
+    private final UserRepository userRepository;
 
     @Transactional
     public void generateBooking() {
@@ -57,7 +44,7 @@ public class FakerService {
         Booking fakeBooking = new Booking();
 
         // Generate random check-in and check-out dates
-        LocalDate checkInLocalDate = faker.date().future(365, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate checkInLocalDate = faker.date().past(365, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate checkOutLocalDate = checkInLocalDate.plusDays(faker.number().numberBetween(1, 15));
 
         // Convert LocalDate to Date
@@ -66,6 +53,13 @@ public class FakerService {
 
         fakeBooking.setCheckInDate(checkInDate);
         fakeBooking.setCheckOutDate(checkOutDate);
+        fakeBooking.setStatus("CHECK_OUT");
+        fakeBooking.setConfirm(true);
+        fakeBooking.setIsCheckedOut(true);
+        User user = userRepository.findById(2).orElseThrow(
+                () -> new RuntimeException("asd")
+        );
+        fakeBooking.setUser(user);
 
         // Generate random number of adults, children, and pets
         fakeBooking.setNumAlduts(1);
@@ -82,11 +76,30 @@ public class FakerService {
                 .map(Property::getId)
                 .toList();
         Long propertyId = propertyIds.get(faker.random().nextInt(propertyIds.size()));
-        bookingService.save(fakeBooking, 2, propertyId);
+        Property property = propertyRepository.findById(propertyId).orElseThrow(
+                () -> new RuntimeException("")
+        );
+
+
+        fakeBooking.addProperty(property);
+
+        Review fakeReview = new Review();
+
+        String content = faker.lorem().paragraph(30);
+        fakeReview.setContent(content);
+
+        // Generate a random rating between 1 and 5
+        Integer rating = faker.number().numberBetween(1, 6);
+        fakeReview.setRating(rating);
+        fakeReview.setIs_recommend(faker.random().nextBoolean());
+
+        fakeBooking.addReview(fakeReview);
+
+        bookingRepository.save(fakeBooking);
     }
 
     @Transactional
-    public void generateProperty() {
+    public void generateProperty() throws IOException {
         Property fakeProperty = new Property();
 
         // Generate random property details
@@ -111,9 +124,30 @@ public class FakerService {
         Tag tag = faker.options().option(Tag.class);
         fakeProperty.setTag(tag);
 
-        List<Image> fakeImage = new ArrayList<>();
+
+        List<MultipartFile> fakeImage = new ArrayList<>();
+        int length = faker.number().numberBetween(3, 6);
+        for (int i = 0; i < length; i++) {
+            fakeImage.add(getMultipartFile(getFilepath(faker.number().numberBetween(1,37))));
+        }
 
         // Save the Property using the repository
-        propertyService.saveMock(fakeProperty, 2, fakeImage);
+        propertyService.save(fakeProperty, 2, fakeImage);
+    }
+
+    private static MultipartFile getMultipartFile(String filePath) throws IOException {
+        File file = new File(filePath);
+        byte[] content = Files.readAllBytes(file.toPath());
+
+        return new CustomMultipartFile(
+                file.getName(),
+                file.getName(),
+                Files.probeContentType(file.toPath()),
+                content
+        );
+    }
+
+    private static String getFilepath(Integer index) {
+        return  "C:/Users/PC/Downloads/house-pictures-2019/170159165_"+index+".jpg";
     }
 }

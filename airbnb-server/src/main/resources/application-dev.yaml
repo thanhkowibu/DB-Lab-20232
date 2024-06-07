@@ -26,6 +26,7 @@ spring:
         auth: true
         starttls:
           enabled: true
+          required: true
         connectiontimeout: 5000
         timeout: 3000
         writetimeout: 5000
@@ -34,11 +35,12 @@ application:
   security:
     jwt:
       secretKey: mysupersecretkeyihavetomakeitlongoriwillgetanexceptionfortooshortlmao
-      jwtExpiration: 8640000 # 1 day
+      jwtExpiration: 86400000 # 1 day
 
 aws:
   s3:
     bucket-name: airbnb-media
     endpoint: http://localhost:9000
+    external-endpoint: http://localhost:9000
     access-key: "user"
     secret-key: "password"

@@ -7,10 +7,10 @@ import com.huy.airbnbserver.image.ImageInstruction;
 import com.huy.airbnbserver.image.ImageRepository;
 import com.huy.airbnbserver.properties.enm.*;
 import com.huy.airbnbserver.properties.dto.PropertyOverviewProjection;
-import com.huy.airbnbserver.system.SortDirection;
+import com.huy.airbnbserver.system.common.SortDirection;
 import com.huy.airbnbserver.system.exception.EntityAlreadyExistException;
 import com.huy.airbnbserver.system.exception.ObjectNotFoundException;
-import com.huy.airbnbserver.user.User;
+import com.huy.airbnbserver.user.model.User;
 import com.huy.airbnbserver.user.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -209,8 +209,41 @@ public class PropertyService {
                 .toList();
     }
 
-    public Long getTotalProperty() {
-        return propertyRepository.countAll();
+    public Long getTotalProperty(Category category1,
+                                 Category category2,
+                                 Tag tag,
+                                 Area area,
+                                 Double minNightlyPrice,
+                                 Double maxNightlyPrice,
+                                 Integer minBeds,
+                                 Integer minBathrooms,
+                                 Integer minBedrooms,
+                                 Integer maxGuest) {
+        var minLongitude = area != null ? area.getMinLongitude() : null;
+        var maxLongitude = area != null ? area.getMaxLongitude() : null;
+        var minLatitude = area != null ? area.getMinLatitude() : null;
+        var maxLatitude = area != null ? area.getMaxLatitude() : null;
+
+        String _category1 = category1 == null ? null : category1.name();
+        String _category2 = category2 == null ? null : category2.name();
+        String _tag = tag == null ? null : tag.name();
+
+        return propertyRepository.countAll(
+                _category1,
+                _category2,
+                _tag,
+                area,
+                minLongitude,
+                maxLongitude,
+                minLatitude,
+                maxLatitude,
+                minNightlyPrice,
+                maxNightlyPrice,
+                minBeds,
+                minBathrooms,
+                minBedrooms,
+                maxGuest
+        );
     }
 
     public Long getTotalLikedByUserId(Integer userId) {
@@ -245,8 +278,6 @@ public class PropertyService {
         String _category1 = category1 == null ? null : category1.name();
         String _category2 = category2 == null ? null : category2.name();
         String _tag = tag == null ? null : tag.name();
-
-        System.out.println(sortColumn.name());
 
         List<Object[]> results = nativePropertyRepository.findAllNative(
                 sortColumn.getName(),
