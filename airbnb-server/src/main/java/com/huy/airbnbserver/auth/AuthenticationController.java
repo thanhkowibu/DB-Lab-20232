@@ -1,21 +1,22 @@
 package com.huy.airbnbserver.auth;
 
 
-import com.huy.airbnbserver.system.Result;
+import com.huy.airbnbserver.system.common.Result;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
-    @PostMapping("/register")
+    @PostMapping("/auth/register")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Result register(
             @RequestBody @Valid RegistrationRequest request
@@ -24,7 +25,7 @@ public class AuthenticationController {
         return new Result(true, 202, "Register Success");
     }
 
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public Result login(
             @RequestBody @Valid LoginRequest request
     ) {
@@ -32,7 +33,7 @@ public class AuthenticationController {
     }
 
 
-    @GetMapping("/activate")
+    @GetMapping("/auth/activate")
     public Result activate(
             @RequestParam("token") String token
     ) {
@@ -44,10 +45,15 @@ public class AuthenticationController {
         return new Result(true, code, "Transaction done", res);
     }
 
-    @GetMapping("/resend-token")
+    @GetMapping("/auth/resend-token")
     public Result resend(
             @Email @RequestParam("email") String email
     ) {
         return new Result(true, 200, authenticationService.resend(email));
+    }
+
+    @PostMapping("/validate-token")
+    public Result tokenCheck() {
+        return new Result(true, 200, "Valid Token");
     }
 }

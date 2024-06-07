@@ -12,6 +12,7 @@ import com.huy.airbnbserver.report.Issue;
 import com.huy.airbnbserver.report.ReportService;
 import com.huy.airbnbserver.report.dto.ReportDto;
 import com.huy.airbnbserver.system.*;
+import com.huy.airbnbserver.system.common.*;
 import com.huy.airbnbserver.system.exception.InvalidSearchQueryException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -151,7 +152,16 @@ public class PropertyController {
                         sortDirection);
 
 
-        Long totalProperty = propertyService.getTotalProperty();
+        Long totalProperty = propertyService.getTotalProperty(category1,
+                category2,
+                tag,
+                area,
+                minNightlyPrice,
+                maxNightlyPrice,
+                minBeds,
+                minBathrooms,
+                minBedrooms,
+                maxGuest);
         PageMetadata pageData = new PageMetadata(pageObject.getPage(), pageObject.getPageSize(), totalProperty);
 
         return new Result(
@@ -182,8 +192,6 @@ public class PropertyController {
 
         Property property = propertyDetailDtoToPropertyConverter.convert(propertyDetailDto);
         assert images != null;
-        images.forEach(System.out::println);
-
         assert property != null;
         propertyService.save(property, Utils.extractAuthenticationId(authentication), images);
 //        var savedProperty = propertyService.save(property, Utils.extractAuthenticationId(authentication), images);

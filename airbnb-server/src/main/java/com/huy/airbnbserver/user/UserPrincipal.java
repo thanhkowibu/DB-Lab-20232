@@ -1,7 +1,7 @@
 package com.huy.airbnbserver.user;
 
+import com.huy.airbnbserver.user.model.User;
 import lombok.ToString;
-import org.apache.catalina.util.StringUtil;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

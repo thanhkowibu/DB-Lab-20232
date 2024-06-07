@@ -2,12 +2,8 @@ package com.huy.airbnbserver.image;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.huy.airbnbserver.properties.Property;
-import com.huy.airbnbserver.user.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Type;
-
-import java.io.Serializable;
 
 @Entity
 @AllArgsConstructor

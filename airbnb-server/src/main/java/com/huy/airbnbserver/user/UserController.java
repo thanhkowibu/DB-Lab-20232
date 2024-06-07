@@ -1,7 +1,6 @@
 package com.huy.airbnbserver.user;
 
-import com.huy.airbnbserver.AWS.AWSBucketService;
-import com.huy.airbnbserver.image.Image;
+import com.huy.airbnbserver.notification.model.NotificationPreferences;
 import com.huy.airbnbserver.properties.PropertyService;
 import com.huy.airbnbserver.properties.converter.PropertyOverProjectionToPropertyOverProjectionDto;
 import com.huy.airbnbserver.properties.dto.PropertyOverviewPageDto;
@@ -11,15 +10,22 @@ import com.huy.airbnbserver.report.Issue;
 import com.huy.airbnbserver.report.ReportService;
 import com.huy.airbnbserver.report.dto.ReportDto;
 import com.huy.airbnbserver.system.*;
+import com.huy.airbnbserver.system.common.Page;
+import com.huy.airbnbserver.system.common.PageMetadata;
+import com.huy.airbnbserver.system.common.Result;
+import com.huy.airbnbserver.system.common.StatusCode;
 import com.huy.airbnbserver.system.exception.InvalidSearchQueryException;
 import com.huy.airbnbserver.user.converter.UserToUserDtoConverter;
+import com.huy.airbnbserver.user.dto.NotificationPreferenceDto;
 import com.huy.airbnbserver.user.dto.UserDto;
 import com.huy.airbnbserver.user.dto.UserWithPropertyDto;
+import com.huy.airbnbserver.user.model.User;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 import lombok.NonNull;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +43,6 @@ public class UserController {
     private final PropertyService propertyService;
     private final PropertyOverProjectionToPropertyOverProjectionDto converter;
     private final ReportService reportService;
-    private final AWSBucketService awsBucketService;
 
     @PreAuthorize("hasRole('ROLE_admin')")
     @GetMapping
@@ -155,8 +160,25 @@ public class UserController {
         return new Result(true, 200, "Success");
     }
 
-    @GetMapping("test")
-    public Image test(@RequestParam("file") MultipartFile multipartFile) throws IOException {
-        return awsBucketService.uploadFile(multipartFile, null);
+    @PostMapping("/{userId}/notification-preference")
+    public Result updatingPreference(@PathVariable Integer userId,
+                                     @RequestBody NotificationPreferenceDto notificationPreferenceDto,
+                                     Authentication authentication) {
+        if (!Utils.extractAuthenticationId(authentication).equals(userId)) {
+            throw new AccessDeniedException("Access denied for this user");
+        }
+
+        userService.updateNotificationPreference(notificationPreferenceDto, userId);
+        return new Result(true, 200, "Success");
+    }
+
+    @GetMapping("/{userId}/notification-preference")
+    public Result getPreference(@PathVariable Integer userId) {
+        return new Result(
+                true,
+                200,
+                "Fetching user notification preference",
+                userService.getNotificationPreference(userId)
+        );
     }
 }

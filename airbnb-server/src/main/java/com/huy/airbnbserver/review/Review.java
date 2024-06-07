@@ -1,10 +1,8 @@
-package com.huy.airbnbserver.comment;
+package com.huy.airbnbserver.review;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.huy.airbnbserver.booking.Booking;
 import com.huy.airbnbserver.report.ReportableEntity;
-import com.huy.airbnbserver.properties.Property;
-import com.huy.airbnbserver.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -20,10 +18,7 @@ import java.util.Date;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(indexes = {
-        @Index(name = "host_id_index", columnList = "property_id")
-})
-public class Comment implements ReportableEntity {
+public class Review implements ReportableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -36,6 +31,9 @@ public class Comment implements ReportableEntity {
     @Max(5)
     private Integer rating;
 
+    @Column(nullable = false)
+    private Boolean is_recommend = false;
+
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
@@ -45,24 +43,14 @@ public class Comment implements ReportableEntity {
     @UpdateTimestamp
     private Date updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "booking_id", unique = true)
     @JsonManagedReference
-    private User user;
+    private Booking booking;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "property_id")
-    @JsonBackReference
-    private Property property;
-
-
-    public void addUser(User user) {
-        this.user = user;
-    }
-
-    public void addProperty(Property property) {
-        this.property = property;
-        property.getComments().add(this);
+    public void registerBooking(Booking booking) {
+        this.booking = booking;
+        booking.setReview(this);
     }
 
     @Override

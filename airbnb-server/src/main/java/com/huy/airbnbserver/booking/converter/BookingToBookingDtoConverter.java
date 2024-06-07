@@ -21,7 +21,8 @@ public class BookingToBookingDtoConverter implements Converter<Booking, BookingD
                 source.getCleanFee(),
                 source.getServiceFee(),
                 source.getCreatedAt(),
-                source.isConfirm()
+                source.isConfirm(),
+                source.getStatus()
         );
     }
 }

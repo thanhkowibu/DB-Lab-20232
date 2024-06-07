@@ -1,6 +1,6 @@
 package com.huy.airbnbserver.properties.dto;
 
-import com.huy.airbnbserver.system.PageMetadata;
+import com.huy.airbnbserver.system.common.PageMetadata;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

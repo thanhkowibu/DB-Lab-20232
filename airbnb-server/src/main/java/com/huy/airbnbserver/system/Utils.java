@@ -2,7 +2,6 @@ package com.huy.airbnbserver.system;
 
 
 import com.huy.airbnbserver.system.exception.InvalidSearchQueryException;
-import com.huy.airbnbserver.user.User;
 import com.huy.airbnbserver.user.UserPrincipal;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.security.access.AccessDeniedException;

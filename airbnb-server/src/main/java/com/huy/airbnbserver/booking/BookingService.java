@@ -1,16 +1,24 @@
 package com.huy.airbnbserver.booking;
 
+import com.huy.airbnbserver.booking.dto.BookingDetail;
 import com.huy.airbnbserver.booking.dto.BookingDto;
 import com.huy.airbnbserver.properties.PropertyRepository;
 import com.huy.airbnbserver.system.Utils;
+import com.huy.airbnbserver.system.event.EventPublisher;
+import com.huy.airbnbserver.system.event.ui.NotificationRefType;
 import com.huy.airbnbserver.system.exception.InvalidDateArgumentException;
+import com.huy.airbnbserver.system.exception.NotModifiedException;
 import com.huy.airbnbserver.system.exception.ObjectNotFoundException;
 import com.huy.airbnbserver.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +29,8 @@ public class BookingService {
     private final UserRepository userRepository;
     private final PropertyRepository propertyRepository;
     private final BookingRepository bookingRepository;
+    private final EventPublisher eventPublisher;
+    private static final Logger LOG = LogManager.getLogger(BookingService.class);
 
     @Transactional
     public Booking save(Booking booking, Integer userId, Long propertyId) {
@@ -31,8 +41,17 @@ public class BookingService {
         booking.addUser(user);
         booking.addProperty(property);
         booking.setConfirm(false);
+        booking.setStatus(BookingStatus.PENDING.toString());
+        booking.setIsCheckedOut(false);
 
-        return bookingRepository.save(booking);
+        var newBooking = bookingRepository.save(booking);
+        eventPublisher.publishSendingNotificationEvent(
+                property.getHost().getId(),
+                propertyId,
+                "Your property has a new booking! click to see in more detail.",
+                NotificationRefType.BOOKING.name()
+        );
+        return newBooking;
     }
 
     @Transactional(readOnly = true)
@@ -60,28 +79,149 @@ public class BookingService {
         return bookingRepository.findByPropertyId(propertyId, limit, offset);
     }
 
-    @Transactional
-    public void delete(Long id, Integer userId) {
-        var deletedBooking = bookingRepository.findByIdEagerHost(id).orElseThrow(()->new ObjectNotFoundException("booking", id));
+    public BookingDetail findBookingDetail(Long id) {
+        List<Object[]> res = bookingRepository.findDetailById(id);
+        if (res.isEmpty()) {
+            throw new ObjectNotFoundException("booking", id);
+        }
 
-        if (!userId.equals(deletedBooking.getUser().getId())) {
+        return mapToBookingDetail(res.get(0));
+    }
+
+    private BookingDetail mapToBookingDetail(Object[] res) {
+        BookingDetail bookingDetail = new BookingDetail();
+
+        bookingDetail.setId((Long) res[0]);
+        bookingDetail.setCheck_in_date((Date) res[1]);
+        bookingDetail.setCheck_out_date((Date) res[2]);
+        bookingDetail.setCreated_at((Date) res[3]);
+        bookingDetail.setIs_confirm((Boolean) res[4]);
+        bookingDetail.setNightly_fee((BigDecimal) res[5]);
+        bookingDetail.setClean_fee((BigDecimal) res[6]);
+        bookingDetail.setService_fee((BigDecimal) res[7]);
+        bookingDetail.setNum_alduts((Integer) res[8]);
+        bookingDetail.setNum_childrens((Integer) res[9]);
+        bookingDetail.setNum_pets((Integer) res[10]);
+        bookingDetail.setStatus((String) res[11]);
+        bookingDetail.setIssuer_id((Integer) res[12]);
+        bookingDetail.setHost_id((Integer) res[13]);
+        bookingDetail.setProperty_id((Long) res[14]);
+        bookingDetail.setNum_guests((Long) res[15]);
+        bookingDetail.setTotal_fee((BigDecimal) res[16]);
+        bookingDetail.setIssuer_email((String) res[17]);
+        bookingDetail.setIssuer_firstname((String) res[18]);
+        bookingDetail.setIs_checked_out((Boolean) res[19]);
+
+        return bookingDetail;
+    }
+
+    @Transactional
+    public void reject(Long id, Integer userId) {
+        var rejectedBooking = findBookingDetail(id);
+
+        if (!userId.equals(rejectedBooking.getHost_id())) {
             throw new AccessDeniedException("Access denied for this user");
         }
 
-        deletedBooking.cancel();
-        bookingRepository.delete(deletedBooking);
+        if (rejectedBooking.getIs_confirm()) {
+            throw new NotModifiedException("This booking has already been confirmed");
+        }
+
+        if (!rejectedBooking.getStatus().equals(BookingStatus.PENDING.toString())) {
+            throw new NotModifiedException("This booking has already been review");
+        }
+
+        eventPublisher.publishHostReviewBookingEvent(rejectedBooking, false);
     }
 
     @Transactional
     public void confirm(Long id, Integer userId) {
-        var confirmBooking = bookingRepository.findByIdEagerPropertyHost(id).orElseThrow(()->new ObjectNotFoundException("booking", id));
-        if (!confirmBooking.getProperty().getHost().getId().equals(userId)) {
+        var confirmBooking = findBookingDetail(id);
+        if (!userId.equals(confirmBooking.getHost_id())) {
             throw new AccessDeniedException("Access denied for this user");
         }
 
-        confirmBooking.setConfirm(true);
-        bookingRepository.save(confirmBooking);
+        if (confirmBooking.getIs_confirm()) {
+            throw new NotModifiedException("This booking has already been confirmed");
+        }
+
+        bookingRepository.confirmBooking(id);
+        eventPublisher.publishHostReviewBookingEvent(confirmBooking, true);
     }
+
+    @Transactional
+    public void handleHostConfirmationForCheckOut(Long bookingId, boolean isCheckOut, Integer hostId) {
+        BookingDetail bookingDetail = findBookingDetail(bookingId);
+
+        if (!bookingDetail.getHost_id().equals(hostId)) {
+            throw new AccessDeniedException("This user dont have permission for this action.");
+        }
+
+        if (!bookingDetail.getStatus().equals("SUCCESS") || bookingDetail.getIs_checked_out()) {
+            throw new NotModifiedException("Can not check out this booking, please check its status");
+        }
+
+        if (!isCheckOut) {
+            if (bookingDetail.getCheck_out_date().after(new Date())) {
+                throw new NotModifiedException("Please way until the last day of check out date");
+            }
+            // update status to no show
+            bookingRepository.updateStatus(BookingStatus.NO_SHOW.toString(),bookingId);
+            // send a notification to user
+            eventPublisher.publishSendingNotificationEvent(
+                    bookingDetail.getIssuer_id(),
+                    bookingId,
+                    "We have acknowledge you had a booking but did not show up, click for more detail",
+                    NotificationRefType.BOOKING.name()
+            );
+        } else {
+            bookingRepository.checkOut(bookingId);
+            // send a notification to user ask for giving a review
+            eventPublisher.publishSendingNotificationEvent(
+                    bookingDetail.getIssuer_id(),
+                    bookingId,
+                    "Congratulation, your trip is not completed, " +
+                            "please consider leave a review for the property to help other user",
+                    NotificationRefType.BOOKING.name()
+            );
+            // host get the remaining 50%
+        }
+    }
+
+    @Transactional
+    public void handleCancelBooking(Long bookingId, Integer userId) {
+        BookingDetail bookingDetail = findBookingDetail(bookingId);
+
+        if (!bookingDetail.getIssuer_id().equals(userId)) {
+            throw new AccessDeniedException("This user can not take this action");
+        }
+
+        String status = bookingDetail.getStatus();
+        if (status.equals("PENDING") || status.equals("CONFIRMED") || status.equals("SUCCESS") ) {
+            bookingRepository.updateStatus(BookingStatus.CANCEL.toString(), bookingDetail.getId());
+        } else {
+            throw new NotModifiedException("This booking can not be cancel anymore");
+        }
+        if (status.equals("SUCCESS")) {
+
+            System.out.println("send a notification to host that a success booking has been canceled");
+        }
+
+    }
+
+    @Scheduled(cron = "0 0 1 * * ?") // Runs daily at 1 AM
+    public void detectNoShows() {
+        LOG.info("Auto Detect No-Show Booking Executed, Sending Notification To All Host...");
+        var bookingIds = bookingRepository.findPendingCheckoutsPastEndDate();
+        bookingIds.forEach(objects -> {
+            // objects[0] = bookingId
+            // objects[1] = hostId
+            LOG.info("Potential No-Show Booking: {id:{}, hostId:{}}", objects[0], objects[1]);
+            // send a notification ask if the user hasn't showed up
+            // or if they forgot to set the is_checked_out to be true
+        });
+    }
+
 
     public void isDateValidCheck(BookingDto bookingDto, Long propertyId) {
         if(isSameDay(bookingDto.check_in_date(), bookingDto.check_out_date())) {
@@ -95,9 +235,9 @@ public class BookingService {
         List<Date> queryDate = bookingRepository.findAllBookingDateOfProperty(propertyId);
         List<Date> fillDate = Utils.fillDateRanges(queryDate);
 
-        for (Date date : fillDate) {
-            System.out.println(date);
-        }
+//        for (Date date : fillDate) {
+//            System.out.println(date);
+//        }
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(bookingDto.check_in_date());

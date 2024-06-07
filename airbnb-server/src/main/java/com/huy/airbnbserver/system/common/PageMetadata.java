@@ -1,4 +1,4 @@
-package com.huy.airbnbserver.system;
+package com.huy.airbnbserver.system.common;
 
 import lombok.Getter;
 import lombok.Setter;
