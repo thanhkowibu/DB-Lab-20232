@@ -4,19 +4,22 @@ import { PAGE_SIZE } from "@/data/params";
 
 export const getListings = async (params: string = "") => {
   try {
-    const parsedParams = params.split("&").reduce((acc, param) => {
-      const [key, value] = param.split("=");
-      if (key !== "page_size") {
-        acc[key] = value;
-      }
-      return acc;
-    }, {} as Record<string, string>);
+    const parsedParams = params
+      .replace(/^\?/, "")
+      .split("&")
+      .reduce((acc, param) => {
+        const [key, value] = param.split("=");
+        if (key !== "page_size") {
+          acc[key] = value;
+        }
+        return acc;
+      }, {} as Record<string, string>);
 
     const newParams = queryString.stringify({
       page_size: PAGE_SIZE,
       ...parsedParams,
     });
-
+    // console.log(newParams);
     const listings = await propertyApi.getList(newParams);
     const data = listings.data;
     return data;

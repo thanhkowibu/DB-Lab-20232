@@ -28,4 +28,7 @@ export type ContextProps = {
   logoutUser: () => void;
   isLoggedIn: () => boolean;
   isLoading: boolean;
+  isSearchOpen: boolean;
+  onSearchOpen: () => void;
+  onSearchClose: () => void;
 };

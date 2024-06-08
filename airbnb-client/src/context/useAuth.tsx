@@ -16,6 +16,7 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
   const [token, setToken] = useState<string | null>(null);
   const [fav, setFav] = useState<number[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -118,6 +119,14 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
     setFav([]);
   };
 
+  const onSearchOpen = () => {
+    setIsSearchOpen(true);
+  };
+
+  const onSearchClose = () => {
+    setIsSearchOpen(false);
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -132,6 +141,9 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
         activate,
         logoutUser,
         isLoading,
+        isSearchOpen,
+        onSearchOpen,
+        onSearchClose,
       }}
     >
       {!isLoading && children}

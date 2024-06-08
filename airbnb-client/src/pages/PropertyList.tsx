@@ -24,6 +24,7 @@ export const PropertyList = () => {
     const fetchData = async () => {
       setIsLoading(true);
       await delay(1000);
+      // console.log(tag);
       const { pagination_meta_data, properties, err } = await getListings(tag);
       if (pagination_meta_data) setLastpage(pagination_meta_data.last_page);
       if (properties) setListings(properties);
@@ -35,9 +36,15 @@ export const PropertyList = () => {
 
   return (
     <>
-      {listings?.length === 0 ? (
+      {isLoading ? (
+        <div className="pt-20 px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {Array.from({ length: 20 }, (_, i) => i + 1).map((_, index) => (
+            <PropertyOverviewSkeleton key={`${Math.random()}-${index}`} />
+          ))}
+        </div>
+      ) : listings?.length === 0 ? (
         <EmptyState showReset />
-      ) : !isLoading ? (
+      ) : (
         <div className="pt-20 pb-8 px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {listings?.map((listing: PropertyOverviewProps) => (
             <ListingCard
@@ -46,12 +53,6 @@ export const PropertyList = () => {
             />
           ))}
           <LoadMore params={tag} lastpage={lastpage} />
-        </div>
-      ) : (
-        <div className="pt-20 px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {Array.from({ length: 20 }, (_, i) => i + 1).map((_, index) => (
-            <PropertyOverviewSkeleton key={`${Math.random()}-${index}`} />
-          ))}
         </div>
       )}
     </>
