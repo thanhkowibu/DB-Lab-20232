@@ -1,12 +1,14 @@
 import { ResultProps } from "@/types/global.types";
 import publicClient from "../client/public.client";
 import { LoginReqProps, RegisterReqProps } from "@/types/users.types";
+import privateClient from "../client/private.client";
 
 const authEndpoints = {
   login: "auth/login",
   register: "auth/register",
   activate: (token: string) => `/auth/activate?token=${token}`,
   resend_token: (email: string) => `/auth/resend-token?email=${email}`,
+  validate: () => "/validate-token",
 };
 
 const authApi = {
@@ -41,6 +43,10 @@ const authApi = {
     const res: ResultProps = await publicClient.get(
       authEndpoints.resend_token(email)
     );
+    return res;
+  },
+  validate: async () => {
+    const res: ResultProps = await privateClient.post(authEndpoints.validate());
     return res;
   },
 };

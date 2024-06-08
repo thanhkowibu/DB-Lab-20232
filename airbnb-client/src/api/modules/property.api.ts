@@ -20,6 +20,7 @@ const propertyApi = {
       ...parsedParams,
       page_size: PAGE_SIZE,
     });
+    // console.log("?" + newParams);
 
     const res: ResultProps = await publicClient.get(
       propertyEndpoints.list("?" + newParams)

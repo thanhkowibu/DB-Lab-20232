@@ -216,3 +216,35 @@ body,
 .rdrDayNumber span {
   font-weight: 400;
 }
+
+.slider {
+  width: 100%;
+  background: #ddd;
+  margin-top: 30px;
+}
+
+.slider-thumb {
+  width: 23px;
+  height: 23px;
+  cursor: grab;
+  background: #fff;
+  border-radius: 50%;
+  border: 2px solid #222;
+  top: -10px;
+}
+
+.slider-track {
+  height: 2px;
+}
+
+.slider-track-0 {
+  background-color: #ddd;
+}
+
+.slider-track-1 {
+  background-color: #222 !important;
+}
+
+.slider-track-2 {
+  background-color: #ddd;
+}

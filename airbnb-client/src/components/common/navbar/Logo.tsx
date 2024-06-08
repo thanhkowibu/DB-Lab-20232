@@ -6,7 +6,7 @@ export const Logo = () => {
   return (
     <img
       onClick={() => {
-        navigate("/properties?page_size=24");
+        navigate("/properties");
         window.scrollTo({ top: 0 });
       }}
       alt="Logo"
