@@ -36,10 +36,10 @@ public class NativePropertyRepository {
             GROUP_CONCAT(DISTINCT i.id) AS imageIds,
             GROUP_CONCAT(DISTINCT i.url) AS imageUrls,
             GROUP_CONCAT(DISTINCT i.name) AS imageNames,
-            COALESCE(AVG(c.rating), 0) AS averageRating
+            COALESCE(AVG(r.rating), 0) AS averageRating
         FROM property p
         LEFT JOIN image i ON p.id = i.property_id
-        LEFT JOIN comment c ON p.id = c.property_id
+        LEFT JOIN booking b on b.property_id = p.id LEFT JOIN review r on r.booking_id = b.id
         WHERE (:category1 IS NULL OR EXISTS
             (SELECT 1 FROM property_categories pc1 WHERE pc1.property_id = p.id AND pc1.categories = :category1))
         AND (:category2 IS NULL OR EXISTS

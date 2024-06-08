@@ -2,13 +2,14 @@ package com.huy.airbnbserver.auth;
 
 import com.huy.airbnbserver.email.EmailService;
 import com.huy.airbnbserver.email.EmailTemplateName;
+import com.huy.airbnbserver.notification.model.NotificationPreferences;
 import com.huy.airbnbserver.properties.PropertyRepository;
 import com.huy.airbnbserver.security.JwtService;
 import com.huy.airbnbserver.security.token.Token;
 import com.huy.airbnbserver.security.token.TokenRepository;
 import com.huy.airbnbserver.system.exception.EntityAlreadyExistException;
 import com.huy.airbnbserver.system.exception.ObjectNotFoundException;
-import com.huy.airbnbserver.user.User;
+import com.huy.airbnbserver.user.model.User;
 import com.huy.airbnbserver.user.UserPrincipal;
 import com.huy.airbnbserver.user.UserRepository;
 import com.huy.airbnbserver.user.converter.UserToUserDtoConverter;
@@ -50,6 +51,14 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEnabled(false);
         user.setRoles("user");
+
+        var notificationPreferences = new NotificationPreferences();
+        notificationPreferences.setNotifyOnSpecialOffers(true);
+        notificationPreferences.setNotifyOnHostedPropertyRating(true);
+        notificationPreferences.setNotifyOnHostedPropertyBooked(true);
+        notificationPreferences.setNotifyOnHostedPropertyLike(true);
+        notificationPreferences.setNotifyOnBookingStatusChange(true);
+        notificationPreferences.ofUser(user);
 
         userRepository.save(user);
         sendValidationEmail(user);

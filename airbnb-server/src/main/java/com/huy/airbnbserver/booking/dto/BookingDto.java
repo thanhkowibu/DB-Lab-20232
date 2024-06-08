@@ -32,7 +32,8 @@ public record BookingDto(
         BigDecimal service_fee,
 
         Date created_at,
-        boolean is_confirm
+        boolean is_confirm,
+        String status
 ) {
 
 }

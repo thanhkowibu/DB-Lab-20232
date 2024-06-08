@@ -1,4 +1,4 @@
-package com.huy.airbnbserver.system;
+package com.huy.airbnbserver.system.common;
 public class StatusCode {
 
     public static final int SUCCESS = 200; // Success

@@ -1,7 +1,7 @@
 package com.huy.airbnbserver.system.exception;
 
-import com.huy.airbnbserver.system.Result;
-import com.huy.airbnbserver.system.StatusCode;
+import com.huy.airbnbserver.system.common.Result;
+import com.huy.airbnbserver.system.common.StatusCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
@@ -95,6 +95,12 @@ public class ExceptionHandlerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     Result handleInvalidSearchQueryException(InvalidSearchQueryException exception) {
         return new Result(false, StatusCode.INVALID_ARGUMENT, "Invalid Search Query Parameter", exception.getMessage());
+    }
+
+    @ExceptionHandler(NotModifiedException.class)
+    @ResponseStatus(HttpStatus.NOT_MODIFIED)
+    Result handleNotModifiedException(NotModifiedException ex) {
+        return new Result(false, 304, ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

@@ -2,7 +2,7 @@ export const Image = ({ path }: { path: string | undefined }) => {
   if (path === undefined)
     return (
       <img
-        src="/images/default-house.jpg"
+        src="/images/noimage.jpg"
         className="object-cover size-full group-hover:scale-105 transition"
       />
     );

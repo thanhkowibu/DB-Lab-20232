@@ -1,6 +1,6 @@
 package com.huy.airbnbserver.security.token;
 
-import com.huy.airbnbserver.user.User;
+import com.huy.airbnbserver.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,7 +1,7 @@
 package com.huy.airbnbserver.report;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.huy.airbnbserver.user.User;
+import com.huy.airbnbserver.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

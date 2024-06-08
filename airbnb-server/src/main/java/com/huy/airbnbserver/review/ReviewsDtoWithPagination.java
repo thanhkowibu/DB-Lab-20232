@@ -1,6 +1,6 @@
-package com.huy.airbnbserver.comment.dto;
+package com.huy.airbnbserver.review;
 
-import com.huy.airbnbserver.system.PageMetadata;
+import com.huy.airbnbserver.system.common.PageMetadata;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CommentsWithPaginationDto {
+public class ReviewsDtoWithPagination {
     PageMetadata pagination_meta_data;
-    List<CommentDto> comments;
+    List<ReviewDto> reviews;
 }
