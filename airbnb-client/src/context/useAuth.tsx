@@ -72,7 +72,7 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
         setToken(data.access_token);
         setUser(data.user_info);
         setFav(data.favorites);
-        navigate("/properties?page_size=24");
+        navigate("/properties");
       }
     } catch (err: any) {
       console.log(err);
@@ -119,6 +119,11 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
     setFav([]);
   };
 
+  const updateUser = (updatedUser: any) => {
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+  };
+
   const onSearchOpen = () => {
     setIsSearchOpen(true);
   };
@@ -140,6 +145,7 @@ export const GlobalContextProvider = ({ children }: ContextProviderProps) => {
         resendToken,
         activate,
         logoutUser,
+        updateUser,
         isLoading,
         isSearchOpen,
         onSearchOpen,

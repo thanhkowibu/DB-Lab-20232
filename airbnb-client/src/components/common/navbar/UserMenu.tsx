@@ -37,7 +37,7 @@ export const UserMenu = () => {
           className="p-4 md:px-2 md:py-1 border-2 border-neutral-200 flex items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition"
         >
           <AiOutlineMenu />
-          <div className="hidden md:block">
+          <div className="hidden md:block aspect-square">
             <Avatar path={user?.avatar?.path} />
           </div>
         </div>
@@ -50,6 +50,7 @@ export const UserMenu = () => {
                 <DropdownItem
                   onClick={() => {
                     navigate("/trips");
+                    setIsOpen(false);
                   }}
                   label="Trips"
                   isBold
@@ -57,6 +58,7 @@ export const UserMenu = () => {
                 <DropdownItem
                   onClick={() => {
                     navigate("/favourites");
+                    setIsOpen(false);
                   }}
                   label="Wishlists"
                   isBold
@@ -64,25 +66,25 @@ export const UserMenu = () => {
                 <DropdownItem
                   onClick={() => {
                     navigate("/hosting");
+                    setIsOpen(false);
                   }}
                   label="Manage listings"
                 />
                 <DropdownItem
                   onClick={() => {
                     navigate(`/users/${user?.id}`);
+                    setIsOpen(false);
                   }}
                   label="Account"
                 />
                 <DropdownItem
                   onClick={() => {
                     navigate("/help");
+                    setIsOpen(false);
                   }}
                   label="Help"
                 />
-                <DropdownItem
-                  onClick={logoutUser}
-                  label="Logout"
-                />
+                <DropdownItem onClick={logoutUser} label="Logout" />
               </>
             ) : (
               <>
@@ -103,14 +105,8 @@ export const UserMenu = () => {
                   }}
                   label="Login"
                 />
-                <DropdownItem
-                  onClick={() => {}}
-                  label="Suck your dick"
-                />
-                <DropdownItem
-                  onClick={() => {}}
-                  label="Help"
-                />
+                <DropdownItem onClick={() => {}} label="Suck your dick" />
+                <DropdownItem onClick={() => {}} label="Help" />
               </>
             )}
           </div>

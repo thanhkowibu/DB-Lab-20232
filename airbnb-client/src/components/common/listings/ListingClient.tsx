@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { differenceInCalendarDays } from "date-fns";
 import ListingReservation from "./ListingReservation";
 import { Range } from "react-date-range";
+import { useNavigate } from "react-router-dom";
 
 const initialDateRange = {
   startDate: new Date(),
@@ -20,22 +21,28 @@ type Props = {
 };
 
 export const ListingClient = ({ listing }: Props) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [totalPrice, setTotalPrice] = useState(listing.nightly_price);
   const [dateRange, setDateRange] = useState<Range>(initialDateRange);
 
   const tag = tagsArray.find((item) => item.value === listing.tag.toString());
 
+  const navigate = useNavigate();
+
   const categories = categoriesArray.filter((category) =>
     listing.categories.toString().includes(category.value)
   );
 
-  const handleBooking = async () => {
-    setIsLoading(true);
-    // Post Booking API...
-    console.log(totalPrice, dateRange.startDate, dateRange.endDate, listing.id);
-    // Redirect to /trips
-    setIsLoading(false);
+  const handleBooking = () => {
+    navigate(`/booking/${listing.id}`, {
+      state: {
+        totalPrice: totalPrice,
+        nightlyPrice: listing.nightly_price,
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate,
+        listingId: listing.id,
+        maxGuests: listing.max_guests,
+      },
+    });
   };
 
   useEffect(() => {
@@ -86,7 +93,6 @@ export const ListingClient = ({ listing }: Props) => {
                 onChangeDate={(value) => setDateRange(value)}
                 dateRange={dateRange}
                 onSubmit={handleBooking}
-                disabled={isLoading}
                 disabledDates={listing.booking_date}
               />
             </div>
