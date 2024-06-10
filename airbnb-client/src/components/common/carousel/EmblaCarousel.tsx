@@ -29,7 +29,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
       <div className="size-full flex" ref={emblaRef}>
         <div className="size-full flex">
           {slides.map((slide, index) => (
-            <div className="embla__slide" key={index}>
+            <div className="embla__slide " key={index}>
               {slide}
             </div>
           ))}

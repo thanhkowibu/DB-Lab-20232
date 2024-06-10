@@ -248,3 +248,37 @@ body,
 .slider-track-2 {
   background-color: #ddd;
 }
+
+.utl {
+  --slide-height: 19rem;
+  --slide-spacing: 1rem;
+  --slide-size: 33.4%;
+}
+.utl__viewport {
+  overflow: hidden;
+}
+.utl__container {
+  backface-visibility: hidden;
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+  margin-left: calc(var(--slide-spacing) * -1);
+}
+.utl__slide {
+  flex: 0 0 var(--slide-size);
+  min-width: 0;
+  padding-left: var(--slide-spacing);
+}
+
+.utl__button {
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 1);
+  color: #000;
+  border: 2px;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);
+}

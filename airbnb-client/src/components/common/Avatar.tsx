@@ -5,13 +5,14 @@ export const Avatar = ({
   path: string | undefined;
   size?: string;
 }) => {
+  const dimension = size ? size : "size-8";
   return (
-    <img
-      className="rounded-full"
-      height={size ? size : "30"}
-      width={size ? size : "30"}
-      alt="Avatar"
-      src={path ? path : "/images/sensei-face.jpg"}
-    />
+    <div className={`aspect-ratio overflow-hidden ${dimension}`}>
+      <img
+        className="rounded-full object-cover size-full"
+        alt="Avatar"
+        src={path ? path : "/images/sensei-face.jpg"}
+      />
+    </div>
   );
 };

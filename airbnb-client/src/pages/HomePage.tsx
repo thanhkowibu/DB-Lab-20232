@@ -119,7 +119,7 @@ const squareData = [
   },
   {
     id: 12,
-    src: "http://localhost:9000/airbnb-media/b89ccc03-19f1-4373-a603-355a7b360bdf.jpg",
+    src: "http://localhost:9000/airbnb-media/f4be7cb7-4ff1-4ad9-968e-518a131940a6.jpg",
   },
   {
     id: 13,

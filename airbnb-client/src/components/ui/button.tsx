@@ -22,6 +22,10 @@ const buttonVariants = cva(
           "relative disabled:opacity-70 disabled:cursor-not-allowed rounded-lg hover:opacity-80 transition w-full bg-rose-500 border-rose-500 text-white py-3 text-md font-semibold border-2",
         airbnbOutline:
           "relative disabled:opacity-70 disabled:cursor-not-allowed rounded-lg hover:bg-neutral-100 transition w-full bg-white border-black text-black py-3 text-md font-semibold border-2",
+        ghostbnb:
+          "hover:bg-neutral-200 hover:text-accent-foreground rounded-full cursor-pointer select-none transition",
+        activebnb:
+          "bg-rose-500 text-white rounded-full cursor-pointer select-none",
       },
       size: {
         default: "h-10 px-4 py-2",

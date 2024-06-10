@@ -18,7 +18,7 @@ export const ListingCreated = () => {
       <div className="flex flex-col gap-5 w-[20%]">
         <button
           className="bg-rose-500 py-3 mt-5 px-10 text-white text-base hover:bg-rose-600 font-medium rounded-lg cursor-pointer"
-          onClick={() => navigate("/properties?page=1&page_size=24")}
+          onClick={() => navigate("/properties")}
         >
           Visit home page
         </button>

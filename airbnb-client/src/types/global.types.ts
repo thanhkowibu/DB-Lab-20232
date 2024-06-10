@@ -26,6 +26,7 @@ export type ContextProps = {
   resendToken: (email: string) => Promise<ResultProps | undefined>;
   activate: (token: string) => Promise<ResultProps | undefined>;
   logoutUser: () => void;
+  updateUser: (updatedUser: UserProps) => void;
   isLoggedIn: () => boolean;
   isLoading: boolean;
   isSearchOpen: boolean;

@@ -3,13 +3,9 @@ import { IconType } from "react-icons";
 import { Avatar } from "../Avatar";
 import ListingTag from "./ListingTag";
 import { useCountry } from "@/hooks/useGeocoding";
-import {
-  differenceInYears,
-  differenceInMonths,
-  differenceInWeeks,
-  differenceInDays,
-} from "date-fns";
 import ListingCategories from "./ListingCategories";
+import { getHostingTime } from "@/utils/hostingTime";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   host: UserProps;
@@ -57,24 +53,9 @@ const ListingInfo: React.FC<Props> = ({
   //   console.log(tag);
   const country = useCountry(latitude, longitude);
 
-  const years = differenceInYears(new Date(), new Date(host.created_at));
-  const months = differenceInMonths(new Date(), new Date(host.created_at));
-  const weeks = differenceInWeeks(new Date(), new Date(host.created_at));
-  const days = differenceInDays(new Date(), new Date(host.created_at));
+  const hostingTime = getHostingTime(host.created_at);
 
-  let hostingTime;
-
-  if (years > 0) {
-    hostingTime = `${years} years on Mikabnb`;
-  } else if (months > 0) {
-    hostingTime = `${months} months on Mikabnb`;
-  } else if (weeks > 0) {
-    hostingTime = `${weeks} weeks on Mikabnb`;
-  } else if (days > 0) {
-    hostingTime = `${days} days on Mikabnb`;
-  } else {
-    hostingTime = "Mikabnb newcomer";
-  }
+  const navigate = useNavigate();
 
   return (
     <div className="col-span-4 flex flex-col gap-4">
@@ -97,8 +78,11 @@ const ListingInfo: React.FC<Props> = ({
           </div>
         </div>
         <hr />
-        <div className="flex items-center gap-6 w-fit rounded-xl py-2 hover:brightness-90 transition duration-300 cursor-pointer">
-          <Avatar path={host.avatar?.path || undefined} size="50" />
+        <div
+          onClick={() => navigate(`/users/${host.id}`)}
+          className="flex items-center gap-6 w-fit rounded-xl py-2 hover:brightness-90 transition duration-300 cursor-pointer"
+        >
+          <Avatar path={host.avatar?.path || undefined} size="size-14" />
           <div className="flex flex-col">
             <div className="font-semibold tracking-wide text-lg">
               Hosted by {host.lastname} {host.firstname}

@@ -21,24 +21,9 @@ import * as yup from "yup";
 import { PropertyReqProps } from "@/types/properties.types";
 import toast from "react-hot-toast";
 import { createListing } from "@/action/createListing";
-import { ResultProps } from "@/types/global.types";
 import { useAuth } from "@/context/useAuth";
 import { useNavigate } from "react-router-dom";
 
-// const schema = yup.object().shape({
-//   nightly_price: yup.number().required(),
-//   name: yup.string().required(),
-//   longitude: yup.number().required(),
-//   latitude: yup.number().required(),
-//   max_guests: yup.number().required(),
-//   num_beds: yup.number().required(),
-//   num_bedrooms: yup.number().required(),
-//   num_bathrooms: yup.number().required(),
-//   description: yup.string().required(),
-//   address_line: yup.string().required(),
-//   categories: yup.array().of(yup.string().required()).required(),
-//   tag: yup.string().required(),
-// });
 const schema = yup.object().shape({
   nightly_price: yup.number(),
   name: yup.string(),
@@ -130,7 +115,7 @@ export const CreateProperty = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+
     getValues,
     setValue,
     watch,

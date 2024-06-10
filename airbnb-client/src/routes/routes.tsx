@@ -3,7 +3,6 @@ import { FavouristList } from "@/pages/FavouristList";
 import { HomePage } from "@/pages/HomePage";
 import { PropertyDetail } from "@/pages/PropertyDetail";
 import { PropertyList } from "@/pages/PropertyList";
-import { PasswordUpdate } from "@/pages/PasswordUpdate";
 import { UserDetail } from "@/pages/UserDetail";
 import ProtectedRoute from "./ProtectedRoute";
 import { CreateProperty } from "@/pages/CreateProperty";
@@ -11,6 +10,8 @@ import TripPage from "@/pages/TripPage";
 import BookingPage from "@/pages/BookingPage";
 import HostingPage from "@/pages/HostingPage";
 import HelpPage from "@/pages/HelpPage";
+import PageNotFound from "@/pages/PageNotFound";
+import UserProperties from "@/pages/UserProperties";
 
 export const routesGen = {
   home: "/",
@@ -49,6 +50,11 @@ const routes = [
   {
     path: "/users/:id",
     element: <UserDetail />,
+    state: "user.detail",
+  },
+  {
+    path: "/users/:id/properties",
+    element: <UserProperties />,
     state: "user.detail",
   },
   {
@@ -96,13 +102,8 @@ const routes = [
     ),
   },
   {
-    path: "/password_update",
-    element: (
-      <ProtectedRoute>
-        <PasswordUpdate />
-      </ProtectedRoute>
-    ),
-    state: "password.update",
+    path: "/404",
+    element: <PageNotFound />,
   },
 ];
 
