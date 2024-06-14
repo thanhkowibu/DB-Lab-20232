@@ -8,8 +8,16 @@ type Props = {
   onUpdate: (id: bigint) => void;
 };
 
-const HostedPropertyItem: React.FC<Props> = ({}) => {
-  return <div>item</div>;
+const HostedPropertyItem: React.FC<Props> = ({
+  id,
+  preview_img,
+  pname,
+  lat,
+  long,
+  created_at,
+  onUpdate,
+}) => {
+  return <div>item {pname}</div>;
 };
 
 export default HostedPropertyItem;
