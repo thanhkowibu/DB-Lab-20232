@@ -11,6 +11,7 @@ const userEndpoints = {
   report: (id: number) => `users/${id}/report`,
   getHosted: (id: number, page: number) =>
     `users/${id}/properties?page_size=8&page=${page}`,
+  notification: (id: number) => `users/${id}/notification-preference`,
 };
 
 const userApi = {
@@ -81,6 +82,28 @@ const userApi = {
   getHosted: async (id: number, page: number) => {
     const res: ResultProps = await publicClient.get(
       userEndpoints.getHosted(id, page)
+    );
+    return res;
+  },
+  getNotiPref: async (id: number) => {
+    const res: ResultProps = await privateClient.get(
+      userEndpoints.notification(id)
+    );
+    return res;
+  },
+  updateNotiPref: async (
+    id: number,
+    data: {
+      notifyOnHostedPropertyRating: boolean;
+      notifyOnHostedPropertyLike: boolean;
+      notifyOnHostedPropertyBooked: boolean;
+      notifyOnBookingStatusChange: boolean;
+      notifyOnSpecialOffers: boolean;
+    }
+  ) => {
+    const res: ResultProps = await privateClient.put(
+      userEndpoints.notification(id),
+      data
     );
     return res;
   },
