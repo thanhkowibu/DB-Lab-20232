@@ -7,7 +7,6 @@ import { ListingCard } from "@/components/common/listings/ListingCard";
 import PropertyOverviewSkeleton from "@/components/common/skeleton/PropertyOverviewSkeleton";
 import { PropertyOverviewProps } from "@/types/properties.types";
 import { UserDetailProps, UserProps } from "@/types/users.types";
-import { delay } from "@/utils/delay";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -27,7 +26,6 @@ const UserProperties = () => {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      await delay(1000);
       try {
         const { data }: { data: UserDetailProps } = await getUserDetail(
           Number(userId)
