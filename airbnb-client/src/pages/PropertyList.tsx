@@ -23,7 +23,7 @@ export const PropertyList = () => {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      await delay(1000);
+      // await delay(1000);
       // console.log(tag);
       const { pagination_meta_data, properties, err } = await getListings(tag);
       if (pagination_meta_data) setLastpage(pagination_meta_data.last_page);

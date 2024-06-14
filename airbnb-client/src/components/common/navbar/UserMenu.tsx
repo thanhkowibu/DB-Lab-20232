@@ -29,9 +29,9 @@ export const UserMenu = () => {
           }}
           className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-200 transition cursor-pointer"
         >
-          Suck your dick
+          Mikabnb your house
         </div>
-        <NotificationButton receiverId={2} />
+        {user && <NotificationButton receiverId={user.id} />}
         <div
           onClick={toggleOpen}
           className="p-4 md:px-2 md:py-1 border-2 border-neutral-200 flex items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition"

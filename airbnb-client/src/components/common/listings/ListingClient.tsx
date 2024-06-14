@@ -9,6 +9,7 @@ import { differenceInCalendarDays } from "date-fns";
 import ListingReservation from "./ListingReservation";
 import { Range } from "react-date-range";
 import { useNavigate } from "react-router-dom";
+import { usePlacename } from "@/hooks/useGeocoding";
 
 const initialDateRange = {
   startDate: new Date(),
@@ -25,6 +26,8 @@ export const ListingClient = ({ listing }: Props) => {
   const [dateRange, setDateRange] = useState<Range>(initialDateRange);
 
   const tag = tagsArray.find((item) => item.value === listing.tag.toString());
+  const location = usePlacename(listing.latitude, listing.longitude);
+  const longTitle = `${listing.name} in ${location}`;
 
   const navigate = useNavigate();
 
@@ -41,6 +44,11 @@ export const ListingClient = ({ listing }: Props) => {
         endDate: dateRange.endDate,
         listingId: listing.id,
         maxGuests: listing.max_guests,
+        longTitle: longTitle,
+        address: listing.address_line,
+        listingImg: listing.images[0].path,
+        rating: listing.average_rating,
+        reviewCount: listing.total_rating,
       },
     });
   };
@@ -64,10 +72,8 @@ export const ListingClient = ({ listing }: Props) => {
       <div className="max-w-[1150px] mx-auto pb-36">
         <div className="flex flex-col gap-6">
           <ListingHead
-            title={listing.name}
+            title={longTitle}
             imageSrc={listing.images}
-            latitude={listing.latitude}
-            longitude={listing.longitude}
             id={listing.id}
           />
           <div className="grid grid-cols-1 md:grid-cols-7 md:gap-10">
