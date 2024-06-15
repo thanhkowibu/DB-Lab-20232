@@ -13,17 +13,31 @@ public class DBInit implements CommandLineRunner {
     private final FakerService fakerService;
 
     @Override
-    public void run(String... args) throws Exception {
-//        for (int i = 0; i < 300; i++) {
-//            fakerService.generateProperty();
-//        }
-//
+    public void run(String... args) {
+
 //        for (int i = 0; i < 2000; i++) {
-//            fakerService.generateComment();
+//            try {
+//                fakerService.generateProperty();
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
 //        }
 //
-//        for (int i = 0; i < 50; i++) {
-//            fakerService.generateBooking();
+//        for (int i = 0; i < 3000; i++) {
+//            try {
+//                fakerService.generateUser();
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
 //        }
+//
+//        for (int i = 0; i < 15000; i++) {
+//            try {
+//                fakerService.generateBooking();
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
+//        }
+//        fakerService.generateReviewsForCheckOutBookings();
     }
 }

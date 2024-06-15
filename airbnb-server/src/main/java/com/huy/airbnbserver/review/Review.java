@@ -18,6 +18,9 @@ import java.util.Date;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "review", indexes = {
+        @Index(name = "idx_review_booking_id", columnList = "booking_id")
+})
 public class Review implements ReportableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

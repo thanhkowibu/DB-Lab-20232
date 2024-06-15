@@ -36,18 +36,18 @@ public enum Area {
 
     // Australia
     eastern_australia(135.0, 155.0, -45.0, -10.0),
-    western_australia(113.0, 135.0, -35.0, -10.0),
+    western_australia(113.0, 135.0, -35.0, -10.0);
 
     // Antarctica
-    eastern_antarctica(0.0, 180.0, -90.0, -60.0),
-    western_antarctica(-180.0, 0.0, -90.0, -60.0),
-
-    // Oceans
-    pacific_ocean(-180.0, 180.0, -60.0, 60.0),
-    atlantic_ocean(-80.0, 20.0, -60.0, 60.0),
-    indian_ocean(20.0, 146.0, -60.0, 30.0),
-    southern_ocean(-180.0, 180.0, -90.0, -60.0),
-    arctic_ocean(-180.0, 180.0, 60.0, 90.0);
+//    eastern_antarctica(0.0, 180.0, -90.0, -60.0),
+//    western_antarctica(-180.0, 0.0, -90.0, -60.0),
+//
+//    // Oceans
+//    pacific_ocean(-180.0, 180.0, -60.0, 60.0),
+//    atlantic_ocean(-80.0, 20.0, -60.0, 60.0),
+//    indian_ocean(20.0, 146.0, -60.0, 30.0),
+//    southern_ocean(-180.0, 180.0, -90.0, -60.0),
+//    arctic_ocean(-180.0, 180.0, 60.0, 90.0);
 
     private final double minLongitude;
     private final double maxLongitude;

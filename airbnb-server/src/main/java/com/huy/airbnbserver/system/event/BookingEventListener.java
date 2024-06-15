@@ -1,5 +1,6 @@
 package com.huy.airbnbserver.system.event;
 
+import com.huy.airbnbserver.booking.BookingLogDes;
 import com.huy.airbnbserver.booking.BookingRepository;
 import com.huy.airbnbserver.booking.BookingStatus;
 import com.huy.airbnbserver.system.event.booking.*;
@@ -27,11 +28,15 @@ public class BookingEventListener {
         try {
             if (event.getIsConfirm()) {
                 LOG.info("HOST CONFIRM BOOKING {}", booking.getId());
-                bookingRepository.updateStatus(BookingStatus.CONFIRMED.toString(), booking.getId());
+                bookingRepository.confirmBooking(booking.getId());
+                bookingRepository.log(
+                        BookingStatus.CONFIRMED.toString(),
+                        booking.getId(),
+                        BookingLogDes.CONFIRMED.getDescription()
+                );
                 eventPublisher.publishPaymentProcessedEvent(booking);
             } else {
                 LOG.info("HOST REJECT BOOKING {}", booking.getId());
-                bookingRepository.updateStatus(BookingStatus.REJECTED.toString(), booking.getId());
                 eventPublisher.publishBookingRejectEvent(booking, "Host rejected booking");
             }
         } catch (Exception exception) {
@@ -49,10 +54,8 @@ public class BookingEventListener {
         try {
             Boolean paymentSuccess = processPayment(booking.getHost_id(), booking.getIssuer_id());
             if (paymentSuccess) {
-                bookingRepository.updateStatus(BookingStatus.SUCCESS.toString(), booking.getId());
                 eventPublisher.publishBookingSuccessEvent(booking);
             } else {
-                booking.setStatus(BookingStatus.REJECTED.toString());
                 eventPublisher.publishBookingRejectEvent(
                         booking,
                         "Payment failed, not enough balance");
@@ -73,9 +76,15 @@ public class BookingEventListener {
 
 
     @EventListener
-    @Async
+    @Transactional
     public void handleBookingSuccessEvent(BookingSuccessEvent event) {
         var booking = event.getBooking();
+        bookingRepository.updateStatus(BookingStatus.SUCCESS.toString(), booking.getId());
+        bookingRepository.log(
+                BookingStatus.SUCCESS.toString(),
+                booking.getId(),
+                BookingLogDes.SUCCESS.getDescription()
+        );
         LOG.info("Booking {} successful", booking.getId());
         eventPublisher.publishSendingBookingEmailEvent(booking);
         eventPublisher.publishSendingNotificationEvent(
@@ -86,9 +95,15 @@ public class BookingEventListener {
     }
 
     @EventListener
-    @Async
+    @Transactional
     public void handleBookingRejectEvent(BookingRejectEvent event) {
         var booking = event.getBooking();
+        bookingRepository.updateStatus(BookingStatus.REJECTED.toString(), booking.getId());
+        bookingRepository.log(
+                BookingStatus.REJECTED.toString(),
+                booking.getId(),
+                BookingLogDes.REJECTED.getDescription() + event.getReason()
+        );
         LOG.info("Booking {} rejected:, Reason: {}" ,booking.getId(),event.getReason());
         eventPublisher.publishSendingNotificationEvent(
                 booking.getIssuer_id(),

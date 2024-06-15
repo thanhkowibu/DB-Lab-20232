@@ -22,7 +22,7 @@ public class ReviewService {
     private final PropertyService propertyService;
     private final BookingRepository bookingRepository;
 
-    public Review addReview(ReviewDto reviewDto, Long bookingId, Integer userId) {
+    public void addReview(ReviewDto reviewDto, Long bookingId, Integer userId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(
                 () -> new ObjectNotFoundException("Booking", bookingId)
         );
@@ -40,8 +40,10 @@ public class ReviewService {
         review.setContent(reviewDto.content());
         review.setIs_recommend(reviewDto.is_recommend());
         review.registerBooking(booking);
-        return reviewRepository.save(review);
+        reviewRepository.save(review);
+//        return review;
     }
+
 
     public Review findById(Long id) {
         return reviewRepository.findByIdLazy(id).orElseThrow(

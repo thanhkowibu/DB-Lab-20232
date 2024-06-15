@@ -48,7 +48,7 @@ public class NotificationController {
     @GetMapping(value = "/notifications/test")
     public void test() {
          sendNotification(
-                new SendingNotificationEvent(NotificationRefType.BOOKING.name(),2,1L,"Your property has a new booking, click to see more in detail"));
+                new SendingNotificationEvent(NotificationRefType.BOOKING.name(),1,1L,"Testing notification"));
     }
 
     public void sendNotification(SendingNotificationEvent event) {

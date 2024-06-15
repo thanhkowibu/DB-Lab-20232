@@ -23,22 +23,37 @@ public class Utils {
         }
     }
 
-    public static List<Date> fillDateRanges(List<Date> inputDates) {
+//    public static List<Date> fillDateRanges(List<Date> inputDates) {
+//        List<Date> filledDates = new ArrayList<>();
+//        if (inputDates.size() % 2 != 0) {
+//            throw new RuntimeException("Input list must have an even number of dates");
+//        }
+//
+//        Collections.sort(inputDates);
+//
+//        for (int i = 0; i < inputDates.size(); i += 2) {
+//            Date checkInDate = inputDates.get(i);
+//            Date checkOutDate = inputDates.get(i + 1);
+//            List<Date> dateRange = getDateRange(checkInDate, checkOutDate);
+//            filledDates.addAll(dateRange);
+//        }
+//        return filledDates;
+//    }
+
+    public static List<Date> fillDateRanges(List<Object[]> inputDates) {
         List<Date> filledDates = new ArrayList<>();
-        if (inputDates.size() % 2 != 0) {
-            throw new RuntimeException("Input list must have an even number of dates");
-        }
-
-        Collections.sort(inputDates);
-
-        for (int i = 0; i < inputDates.size(); i += 2) {
-            Date checkInDate = inputDates.get(i);
-            Date checkOutDate = inputDates.get(i + 1);
+        for (Object[] datePair : inputDates) {
+            if (datePair.length != 2) {
+                throw new RuntimeException("Each array must contain exactly two dates");
+            }
+            Date checkInDate = (Date) datePair[0];
+            Date checkOutDate = (Date) datePair[1];
             List<Date> dateRange = getDateRange(checkInDate, checkOutDate);
             filledDates.addAll(dateRange);
         }
         return filledDates;
     }
+
 
     private static List<Date> getDateRange(Date startDate, Date endDate) {
         List<Date> dateRange = new ArrayList<>();

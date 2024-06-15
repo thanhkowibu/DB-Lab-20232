@@ -24,7 +24,7 @@ public class AdminController {
     private final ReportService reportService;
     private final UserService userService;
     private final PropertyService propertyService;
-    private final FakerService fakerService;
+    private final AdminService adminService;
 
     @GetMapping("/admin/reported-properties")
     public Result findAllReportedProperty(
@@ -64,25 +64,6 @@ public class AdminController {
         return new Result(true, 200, "Get all reported users", new ReportPageDto(pageMetadata, reportDtoList));
     }
 
-    @GetMapping("/admin/reported-comments")
-    public Result findAllReportedComment(
-            @RequestParam(value = "page", required = false) Long page,
-            @RequestParam(value = "page_size", required = false) Long pageSize
-    ) {
-        pageSizeCheck(page,pageSize);
-        Page pageObject =  new Page(page,pageSize);
-        List<ReportDto> reportDtoList = reportService.findAllCommentReports(
-                pageObject.getLimit(),
-                pageObject.getOffset());
-        PageMetadata pageMetadata = new PageMetadata(
-                pageObject.getPage(),
-                pageObject.getPageSize(),
-                reportDtoList.isEmpty() ? 0 : reportDtoList.get(0).total_count()
-        );
-
-        return new Result(true, 200, "Get all reported comments", new ReportPageDto(pageMetadata, reportDtoList));
-    }
-
     @PutMapping("/admin/report/{reportId}")
     public Result resolveReport(@PathVariable Long reportId) {
         reportService.resolveReport(reportId);
@@ -107,22 +88,48 @@ public class AdminController {
         return new Result(true, 200, "delete property with id "+propertyId);
     }
 
-//    @DeleteMapping("/admin/comments/{commentId}")
-//    public Result deleteComment(@PathVariable Long commentId) {
-//        commentService.delete(commentId, -1);
-//        return new Result(true, 200, "delete comment with id "+commentId);
-//    }
-
-    @GetMapping("/admin/generate-bookings")
-    public Result generateBooking() {
-        fakerService.generateBooking();
-        return new Result(true, 200, "generate mock booking");
+    @GetMapping("/admin/revenue/year/{year}")
+    public Result getRevenue(@PathVariable int year) {
+        return new Result(
+                true,
+                200,
+                "fetching revenue in " + year,
+                adminService.getRevenueInYear(year));
     }
 
-    @GetMapping("/admin/generate-properties")
-    public Result generateProperties() throws IOException {
-        fakerService.generateProperty();
-        return new Result(true, 200, "generate mock property");
+    @GetMapping("/admin/revenue/year/{year}/month/{month}")
+    public Result getRevenue(@PathVariable int year, @PathVariable int month) {
+        return new Result(
+                true,
+                200,
+                "fetching revenue in "+month+"/"+year,
+                adminService.getRevenueInMonth(year, month));
+    }
+
+    @GetMapping("/admin/bookings/status/year/{year}/month/{month}")
+    public Result getBookingStatusOverview(@PathVariable int year, @PathVariable int month) {
+        return new Result(
+                true, 200, "Success",
+                adminService.getBookingStatusOverview(year, month)
+        );
+    }
+
+    @GetMapping("/admin/diff-report")
+    public Result getDiffReport() {
+        return new Result(
+                true, 200, "success",
+                adminService.getDiffReport()
+        );
+    }
+
+    @PutMapping("/admin/users/{userId}/set-admin")
+    public void setAdminPrivilege(@PathVariable Integer userId) {
+        adminService.setAdminPrivilege(userId);
+    }
+
+    @PutMapping("/admin/users/{userId}/set-user")
+    public void setUserPrivilege(@PathVariable Integer userId) {
+        adminService.setUserPrivilege(userId);
     }
 
     private void pageSizeCheck(Long page, Long pageSize) {

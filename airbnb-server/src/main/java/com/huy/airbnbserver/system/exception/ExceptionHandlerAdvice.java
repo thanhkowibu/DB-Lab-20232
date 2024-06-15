@@ -98,7 +98,7 @@ public class ExceptionHandlerAdvice {
     }
 
     @ExceptionHandler(NotModifiedException.class)
-    @ResponseStatus(HttpStatus.NOT_MODIFIED)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     Result handleNotModifiedException(NotModifiedException ex) {
         return new Result(false, 304, ex.getMessage());
     }

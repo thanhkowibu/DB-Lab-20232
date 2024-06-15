@@ -9,10 +9,10 @@ import com.huy.airbnbserver.security.token.Token;
 import com.huy.airbnbserver.security.token.TokenRepository;
 import com.huy.airbnbserver.system.exception.EntityAlreadyExistException;
 import com.huy.airbnbserver.system.exception.ObjectNotFoundException;
+import com.huy.airbnbserver.user.converter.UserToUserDetailDtoConverter;
 import com.huy.airbnbserver.user.model.User;
 import com.huy.airbnbserver.user.UserPrincipal;
 import com.huy.airbnbserver.user.UserRepository;
-import com.huy.airbnbserver.user.converter.UserToUserDtoConverter;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class AuthenticationService {
     private final EmailService emailService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final UserToUserDtoConverter userToUserDtoConverter;
+    private final UserToUserDetailDtoConverter userToUserDtoConverter;
 
     @Transactional
     public void registerUser(RegistrationRequest request) throws MessagingException {
