@@ -12,6 +12,7 @@ import HostingPage from "@/pages/HostingPage";
 import HelpPage from "@/pages/HelpPage";
 import PageNotFound from "@/pages/PageNotFound";
 import UserProperties from "@/pages/UserProperties";
+import BecomingHostPage from "@/pages/BecomingHostPage";
 
 export const routesGen = {
   home: "/",
@@ -98,6 +99,14 @@ const routes = [
     element: (
       <ProtectedRoute>
         <HelpPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/host/home",
+    element: (
+      <ProtectedRoute>
+        <BecomingHostPage />
       </ProtectedRoute>
     ),
   },
