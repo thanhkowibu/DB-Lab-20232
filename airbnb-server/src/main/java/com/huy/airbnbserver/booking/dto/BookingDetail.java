@@ -33,4 +33,10 @@ public class BookingDetail {
     private String issuer_firstname;
 
     private Boolean is_checked_out;
+    private BigDecimal longitude;
+    private BigDecimal latitude;
+    private String property_name;
+    private String booking_preview_img;
+
+    private Boolean is_rated;
 }

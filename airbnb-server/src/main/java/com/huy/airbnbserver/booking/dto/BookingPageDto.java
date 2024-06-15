@@ -12,5 +12,5 @@ import java.util.List;
 @AllArgsConstructor
 public class BookingPageDto {
     PageMetadata pagination_meta_data;
-    List<BookingDto> bookings;
+    List<BookingDetail> bookings;
 }

@@ -7,18 +7,18 @@ public enum Tag {
     ROMANTIC_GETAWAY,
     LUXURY,
     COZY,
-    SECLUDED,
-    HOUSEBOAT,
-    TENT,
-    TOWER,
-    WINDMILL,
-    MOUNTAIN_VIEW,
-    LAKEFRONT,
+    SECLUDED, // ok
+    HOUSEBOAT, // ok
+    TENT, // ok
+    TOWER, // ok
+    WINDMILL, // ok
+    MOUNTAIN_VIEW, // ok
+    LAKEFRONT, // ok
     SKI_IN_SKI_OUT,
-    OCEAN_VIEW,
-    TREEHOUSE,
-    COTTAGE,
-    CABIN,
-    FARMS,
-    VILLA
+    OCEAN_VIEW, // ok
+    TREEHOUSE, // ok
+    COTTAGE, // ok
+    CABIN, // ok
+    FARMS, // ok
+    VILLA // ok
 }

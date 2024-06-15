@@ -1,5 +1,7 @@
 package com.huy.airbnbserver.user;
 
+import com.huy.airbnbserver.image.ImageDto;
+import com.huy.airbnbserver.image.converter.ImageToImageDtoConverter;
 import com.huy.airbnbserver.notification.model.NotificationPreferences;
 import com.huy.airbnbserver.properties.PropertyService;
 import com.huy.airbnbserver.properties.converter.PropertyOverProjectionToPropertyOverProjectionDto;
@@ -15,10 +17,9 @@ import com.huy.airbnbserver.system.common.PageMetadata;
 import com.huy.airbnbserver.system.common.Result;
 import com.huy.airbnbserver.system.common.StatusCode;
 import com.huy.airbnbserver.system.exception.InvalidSearchQueryException;
+import com.huy.airbnbserver.user.converter.UserToUserDetailDtoConverter;
 import com.huy.airbnbserver.user.converter.UserToUserDtoConverter;
-import com.huy.airbnbserver.user.dto.NotificationPreferenceDto;
-import com.huy.airbnbserver.user.dto.UserDto;
-import com.huy.airbnbserver.user.dto.UserWithPropertyDto;
+import com.huy.airbnbserver.user.dto.*;
 import com.huy.airbnbserver.user.model.User;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -40,20 +41,40 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final UserToUserDtoConverter userToUserDtoConverter;
+    private final UserToUserDetailDtoConverter userToUserDetailDtoConverter;
     private final PropertyService propertyService;
     private final PropertyOverProjectionToPropertyOverProjectionDto converter;
     private final ReportService reportService;
+    private final ImageToImageDtoConverter imageToImageDtoConverter;
 
     @PreAuthorize("hasRole('ROLE_admin')")
     @GetMapping
-    public Result findAllUsers() {
-        List<User> users = userService.findAll();
+    public Result findAllUsers(
+            @RequestParam(value = "page", required = false) Long page,
+            @RequestParam(value = "page_size", required = false) Long pageSize
+    ) {
+        if (page != null && page < 1) {
+            throw new InvalidSearchQueryException("Page must be greater than zero");
+        }
 
-        List<UserDto> userDtos = users
+        if (pageSize != null && pageSize < 5) {
+            throw new InvalidSearchQueryException("Page size must be at least 5");
+        }
+        Page pageObject =  new Page(page,pageSize);
+        List<User> users = userService.findAll(pageObject.getPage(), pageObject.getPageSize());
+        PageMetadata pageMetadata = new PageMetadata(
+                pageObject.getPage(),
+                pageObject.getPageSize(),
+                userService.getTotal());
+
+        List<UserDetailDto> userDtos = users
                 .stream()
-                .map(userToUserDtoConverter::convert)
+                .map(userToUserDetailDtoConverter::convert)
                 .toList();
-        return new Result(true, StatusCode.SUCCESS, "Fetch All User", userDtos);
+
+
+        return new Result(true, StatusCode.SUCCESS, "Fetch All User",
+                new UserDetailPage(pageMetadata, userDtos));
     }
 
     @GetMapping("/{userId}")
@@ -67,6 +88,31 @@ public class UserController {
         var userDto = userToUserDtoConverter.convert(user);
         return new Result(true, StatusCode.SUCCESS, "Success",
                 new UserWithPropertyDto(userDto,topProperties));
+    }
+
+    @GetMapping("/{userId}/details")
+    public Result getUserDetail(@PathVariable Integer userId,
+                                Authentication authentication) {
+        if (!userId.equals(Utils.extractAuthenticationId(authentication))) {
+            return new Result(false,  StatusCode.UNAUTHORIZED, "Action Not Allow For This User");
+        }
+
+        User user = userService.findById(userId);
+        UserDetailDto userDetailDto = userToUserDetailDtoConverter.convert(user);
+
+        return new Result(true, 200, "Fetch user detail success", userDetailDto);
+    }
+
+    @PutMapping("/{userId}/details")
+    public Result updateUserDetail(@PathVariable Integer userId,
+                                   Authentication authentication,
+                                   @Valid @RequestBody UserDetailDto userDetailDto) {
+        if (!userId.equals(Utils.extractAuthenticationId(authentication))) {
+            return new Result(false,  StatusCode.UNAUTHORIZED, "Action Not Allow For This User");
+        }
+
+        userService.update(userId, userDetailDto);
+        return new Result(true, 200, "Update success");
     }
 
     @GetMapping("/{userId}/properties")
@@ -106,22 +152,6 @@ public class UserController {
         );
     }
 
-    @PutMapping("/{userId}")
-    public Result updateUser(@PathVariable Integer userId,
-                             Authentication authentication,
-                             @RequestBody UserDto userDto) {
-        if (!userId.equals(Utils.extractAuthenticationId(authentication))) {
-            return new Result(false,  StatusCode.UNAUTHORIZED, "Action Not Allow For This User");
-        }
-
-        return new Result(
-                true,
-                StatusCode.SUCCESS,
-                "Updated Success",
-                userToUserDtoConverter.convert(userService.update(userId, userDto))
-        );
-    }
-
     @PutMapping(path = "/{userId}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Result assignAvatar(@PathVariable Integer userId,
                                @NonNull @RequestParam(value = "images") List<MultipartFile> files,
@@ -138,8 +168,8 @@ public class UserController {
             new Result(false, StatusCode.INVALID_ARGUMENT, "Too many images were provided, only accept 1");
         }
 
-        userService.assignAvatar(userId, files);
-        return new Result(true, 200, "Avatar upload success!");
+        ImageDto image = imageToImageDtoConverter.convert(userService.assignAvatar(userId, files));
+        return new Result(true, 200, "Avatar upload success!", image);
     }
 
     @PostMapping("/{userId}/report")
@@ -160,7 +190,7 @@ public class UserController {
         return new Result(true, 200, "Success");
     }
 
-    @PostMapping("/{userId}/notification-preference")
+    @PutMapping("/{userId}/notification-preference")
     public Result updatingPreference(@PathVariable Integer userId,
                                      @RequestBody NotificationPreferenceDto notificationPreferenceDto,
                                      Authentication authentication) {

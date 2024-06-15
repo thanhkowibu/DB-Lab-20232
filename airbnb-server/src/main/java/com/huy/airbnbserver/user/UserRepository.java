@@ -5,11 +5,13 @@ import com.huy.airbnbserver.notification.model.NotificationPreferences;
 import com.huy.airbnbserver.user.dto.NotificationPreferenceDto;
 import com.huy.airbnbserver.user.model.User;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.NonNull;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,12 +26,15 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT u FROM User u " +
             "LEFT JOIN FETCH u.avatar " +
-            "JOIN FETCH u.notificationPreferences "+
+//            "JOIN FETCH u.notificationPreferences "+
             "WHERE u.id = :id")
     Optional<User> findByIdEager(@NonNull Integer id);
 
     @Query(value = "SELECT u FROM User u LEFT JOIN FETCH u.avatar")
-    List<User> findAllEagerAvatar();
+    List<User> findAllEagerAvatar(Pageable pageable);
+
+    @Query(value = "SELECT count(*) FROM user_account u", nativeQuery = true)
+    Long getTotalCount();
 
     // ADMIN QUERY
     @Query(value = "SELECT COUNT(*) FROM user_account WHERE DATE(created_at) = CURDATE()", nativeQuery = true)

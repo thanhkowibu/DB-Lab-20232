@@ -2,6 +2,7 @@ package com.huy.airbnbserver.booking;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.huy.airbnbserver.image.Image;
 import com.huy.airbnbserver.review.Review;
 import com.huy.airbnbserver.properties.Property;
 import com.huy.airbnbserver.user.model.User;
@@ -14,7 +15,9 @@ import org.hibernate.annotations.Check;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -23,6 +26,12 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Check(constraints = "check_in_date < check_out_date")
+@Table(name = "booking", indexes = {
+        @Index(name = "idx_booking_user_id", columnList = "user_id"),
+        @Index(name = "idx_booking_property_id", columnList = "property_id"),
+        @Index(name = "idx_booking_created_at", columnList = "created_at")
+
+})
 public class Booking{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,6 +92,7 @@ public class Booking{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonManagedReference
+
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -90,9 +100,13 @@ public class Booking{
     @JsonManagedReference
     private Property property;
 
-    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
     private Review review;
+
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<BookingLog> logs = new ArrayList<>();
 
     public void addUser(User user) {
         this.user = user;
@@ -109,8 +123,8 @@ public class Booking{
         review.setBooking(this);
     }
 
-    public void cancel() {
-        this.user.getBookings().remove(this);
-        this.property.getBookings().remove(this);
+    public void addLog(BookingLog log) {
+        this.logs.add(log);
+        log.setBooking(this);
     }
 }

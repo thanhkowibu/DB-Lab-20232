@@ -15,6 +15,7 @@ services:
       SPRING_PROFILES_ACTIVE: qa
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/airbnb_db
       SPRING_MAIL_HOST: mail-dev
+      TZ: Asia/Ho_Chi_Minh
     networks:
       - app-network
 
@@ -26,6 +27,7 @@ services:
       MYSQL_DATABASE: airbnb_db
       MYSQL_USER: username
       MYSQL_PASSWORD: password
+      TZ: 'UTC'
     volumes:
       - ./data/mysql:/var/lib/mysql
     ports:

@@ -56,15 +56,6 @@ public class ReportService {
                 .map(this::mapToReportDto)
                 .toList();
     }
-
-    public List<ReportDto> findAllCommentReports(long limit, long offset) {
-        return reportRepository.
-                getAllCommentReports(limit, offset)
-                .stream()
-                .map(this::mapToReportDto)
-                .toList();
-    }
-
     private ReportDto mapToReportDto(ReportProjection reportProjection) {
         return new ReportDto(
                 reportProjection.getId(),
