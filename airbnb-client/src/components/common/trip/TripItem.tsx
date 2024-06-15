@@ -6,25 +6,14 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import CancelModal from "./CancelModal";
+import BookingModal from "../booking-detail/BookingModal";
+import { BookingResProps } from "@/types/booking.types";
+import ReviewModal from "../review/ReviewModal";
 
 type Props = {
-  id: number;
-  pid: number;
-  preview_img: string;
-  pname: string;
-  lat: number;
-  long: number;
-  check_in_date: Date;
-  check_out_date: Date;
-  status:
-    | "PENDING"
-    | "CONFIRMED"
-    | "SUCCESS"
-    | "REJECTED"
-    | "CHECK_OUT"
-    | "NO_SHOW"
-    | "CANCEL";
+  booking: BookingResProps;
   onCancel: (id: number) => void;
+  onReview: (id: number) => void;
 };
 
 const statusLabel = {
@@ -48,33 +37,48 @@ const statusGradient = {
 };
 
 const TripItem: React.FC<Props> = ({
-  id,
-  pid,
-  preview_img,
-  pname,
-  lat,
-  long,
-  check_in_date,
-  check_out_date,
-  status,
+  booking,
   onCancel,
+  onReview,
 }) => {
   const navigate = useNavigate();
-
-  const [isHovered, setIsHovered] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
+  const [isOpenReviewModal, setIsOpenReviewModal] =
+    useState(false);
 
-  const formattedStartDate = format(new Date(check_in_date), "MMM dd");
-  const formattedEndDate = format(new Date(check_out_date), "MMM dd");
-  const location = usePlacename(lat, long);
-  const longTitle = `${pname} in ${location}`;
-  const country = useCountry(lat, long);
+  const formattedStartDate = format(
+    new Date(booking.check_in_date),
+    "MMM dd"
+  );
+  const formattedEndDate = format(
+    new Date(booking.check_out_date),
+    "MMM dd"
+  );
+  const location = usePlacename(
+    booking.latitude,
+    booking.longitude
+  );
+  const longTitle = `${booking.property_name} in ${location}`;
+  const country = useCountry(
+    booking.latitude,
+    booking.longitude
+  );
 
   const isEnableCancel =
-    status === "PENDING" || status === "CONFIRMED" || status === "SUCCESS";
+    booking.status === "PENDING" ||
+    booking.status === "SUCCESS";
 
   const handleCancelSuccess = () => {
-    onCancel(id); // Notify parent component to update the state
+    onCancel(booking.id); // Notify parent component to update the state
+  };
+
+  const handleOpenBookingDetail = () => {
+    setShowDetail(true);
+  };
+
+  const handleReviewSuccess = () => {
+    onReview(booking.id);
   };
 
   return (
@@ -82,59 +86,126 @@ const TripItem: React.FC<Props> = ({
       <div className="flex justify-between">
         <div className="flex items-center gap-4 w-full">
           <div className="size-14 rounded-xl overflow-hidden">
-            <Image path={preview_img} />
+            <Image path={booking.booking_preview_img} />
           </div>
           <div className="flex flex-col gap-[0.25rem] justify-center">
             <div
-              onClick={() => navigate(`/properties/${pid}`)}
+              onClick={() =>
+                navigate(
+                  `/properties/${booking.property_id}`
+                )
+              }
               className="text-lg font-semibold truncate hover:underline cursor-pointer"
             >
               {longTitle}
             </div>
             <div className="text-neutral-600">
-              {country}・{formattedStartDate} - {formattedEndDate}{" "}
+              {country}・{formattedStartDate} -{" "}
+              {formattedEndDate}{" "}
             </div>
           </div>
         </div>
 
         <div className="flex items-center gap-4 select-none">
+          {booking.status === "CHECK_OUT" &&
+            !booking.is_rated && (
+              <div className="relative">
+                <button
+                  className="rounded-full border border-red-500 w-52 py-2 text-red-500 text-center font-semibold hover:bg-neutral-100 transition duration-300 peer"
+                  onClick={() => setIsOpenReviewModal(true)}
+                >
+                  Rate this trip
+                  <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-600 border-2 border-white rounded-full -top-2 -end-2 animate-shake">
+                    !
+                  </div>
+                </button>
+                <div className="opacity-0 peer-hover:opacity-100 transition-all transform peer-hover:translate-x-0 duration-500 absolute -top-[270%] rounded-lg border right-0 -translate-x-1/2 mt-2 px-4 py-2 w-80 bg-white/80 z-[15] peer-hover:pointer-events-none">
+                  <div className="mb-[1px]  font-semibold">
+                    The community needs your help!
+                  </div>
+                  Please consider leave a review to help
+                  other people on their trips as well 😍
+                </div>
+              </div>
+            )}
+          {booking.status === "CHECK_OUT" &&
+            booking.is_rated && (
+              <div className="relative">
+                <div
+                  className="peer rounded-full border border-white w-52 py-2 text-white bg-blue-500 text-center font-semibold hover:bg-blue-600 transition duration-300 cursor-pointer"
+                  onClick={() =>
+                    navigate(
+                      `/properties/${booking.property_id}`
+                    )
+                  }
+                >
+                  Checked Out & Rated 👌
+                </div>
+                <div className="opacity-0 peer-hover:opacity-100 transition-all transform peer-hover:translate-x-0 duration-500 absolute -top-[330%] rounded-lg border right-0 -translate-x-1/2 mt-2 px-4 py-2 w-80 bg-white z-[15] peer-hover:pointer-events-none">
+                  <div className="mb-[1px]  font-semibold">
+                    Thank you for using our service!
+                  </div>
+                  You have already left a review for this
+                  trip 💁. Click to navigate and see how
+                  other people are feeling as well.
+                </div>
+              </div>
+            )}
+          {booking.status !== "CHECK_OUT" && (
+            <>
+              <div
+                className={cn(
+                  "rounded-full bg-gradient-to-br w-24 py-1 text-white text-center font-semibold",
+                  statusGradient[booking.status]
+                )}
+              >
+                {statusLabel[booking.status]}
+              </div>
+
+              <button
+                disabled={!isEnableCancel}
+                onClick={() => setIsOpen(true)}
+                className={cn(
+                  "rounded-full border border-rose-500 w-24 py-1 text-rose-500 text-center font-semibold hover:bg-neutral-100 transition duration-300",
+                  {
+                    "cursor-not-allowed opacity-40":
+                      !isEnableCancel,
+                  }
+                )}
+              >
+                Cancel
+              </button>
+            </>
+          )}
           <div
-            onClick={() => alert(`booking detail modal of id ${id}`)}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onClick={handleOpenBookingDetail}
             className="cursor-pointer"
           >
-            <FaInfoCircle size={28} fill={isHovered ? "#737373" : "#D4D4D4"} />
+            <FaInfoCircle size={28} />
           </div>
-          <div
-            className={cn(
-              "rounded-full bg-gradient-to-br w-24 py-1 text-white text-center font-semibold",
-              statusGradient[status]
-            )}
-          >
-            {statusLabel[status]}
-            {/* {status} */}
-          </div>
-          <button
-            disabled={!isEnableCancel}
-            onClick={() => setIsOpen(true)}
-            className={cn(
-              "rounded-full border border-rose-500 w-24 py-1 text-rose-500 text-center font-semibold hover:bg-neutral-100 transition duration-300",
-              {
-                "cursor-not-allowed opacity-40": !isEnableCancel,
-              }
-            )}
-          >
-            Cancel
-          </button>
         </div>
       </div>
       {isOpen && (
         <CancelModal
-          id={id}
+          id={booking.id}
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           onCancelSuccess={handleCancelSuccess}
+        />
+      )}
+      {isOpenReviewModal && (
+        <ReviewModal
+          id={booking.id}
+          isOpen={isOpenReviewModal}
+          setIsOpen={setIsOpenReviewModal}
+          onReviewSuccess={handleReviewSuccess}
+        />
+      )}
+
+      {showDetail && (
+        <BookingModal
+          booking={booking}
+          setShowPopup={setShowDetail}
         />
       )}
     </div>

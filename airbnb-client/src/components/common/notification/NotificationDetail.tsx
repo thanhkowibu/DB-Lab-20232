@@ -1,4 +1,4 @@
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, parseISO } from "date-fns";
 import { Notification } from "./NotificationButton";
 import { BiSolidCreditCardAlt } from "react-icons/bi";
 import { SiHomeassistantcommunitystore } from "react-icons/si";
@@ -9,17 +9,17 @@ const NotificationDetail = ({
   notification: Notification;
 }) => {
   const handleOnClick = () => {
-    if (notification.type === "BOOKING") {
-      alert(
-        "Go to booking detail of bookingID " +
-          notification.object_ref_id
-      );
-    } else {
-      alert(
-        "Go to property with id " +
-          notification.object_ref_id
-      );
-    }
+    // if (notification.type === "BOOKING") {
+    //   alert(
+    //     "Go to booking detail of bookingID " +
+    //       notification.object_ref_id
+    //   );
+    // } else {
+    //   alert(
+    //     "Go to property with id " +
+    //       notification.object_ref_id
+    //   );
+    // }
   };
 
   return (
@@ -34,14 +34,14 @@ const NotificationDetail = ({
           <SiHomeassistantcommunitystore size={28} />
         )}
       </div>
-      <div className="flex flex-col w-[70%]">
-        <p className="font-semibold text-md truncate">
-          {notification.message +
-            " " +
-            notification.message}
+      <div className="flex flex-col w-full">
+        <p className="font-semibold text-sm">
+          {notification.message}
         </p>
         <p className="text-xs text-muted-foreground">
-          {formatDistanceToNow(notification.created_at)}
+          {formatDistanceToNow(
+            parseISO(notification.created_at.toString())
+          )}
         </p>
       </div>
     </div>

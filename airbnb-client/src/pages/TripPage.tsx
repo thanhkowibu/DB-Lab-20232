@@ -7,10 +7,11 @@ import { BookingResProps } from "@/types/booking.types";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-type Props = {};
 
-const TripPage: React.FC<Props> = ({}) => {
-  const [trips, setTrips] = useState<BookingResProps[] | null>(null);
+const TripPage: React.FC = () => {
+  const [trips, setTrips] = useState<
+    BookingResProps[] | null
+  >(null);
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,7 +26,8 @@ const TripPage: React.FC<Props> = ({}) => {
           const { pagination_meta_data, bookings } = (
             await bookingApi.getTrips(user?.id, page)
           ).data;
-          if (pagination_meta_data) setLastPage(pagination_meta_data.last_page);
+          if (pagination_meta_data)
+            setLastPage(pagination_meta_data.last_page);
           if (bookings) setTrips(bookings);
         } catch (err: any) {
           toast.error(err.message);
@@ -38,11 +40,29 @@ const TripPage: React.FC<Props> = ({}) => {
   }, [page]);
 
   const handleCancel = (id: number) => {
-    setTrips((prevTrips: any) =>
-      prevTrips?.map((trip: BookingResProps) =>
-        trip.id === id ? { ...trip, status: "CANCEL" } : trip
-      )
-    );
+    setTrips((prevTrips: BookingResProps[] | null) => {
+      if (!prevTrips) return null;
+      return prevTrips?.map((trip: BookingResProps) =>
+        trip.id === id
+          ? { ...trip, status: "CANCEL" }
+          : trip
+      );
+    });
+  };
+
+  const handleReview = (id: number) => {
+    setTrips((prevTrips: BookingResProps[] | null) => {
+      if (!prevTrips) {
+        return null;
+      }
+      const newRes = prevTrips.map(
+        (trip: BookingResProps) =>
+          trip.id === id
+            ? { ...trip, is_rated: true }
+            : trip
+      );
+      return newRes;
+    });
   };
 
   return (
@@ -59,16 +79,9 @@ const TripPage: React.FC<Props> = ({}) => {
             {trips?.map((trip: BookingResProps) => (
               <TripItem
                 key={trip.id}
-                id={trip.id}
-                pid={trip.property_id}
-                preview_img={trip.booking_preview_img}
-                pname={trip.property_name}
-                lat={trip.latitude}
-                long={trip.longitude}
-                check_in_date={trip.check_in_date}
-                check_out_date={trip.check_out_date}
-                status={trip.status}
+                booking={trip}
                 onCancel={handleCancel}
+                onReview={handleReview}
               />
             ))}
           </div>

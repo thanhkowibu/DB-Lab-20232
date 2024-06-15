@@ -25,7 +25,7 @@ const reviewApi = {
     }
   ) => {
     const res: ResultProps = await privateClient.post(
-      reviewEndpoints.property(id),
+      reviewEndpoints.add(id),
       data
     );
     return res;
