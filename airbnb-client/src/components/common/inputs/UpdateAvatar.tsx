@@ -50,8 +50,8 @@ const UpdateAvatar: React.FC<Props> = ({ userId }) => {
           const updatedUser: any = {
             ...user,
             avatar: {
-              name: img.name,
-              path: imgUrl, // Use the local URL generated earlier
+              name: res.data.name,
+              path: res.data.path,
             },
           };
           updateUser(updatedUser);

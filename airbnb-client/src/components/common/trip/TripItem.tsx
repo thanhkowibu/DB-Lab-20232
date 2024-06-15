@@ -74,7 +74,7 @@ const TripItem: React.FC<Props> = ({
     status === "PENDING" || status === "CONFIRMED" || status === "SUCCESS";
 
   const handleCancelSuccess = () => {
-    onCancel(id); // Notify parent component to update the state
+    onCancel(id);
   };
 
   return (
@@ -113,13 +113,12 @@ const TripItem: React.FC<Props> = ({
             )}
           >
             {statusLabel[status]}
-            {/* {status} */}
           </div>
           <button
             disabled={!isEnableCancel}
             onClick={() => setIsOpen(true)}
             className={cn(
-              "rounded-full border border-rose-500 w-24 py-1 text-rose-500 text-center font-semibold hover:bg-neutral-100 transition duration-300",
+              "rounded-full border-2 border-neutral-200 hover:shadow-md w-24 py-1 text-red-500 text-center text-base font-semibold transition duration-300",
               {
                 "cursor-not-allowed opacity-40": !isEnableCancel,
               }

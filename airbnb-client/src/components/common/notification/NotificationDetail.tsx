@@ -2,23 +2,20 @@ import { formatDistanceToNow } from "date-fns";
 import { Notification } from "./NotificationButton";
 import { BiSolidCreditCardAlt } from "react-icons/bi";
 import { SiHomeassistantcommunitystore } from "react-icons/si";
+import { useNavigate } from "react-router-dom";
 
 const NotificationDetail = ({
   notification,
 }: {
   notification: Notification;
 }) => {
+  const navigate = useNavigate();
+
   const handleOnClick = () => {
     if (notification.type === "BOOKING") {
-      alert(
-        "Go to booking detail of bookingID " +
-          notification.object_ref_id
-      );
+      alert("Go to booking detail of bookingID " + notification.object_ref_id);
     } else {
-      alert(
-        "Go to property with id " +
-          notification.object_ref_id
-      );
+      navigate(`/properties/${notification.object_ref_id}`);
     }
   };
 
@@ -36,9 +33,7 @@ const NotificationDetail = ({
       </div>
       <div className="flex flex-col w-[70%]">
         <p className="font-semibold text-md truncate">
-          {notification.message +
-            " " +
-            notification.message}
+          {notification.message + " " + notification.message}
         </p>
         <p className="text-xs text-muted-foreground">
           {formatDistanceToNow(notification.created_at)}

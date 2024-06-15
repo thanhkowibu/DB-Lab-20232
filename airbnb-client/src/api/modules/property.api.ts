@@ -64,5 +64,11 @@ const propertyApi = {
     );
     return res;
   },
+  delete: async (id: bigint) => {
+    const res: ResultProps = await privateClient.delete(
+      propertyEndpoints.detail(id)
+    );
+    return res;
+  },
 };
 export default propertyApi;

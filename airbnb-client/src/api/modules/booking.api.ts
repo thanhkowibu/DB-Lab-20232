@@ -73,11 +73,12 @@ const bookingApi = {
     return res;
   },
   getHosted: async (id: number, page: number, filter: string = "") => {
+    let queryParams = `?page_size=${PAGE_SIZE}&page=${page}`;
+    if (filter) {
+      queryParams += `&filter=${filter}`;
+    }
     const res: ResultProps = await privateClient.get(
-      bookingEndpoints.host(
-        id,
-        `?page_size=${PAGE_SIZE}&page=${page}&filter=${filter}`
-      )
+      bookingEndpoints.host(id, queryParams)
     );
     return res;
   },

@@ -6,11 +6,13 @@ import { UseFormSetValue } from "react-hook-form";
 type CategoriesSelectorProps = {
   formCategories: string[];
   setValue: UseFormSetValue<PropertyReqProps>;
+  nofeather?: boolean;
 };
 
 export const CategoriesSelector = ({
   formCategories,
   setValue,
+  nofeather,
 }: CategoriesSelectorProps) => {
   const [categories, setCategories] = useState<string[]>(
     formCategories ? formCategories : []
@@ -40,7 +42,14 @@ export const CategoriesSelector = ({
           Tell guests what your place can offer
         </h2>
         <p>You can choose as many amenities as you like.</p>
-        <div className="relative grid grid-cols-3 gap-5 overflow-auto scroll no-scrollbar pb-5 max-h-[55vh] w-full">
+        <div
+          className={cn(
+            "relative grid grid-cols-3 gap-5 overflow-auto scroll no-scrollbar pb-5 w-full",
+            {
+              "max-h-[55vh]": !nofeather,
+            }
+          )}
+        >
           {categoriesArray.map((cate) => {
             const Icon = cate.icon;
             return (
@@ -69,7 +78,9 @@ export const CategoriesSelector = ({
             );
           })}
         </div>
-        <div className="sticky w-full bottom-32 left-0 right-0 h-16 pointer-events-none bg-gradient-to-t from-white to-transparent blur-sm"></div>
+        {!nofeather && (
+          <div className="sticky w-full bottom-32 left-0 right-0 h-16 pointer-events-none bg-gradient-to-t from-white to-transparent blur-sm"></div>
+        )}
       </div>
     </div>
   );

@@ -3,15 +3,12 @@ import { useAuth } from "@/context/useAuth";
 import { PropertyOverviewProps } from "@/types/properties.types";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import { PaginationControl } from "../PaginationControl";
 import HostedPropertyItem from "./HostedPropertyItem";
 
 type Props = {};
 
 const ManageListings: React.FC<Props> = ({}) => {
-  const navigate = useNavigate();
-
   const [listings, setListings] = useState<PropertyOverviewProps[] | null>(
     null
   );
@@ -32,7 +29,6 @@ const ManageListings: React.FC<Props> = ({}) => {
         if (properties) setListings(properties);
       } catch (err: any) {
         toast.error(err.message);
-        if (err.code === 404) navigate("/404");
       } finally {
         setIsLoading(false);
       }
@@ -40,16 +36,14 @@ const ManageListings: React.FC<Props> = ({}) => {
     fetchData();
   }, [page]);
 
-  const handleUpdate = (id: bigint) => {
+  const handleDelete = (id: bigint) => {
     setListings((prev: any) =>
-      prev?.map((listing: PropertyOverviewProps) =>
-        listing.id === id ? { ...listing, status: "CANCEL" } : listing
-      )
+      prev?.filter((listing: PropertyOverviewProps) => listing.id !== id)
     );
   };
 
   return (
-    <div className="mx-auto pt-12 pb-16 flex flex-col gap-8">
+    <div className="mx-auto px-8 pt-12 pb-16 flex flex-col gap-8">
       {isLoading ? (
         <div>is loading</div>
       ) : listings?.length === 0 ? (
@@ -65,7 +59,8 @@ const ManageListings: React.FC<Props> = ({}) => {
               lat={listing.latitude}
               long={listing.longitude}
               created_at={listing.created_at}
-              onUpdate={handleUpdate}
+              updated_at={listing.updated_at}
+              onDelete={handleDelete}
             />
           ))}
         </div>
