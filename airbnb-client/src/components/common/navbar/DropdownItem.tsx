@@ -7,9 +7,13 @@ type DropdownItemProps = {
 };
 
 export const DropdownItem = ({ onClick, label, isBold }: DropdownItemProps) => {
+  const handleClick = async () => {
+    await onClick();
+  };
+
   return (
     <div
-      onClick={onClick}
+      onClick={handleClick}
       className={cn("px-4 py-3 hover:bg-neutral-100 transition", {
         "font-semibold": isBold,
       })}

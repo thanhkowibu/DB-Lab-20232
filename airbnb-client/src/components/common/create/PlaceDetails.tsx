@@ -10,9 +10,10 @@ type Props = {
     address_line: string;
   };
   register: UseFormRegister<PropertyReqProps>;
+  hidecountry?: boolean;
 };
 
-export const PlaceDetails = ({ form, register }: Props) => {
+export const PlaceDetails = ({ form, register, hidecountry }: Props) => {
   const country =
     form.latitude && form.longitude
       ? useCountry(form.latitude, form.longitude)
@@ -29,20 +30,22 @@ export const PlaceDetails = ({ form, register }: Props) => {
       </div>
       <div className="flex flex-col w-full items-center overflow-auto no-scrollbar pb-20 pt-5">
         <div className="flex flex-col gap-6 w-[40%]">
-          <input
-            id="country"
-            value={country}
-            placeholder="Country"
-            type="text"
-            autoComplete="country-name"
-            disabled
-            className={cn(
-              "border border-gray-300 p-4 rounded-lg w-full text-lg cursor-not-allowed",
-              {
-                "italic font-light": country === "Unknown country",
-              }
-            )}
-          />
+          {!hidecountry && (
+            <input
+              id="country"
+              value={country}
+              placeholder="Country"
+              type="text"
+              autoComplete="country-name"
+              disabled
+              className={cn(
+                "border border-gray-300 p-4 rounded-lg w-full text-lg cursor-not-allowed",
+                {
+                  "italic font-light": country === "Unknown country",
+                }
+              )}
+            />
+          )}
           <input
             id="address"
             placeholder="House, street, town, province, etc."

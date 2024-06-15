@@ -5,7 +5,8 @@ import ListingTag from "./ListingTag";
 import { useCountry } from "@/hooks/useGeocoding";
 import ListingCategories from "./ListingCategories";
 import { getHostingTime } from "@/utils/hostingTime";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/useAuth";
 
 type Props = {
   host: UserProps;
@@ -57,6 +58,12 @@ const ListingInfo: React.FC<Props> = ({
 
   const navigate = useNavigate();
 
+  const location = useLocation().pathname;
+
+  const { user } = useAuth();
+
+  const isShowUpdate = host.id === user?.id;
+
   return (
     <div className="col-span-4 flex flex-col gap-4">
       <div className="flex flex-col gap-6">
@@ -70,11 +77,21 @@ const ListingInfo: React.FC<Props> = ({
             <div>{num_beds} beds・</div>
             <div>{num_bathrooms} bathrooms</div>
           </div>
-          <div className="flex items-center gap-4 text-xl font-semibold">
-            <div>★ {Number(average_rating).toFixed(1)}</div>
-            <div className="underline cursor-pointer">
-              {total_rating} reviews
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-4 text-xl font-semibold">
+              <div>★ {Number(average_rating).toFixed(1)}</div>
+              <div className="underline cursor-pointer">
+                {total_rating} reviews
+              </div>
             </div>
+            {isShowUpdate && (
+              <button
+                onClick={() => navigate(location + `?update=true`)}
+                className="rounded-full border-2 border-neutral-200 hover:shadow-md w-24 py-1 text-center text-slate-600 font-semibold text-base transition duration-300"
+              >
+                Update
+              </button>
+            )}
           </div>
         </div>
         <hr />

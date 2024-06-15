@@ -35,13 +35,9 @@ const NotificationDetail = ({
         )}
       </div>
       <div className="flex flex-col w-full">
-        <p className="font-semibold text-sm">
-          {notification.message}
-        </p>
+        <p className="font-semibold text-sm">{notification.message}</p>
         <p className="text-xs text-muted-foreground">
-          {formatDistanceToNow(
-            parseISO(notification.created_at.toString())
-          )}
+          {formatDistanceToNow(parseISO(notification.created_at.toString()))}
         </p>
       </div>
     </div>

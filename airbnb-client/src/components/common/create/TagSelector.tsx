@@ -6,16 +6,28 @@ import { UseFormSetValue } from "react-hook-form";
 type TagSelectorProps = {
   formTag: string;
   setValue: UseFormSetValue<PropertyReqProps>;
+  nofeather?: boolean;
 };
 
-export const TagSelector = ({ formTag, setValue }: TagSelectorProps) => {
+export const TagSelector = ({
+  formTag,
+  setValue,
+  nofeather,
+}: TagSelectorProps) => {
   return (
     <div className="flex justify-center items-center">
       <div>
         <h2 className="font-semibold text-4xl">
           Which one best describes your place?
         </h2>
-        <div className="relative grid grid-cols-3 gap-5 overflow-auto scroll no-scrollbar my-10 pb-5 max-h-[55vh] w-full">
+        <div
+          className={cn(
+            "relative grid grid-cols-3 gap-5 overflow-auto scroll no-scrollbar my-10 pb-5 w-full",
+            {
+              "max-h-[55vh]": !nofeather,
+            }
+          )}
+        >
           {tagsArray.map((tag) => {
             const Icon = tag.icon;
             return (
@@ -36,7 +48,9 @@ export const TagSelector = ({ formTag, setValue }: TagSelectorProps) => {
             );
           })}
         </div>
-        <div className="sticky w-full bottom-32 left-0 right-0 h-16 pointer-events-none bg-gradient-to-t from-white to-transparent blur-sm"></div>
+        {!nofeather && (
+          <div className="sticky w-full bottom-32 left-0 right-0 h-16 pointer-events-none bg-gradient-to-t from-white to-transparent blur-sm"></div>
+        )}
       </div>
     </div>
   );

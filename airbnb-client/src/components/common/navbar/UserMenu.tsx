@@ -105,7 +105,7 @@ export const UserMenu = () => {
                   }}
                   label="Login"
                 />
-                <DropdownItem onClick={() => {}} label="Suck your dick" />
+                <DropdownItem onClick={() => {}} label="Mikabnb your house" />
                 <DropdownItem onClick={() => {}} label="Help" />
               </>
             )}
