@@ -15,7 +15,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     @Transactional
     @Query(value = "INSERT INTO notification " +
             "(created_at, is_read, message, user_id, type, reference_id) " +
-            "VALUES (CONVERT_TZ(NOW(), 'UTC', '+07:00'), false, :message, :receiverId, :type, :refId)",nativeQuery = true)
+            "VALUES (CONVERT_TZ(current_timestamp, '+00:00', '+07:00'), false, :message, :receiverId, :type, :refId)",nativeQuery = true)
     void saveNew(@NonNull Integer receiverId,
                  @NonNull String message,
                  @NonNull Long refId,

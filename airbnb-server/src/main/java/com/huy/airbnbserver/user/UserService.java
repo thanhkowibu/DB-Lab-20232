@@ -3,15 +3,16 @@ package com.huy.airbnbserver.user;
 import com.huy.airbnbserver.AWS.AWSBucketService;
 import com.huy.airbnbserver.image.Image;
 import com.huy.airbnbserver.image.ImageRepository;
-import com.huy.airbnbserver.notification.model.Notification;
-import com.huy.airbnbserver.notification.model.NotificationPreferences;
 import com.huy.airbnbserver.system.exception.ObjectNotFoundException;
 import com.huy.airbnbserver.system.exception.UnprocessableEntityException;
 import com.huy.airbnbserver.user.dto.NotificationPreferenceDto;
+import com.huy.airbnbserver.user.dto.UserDetailDto;
 import com.huy.airbnbserver.user.dto.UserDto;
 import com.huy.airbnbserver.user.model.User;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,15 +20,15 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
-@Transactional
 @AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final AWSBucketService awsBucketService;
     private final ImageRepository imageRepository;
 
-    public List<User> findAll() {
-        return userRepository.findAllEagerAvatar();
+    public List<User> findAll(long page, long pagesize) {
+        Pageable pageable = PageRequest.of((int) page - 1, (int) pagesize);
+        return userRepository.findAllEagerAvatar(pageable);
     }
 
     public User findById(Integer id) {
@@ -36,17 +37,25 @@ public class UserService {
                 .orElseThrow(()->new ObjectNotFoundException("user", id));
     }
 
+    public Long getTotal() {
+        return userRepository.getTotalCount();
+    }
 
-    public User update(Integer userId, UserDto update){
+
+    @Transactional
+    public void update(Integer userId, UserDetailDto update){
         var oldUser = userRepository.findById(userId).orElseThrow(()->new ObjectNotFoundException("user", userId));
         oldUser.setFirstname(update.firstname());
         oldUser.setLastname(update.lastname());
+        oldUser.setPhoneNumber(update.phone_number());
+        oldUser.setGender(update.gender());
+        oldUser.setDob(update.dob());
 
-        return userRepository.save(oldUser);
+        userRepository.save(oldUser);
     }
 
     @Transactional
-    public void assignAvatar(Integer id, List<MultipartFile> files) throws IOException {
+    public Image assignAvatar(Integer id, List<MultipartFile> files) throws IOException {
         var user = userRepository.findById(id).orElseThrow(()->new ObjectNotFoundException("user", id));
 
         Image preAvatar = user.getAvatar();
@@ -64,6 +73,8 @@ public class UserService {
 
             throw exception;
         }
+
+        return newImage;
     }
 
     @Transactional

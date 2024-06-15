@@ -19,7 +19,7 @@ public class NotificationPreferences {
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", unique = true)
     @JsonBackReference
     private User user;
 

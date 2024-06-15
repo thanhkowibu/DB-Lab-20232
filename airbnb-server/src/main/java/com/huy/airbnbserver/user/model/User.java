@@ -79,10 +79,6 @@ public class User implements ReportableEntity {
     @JsonManagedReference
     private NotificationPreferences notificationPreferences;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-    @JsonManagedReference
-    private Card card;
-
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     @JoinColumn(name = "avatar_id", referencedColumnName = "id", nullable = true)

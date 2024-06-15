@@ -1,4 +1,4 @@
-package com.huy.airbnbserver.booking.dto;
+package com.huy.airbnbserver.user.dto;
 
 import com.huy.airbnbserver.system.common.PageMetadata;
 import lombok.AllArgsConstructor;
@@ -7,10 +7,10 @@ import lombok.Setter;
 
 import java.util.List;
 
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-public class BookingPageDto {
+public class UserDetailPage {
     PageMetadata pagination_meta_data;
-    List<BookingDetail> bookings;
+    List<UserDetailDto> users;
 }

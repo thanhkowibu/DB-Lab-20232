@@ -43,7 +43,7 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
             r.user_id AS userId,
             COUNT(*) OVER() AS totalCount
         FROM report r
-        WHERE r.report_type = 'Property'
+        WHERE r.report_type = 'Property' AND r.is_resolved = false
         LIMIT :limit OFFSET :offset""", nativeQuery = true)
     List<ReportProjection> getAllPropertyReports(
             @NonNull long limit,
@@ -62,28 +62,9 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
             r.user_id AS userId,
             COUNT(*) OVER() AS totalCount
         FROM report r
-        WHERE r.report_type = 'User'
+        WHERE r.report_type = 'User' AND r.is_resolved = false
         LIMIT :limit OFFSET :offset""", nativeQuery = true)
     List<ReportProjection> getALlUserReports(
-            @NonNull long limit,
-            @NonNull long offset
-    );
-
-    @Query(value = """
-        SELECT
-            r.id,
-            r.created_at AS createdAt,
-            r.detail,
-            r.is_resolved AS isResolved,
-            r.issue,
-            r.report_entity_id AS reportEntityId,
-            r.report_type AS reportType,
-            r.user_id AS userId,
-            COUNT(*) OVER() AS totalCount
-        FROM report r
-        WHERE r.report_type = 'Comment'
-        LIMIT :limit OFFSET :offset""", nativeQuery = true)
-    List<ReportProjection> getAllCommentReports(
             @NonNull long limit,
             @NonNull long offset
     );

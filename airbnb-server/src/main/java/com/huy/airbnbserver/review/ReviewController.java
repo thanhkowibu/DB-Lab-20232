@@ -75,11 +75,11 @@ public class ReviewController {
             Authentication authentication,
             @Valid @RequestBody ReviewDto reviewDto
     ) {
-        var newReview = reviewService.addReview(
+        reviewService.addReview(
                 reviewDto,
                 bookingId,
                 Utils.extractAuthenticationId(authentication));
 
-        return new Result(true, 200, "Adding review success", newReview);
+        return new Result(true, 200, "Adding review success");
     }
 }
