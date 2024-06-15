@@ -20,7 +20,6 @@ const propertyApi = {
       ...parsedParams,
       page_size: PAGE_SIZE,
     });
-    // console.log("?" + newParams);
 
     const res: ResultProps = await publicClient.get(
       propertyEndpoints.list("?" + newParams)
@@ -54,6 +53,13 @@ const propertyApi = {
   create: async (data: FormData) => {
     const res: ResultProps = await privateClient.post(
       propertyEndpoints.base(),
+      data
+    );
+    return res;
+  },
+  update: async (id: bigint, data: FormData) => {
+    const res: ResultProps = await privateClient.put(
+      propertyEndpoints.detail(id),
       data
     );
     return res;
