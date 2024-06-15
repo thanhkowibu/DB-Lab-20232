@@ -5,6 +5,7 @@ import { HeartButton } from "../HeartButton";
 import { usePlacename } from "@/hooks/useGeocoding";
 import { EmblaOptionsType } from "embla-carousel";
 import EmblaCarousel from "../carousel/EmblaCarousel";
+import LazyImage from "../image/LazyImage";
 
 type Props = {
   data: PropertyOverviewProps;
@@ -24,7 +25,7 @@ export const ListingCard = ({ data }: Props) => {
       className="aspect-square w-full relative overflow-hidden"
       key={index}
     >
-      <Image path={image.path} />
+      <LazyImage src={image.path} alt={image.name} />
     </div>
   ));
 

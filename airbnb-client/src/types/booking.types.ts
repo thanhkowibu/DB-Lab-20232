@@ -30,10 +30,18 @@ export type BookingResProps = {
   latitude: number;
   property_name: string;
   booking_preview_img: string;
+  is_rated: boolean;
 };
 
 export type BookingLogProps = {
-  type: "PENDING" | "PAST" | "UPCOMING" | "CANCEL";
+  type:
+    | "PENDING"
+    | "CONFIRMED"
+    | "SUCCESS"
+    | "REJECTED"
+    | "CHECK_OUT"
+    | "NO_SHOW"
+    | "CANCEL";
   time: Date;
   description: string;
 };

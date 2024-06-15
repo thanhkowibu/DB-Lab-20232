@@ -58,16 +58,7 @@ const TripPage: React.FC<Props> = ({}) => {
           <div className="flex flex-col items-center gap-6">
             {trips?.map((trip: BookingResProps) => (
               <TripItem
-                key={trip.id}
-                id={trip.id}
-                pid={trip.property_id}
-                preview_img={trip.booking_preview_img}
-                pname={trip.property_name}
-                lat={trip.latitude}
-                long={trip.longitude}
-                check_in_date={trip.check_in_date}
-                check_out_date={trip.check_out_date}
-                status={trip.status}
+                booking={trip}
                 onCancel={handleCancel}
               />
             ))}
