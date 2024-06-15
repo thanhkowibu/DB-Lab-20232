@@ -8,10 +8,12 @@ import { useNavigate } from "react-router-dom";
 import CancelModal from "./CancelModal";
 import BookingModal from "../booking-detail/BookingModal";
 import { BookingResProps } from "@/types/booking.types";
+import ReviewModal from "../review/ReviewModal";
 
 type Props = {
   booking: BookingResProps;
   onCancel: (id: number) => void;
+  onReview: (id: number) => void;
 };
 
 const statusLabel = {
@@ -37,10 +39,13 @@ const statusGradient = {
 const TripItem: React.FC<Props> = ({
   booking,
   onCancel,
+  onReview,
 }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
+  const [isOpenReviewModal, setIsOpenReviewModal] =
+    useState(false);
 
   const formattedStartDate = format(
     new Date(booking.check_in_date),
@@ -72,6 +77,10 @@ const TripItem: React.FC<Props> = ({
     setShowDetail(true);
   };
 
+  const handleReviewSuccess = () => {
+    onReview(booking.id);
+  };
+
   return (
     <div className="flex flex-col gap-4 w-full border-b-2 pb-6 px-2">
       <div className="flex justify-between">
@@ -101,7 +110,10 @@ const TripItem: React.FC<Props> = ({
           {booking.status === "CHECK_OUT" &&
             !booking.is_rated && (
               <div className="relative">
-                <button className="rounded-full border border-red-500 w-52 py-2 text-red-500 text-center font-semibold hover:bg-neutral-100 transition duration-300 peer">
+                <button
+                  className="rounded-full border border-red-500 w-52 py-2 text-red-500 text-center font-semibold hover:bg-neutral-100 transition duration-300 peer"
+                  onClick={() => setIsOpenReviewModal(true)}
+                >
                   Rate this trip
                   <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-600 border-2 border-white rounded-full -top-2 -end-2 animate-shake">
                     !
@@ -179,6 +191,14 @@ const TripItem: React.FC<Props> = ({
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           onCancelSuccess={handleCancelSuccess}
+        />
+      )}
+      {isOpenReviewModal && (
+        <ReviewModal
+          id={booking.id}
+          isOpen={isOpenReviewModal}
+          setIsOpen={setIsOpenReviewModal}
+          onReviewSuccess={handleReviewSuccess}
         />
       )}
 

@@ -62,7 +62,7 @@ const LazyImage: React.FC<ImageProps> = ({ src, alt }) => {
       ref={(element) => setImageRef(element)}
       src={imageSrc}
       alt={alt}
-      className="transition-opacity duration-1000 opacity-0"
+      className="transition-opacity duration-500 opacity-0"
       onLoad={onLoad}
     />
   );
