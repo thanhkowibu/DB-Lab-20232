@@ -9,10 +9,11 @@ import SearchModal from "../common/navbar/modals/SearchModal";
 
 export const MainLayout = () => {
   const location = useLocation();
-
   const hideNavbarPaths = ["/auth", "/booking"];
 
-  const shouldShowNavbar = !hideNavbarPaths.includes(location.pathname);
+  const shouldShowNavbar = !hideNavbarPaths.includes(
+    location.pathname
+  );
 
   return (
     <>
@@ -21,7 +22,11 @@ export const MainLayout = () => {
       <div className="">
         {shouldShowNavbar && <Navbar />}
         <SearchModal />
-        <div className={cn("px-8", { "pt-24": shouldShowNavbar })}>
+        <div
+          className={cn("px-8", {
+            "pt-24": shouldShowNavbar,
+          })}
+        >
           <Outlet />
         </div>
         <Footer />
