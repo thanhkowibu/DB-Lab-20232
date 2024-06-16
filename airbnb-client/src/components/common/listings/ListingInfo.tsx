@@ -34,6 +34,7 @@ type Props = {
   address_line: string;
   average_rating: number;
   total_rating: number;
+  reviewsRef: React.RefObject<HTMLDivElement>;
 };
 
 const ListingInfo: React.FC<Props> = ({
@@ -50,6 +51,7 @@ const ListingInfo: React.FC<Props> = ({
   address_line,
   average_rating,
   total_rating,
+  reviewsRef,
 }) => {
   //   console.log(tag);
   const country = useCountry(latitude, longitude);
@@ -63,6 +65,44 @@ const ListingInfo: React.FC<Props> = ({
   const { user } = useAuth();
 
   const isShowUpdate = host.id === user?.id;
+
+  const renderStars = (rating: number) => {
+    let stars = [];
+    const fullStars = Math.floor(rating); // 1. Get the integer part for full stars
+    const hasPartialStar = rating % 1 !== 0; // 2. Check if there's a decimal part for a partial star
+    const emptyStars = hasPartialStar ? 5 - fullStars - 1 : 5 - fullStars; // 4. Calculate remaining empty stars, considering the partial star
+
+    // Render full stars
+    for (let i = 1; i <= fullStars; i++) {
+      stars.push(
+        <span key={`full-${i}`} className="text-black">
+          ★
+        </span>
+      );
+    }
+
+    // Render partial star if rating has a decimal part
+    if (hasPartialStar) {
+      // This example uses a simple approach to render a half star for any decimal part
+      // You can enhance this logic to render different types of partial stars based on the decimal value
+      stars.push(
+        <span key="half" className="star-container">
+          ★<span className="half-star">★</span>
+        </span>
+      ); // Use a different icon or style for partial star
+    }
+
+    // Render empty stars
+    for (let i = 1; i <= emptyStars; i++) {
+      stars.push(
+        <span key={`empty-${i}`} className="text-neutral-300">
+          ★
+        </span>
+      );
+    }
+
+    return stars;
+  };
 
   return (
     <div className="col-span-4 flex flex-col gap-4">
@@ -79,8 +119,27 @@ const ListingInfo: React.FC<Props> = ({
           </div>
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4 text-xl font-semibold">
-              <div>★ {Number(average_rating).toFixed(1)}</div>
-              <div className="underline cursor-pointer">
+              <div>
+                {renderStars(average_rating)}{" "}
+                {Number(average_rating).toFixed(1)}
+              </div>
+              <div
+                className="underline cursor-pointer"
+                onClick={() => {
+                  const navbarHeight = 80;
+                  const reviewsElement = reviewsRef.current;
+
+                  if (reviewsElement) {
+                    const yOffset =
+                      reviewsElement.getBoundingClientRect().top +
+                      window.scrollY;
+                    window.scrollTo({
+                      top: yOffset - navbarHeight,
+                      behavior: "smooth",
+                    });
+                  }
+                }}
+              >
                 {total_rating} reviews
               </div>
             </div>

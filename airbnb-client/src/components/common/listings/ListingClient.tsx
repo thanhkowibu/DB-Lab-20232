@@ -4,12 +4,14 @@ import { Container } from "../Container";
 import { ListingHead } from "./ListingHead";
 import ListingInfo from "./ListingInfo";
 import { categoriesArray } from "@/data/categoriesArray";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { differenceInCalendarDays } from "date-fns";
 import ListingReservation from "./ListingReservation";
 import { Range } from "react-date-range";
 import { useNavigate } from "react-router-dom";
 import { usePlacename } from "@/hooks/useGeocoding";
+import ListingMap from "./ListingMap";
+import ListingReviews from "./ListingReviews";
 
 const initialDateRange = {
   startDate: new Date(),
@@ -67,9 +69,11 @@ export const ListingClient = ({ listing }: Props) => {
     }
   }, [dateRange, listing.nightly_price]);
 
+  const reviewsRef = useRef<HTMLDivElement>(null);
+
   return (
     <Container>
-      <div className="max-w-[1150px] mx-auto pb-36">
+      <div className="max-w-[1150px] mx-auto pb-48">
         <div className="flex flex-col gap-6">
           <ListingHead
             title={longTitle}
@@ -91,6 +95,7 @@ export const ListingClient = ({ listing }: Props) => {
               address_line={listing.address_line}
               average_rating={listing.average_rating}
               total_rating={listing.total_rating}
+              reviewsRef={reviewsRef}
             />
             <div className="order-first mb-10 md:order-last md:col-span-3">
               <ListingReservation
@@ -103,9 +108,13 @@ export const ListingClient = ({ listing }: Props) => {
               />
             </div>
           </div>
-          <div className="h-60 w-full bg-neutral-300">Reviews</div>
+          <div className="w-full " ref={reviewsRef}>
+            <ListingReviews id={listing.id} />
+          </div>
           <hr />
-          <div className="h-60 w-full bg-neutral-300">Map</div>
+          <div className="h-[450px] w-full">
+            <ListingMap lat={listing.latitude} long={listing.longitude} />
+          </div>
         </div>
       </div>
     </Container>

@@ -128,29 +128,29 @@ const UpdateProperty: React.FC<Props> = ({}) => {
     formData.append("instruction", JSON.stringify(instructions));
 
     // Log FormData key-value pairs
-    for (let pair of formData.entries()) {
-      if (pair[0] === "propertyDetailDto") {
-        console.log(
-          `key: ${pair[0]}, value: ${JSON.stringify(
-            JSON.parse(pair[1] as string),
-            null,
-            2
-          )}`
-        );
-      } else if (pair[0] === "images") {
-        console.log(
-          `key: ${pair[0]}, value: ${pair[1]}, file name: ${
-            (pair[1] as File).name
-          }`
-        );
-      } else if (pair[0] === "instruction") {
-        console.log(`key: ${pair[0]}, value: ${pair[1]}`);
-      }
-    }
+    // for (let pair of formData.entries()) {
+    //   if (pair[0] === "propertyDetailDto") {
+    //     console.log(
+    //       `key: ${pair[0]}, value: ${JSON.stringify(
+    //         JSON.parse(pair[1] as string),
+    //         null,
+    //         2
+    //       )}`
+    //     );
+    //   } else if (pair[0] === "images") {
+    //     console.log(
+    //       `key: ${pair[0]}, value: ${pair[1]}, file name: ${
+    //         (pair[1] as File).name
+    //       }`
+    //     );
+    //   } else if (pair[0] === "instruction") {
+    //     console.log(`key: ${pair[0]}, value: ${pair[1]}`);
+    //   }
+    // }
     // Post data to API...
     try {
       const res = await propertyApi.update(BigInt(listingId), formData);
-      console.log(res);
+      // console.log(res);
       if (res.code === 200) {
         toast.success("Listing updated successfully");
         navigate(-1);

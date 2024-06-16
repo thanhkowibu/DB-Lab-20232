@@ -64,7 +64,7 @@ export const CreateProperty = () => {
   };
 
   const onSubmit = async (form: PropertyReqProps) => {
-    console.log(form);
+    // console.log(form);
 
     const formData = new FormData();
 
@@ -77,27 +77,28 @@ export const CreateProperty = () => {
     });
 
     // Log FormData key-value pairs
-    for (let pair of formData.entries()) {
-      if (pair[0] === "propertyDetailDto") {
-        console.log(
-          `key: ${pair[0]}, value: ${JSON.stringify(
-            JSON.parse(pair[1] as string),
-            null,
-            2
-          )}`
-        );
-      } else if (pair[0] === "images") {
-        console.log(
-          `key: ${pair[0]}, value: ${pair[1]}, file name: ${
-            (pair[1] as File).name
-          }`
-        );
-      }
-    }
+    // for (let pair of formData.entries()) {
+    //   if (pair[0] === "propertyDetailDto") {
+    //     console.log(
+    //       `key: ${pair[0]}, value: ${JSON.stringify(
+    //         JSON.parse(pair[1] as string),
+    //         null,
+    //         2
+    //       )}`
+    //     );
+    //   } else if (pair[0] === "images") {
+    //     console.log(
+    //       `key: ${pair[0]}, value: ${pair[1]}, file name: ${
+    //         (pair[1] as File).name
+    //       }`
+    //     );
+    //   }
+    // }
     // Post data to API...
     try {
       const res = await createListing(formData);
       console.log(res);
+
       toast.success("New listing created successfully");
       handleNext();
     } catch (err: any) {

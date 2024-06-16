@@ -147,26 +147,22 @@ const TripItem: React.FC<Props> = ({ booking, onCancel, onReview }) => {
             </>
           )}
           <div onClick={handleOpenBookingDetail} className="cursor-pointer">
-            <FaInfoCircle size={28} />
+            <FaInfoCircle size={28} fill="#a7a7a7" />
           </div>
         </div>
       </div>
-      {isOpen && (
-        <CancelModal
-          id={booking.id}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          onCancelSuccess={handleCancelSuccess}
-        />
-      )}
-      {isOpenReviewModal && (
-        <ReviewModal
-          id={booking.id}
-          isOpen={isOpenReviewModal}
-          setIsOpen={setIsOpenReviewModal}
-          onReviewSuccess={handleReviewSuccess}
-        />
-      )}
+      <CancelModal
+        id={booking.id}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        onCancelSuccess={handleCancelSuccess}
+      />
+      <ReviewModal
+        id={booking.id}
+        isOpen={isOpenReviewModal}
+        setIsOpen={setIsOpenReviewModal}
+        onReviewSuccess={handleReviewSuccess}
+      />
 
       {showDetail && (
         <BookingModal booking={booking} setShowPopup={setShowDetail} />

@@ -188,3 +188,13 @@ export type BookingProps = {
   clean_fee: number;
   service_fee: number;
 };
+
+export type ReviewProps = {
+  id: bigint;
+  content: string;
+  rating: number;
+  created_at: Date;
+  checked_out_date: Date;
+  is_recommend: boolean;
+  user: UserProps;
+};

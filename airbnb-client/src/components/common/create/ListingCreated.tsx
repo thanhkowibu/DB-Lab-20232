@@ -24,7 +24,7 @@ export const ListingCreated = () => {
         </button>
         <button
           className="bg-white py-3 mt-5 px-5 text-black border-2 border-black hover:bg-neutral-100 text-base font-medium rounded-lg cursor-pointer"
-          onClick={() => navigate("/listings")}
+          onClick={() => navigate("/hosting")}
         >
           View my listings
         </button>

@@ -5,9 +5,7 @@ interface NotificationDropDownProps {
   notifications: Notification[] | [];
 }
 
-const NotificationDropDown = ({
-  notifications,
-}: NotificationDropDownProps) => {
+const NotificationDropDown = ({ notifications }: NotificationDropDownProps) => {
   return (
     <div className="absolute z-[99999] bg-white border-2 w-96 max-h-[70vh] top-10 -left-[650%] rounded-lg overflow-y-auto text-neutral-800">
       {notifications.length === 0 ? (
@@ -25,8 +23,8 @@ const NotificationDropDown = ({
         </div>
       ) : (
         <div>
-          {notifications.map((n) => (
-            <NotificationDetail notification={n} />
+          {notifications.map((n, index) => (
+            <NotificationDetail key={index} notification={n} />
           ))}
         </div>
       )}

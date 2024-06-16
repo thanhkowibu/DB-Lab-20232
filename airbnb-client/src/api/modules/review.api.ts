@@ -4,15 +4,16 @@ import privateClient from "../client/private.client";
 
 const reviewEndpoints = {
   base: (id: bigint) => `/reviews/${id}`,
-  property: (id: bigint) => `/properties/${id}/reviews`,
+  property: (id: bigint, page: number) =>
+    `/properties/${id}/reviews?page_size=6&page=${page}`,
   add: (id: bigint) => `/bookings/${id}/add-reviews`,
   report: (id: bigint) => `/reviews/${id}/report`,
 };
 
 const reviewApi = {
-  getAll: async (id: bigint) => {
+  getAll: async (id: bigint, page: number) => {
     const res: ResultProps = await publicClient.get(
-      reviewEndpoints.property(id)
+      reviewEndpoints.property(id, page)
     );
     return res;
   },

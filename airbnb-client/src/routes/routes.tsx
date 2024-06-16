@@ -1,5 +1,4 @@
 import { AuthPage } from "@/pages/AuthPage";
-import { FavouristList } from "@/pages/FavouristList";
 import { HomePage } from "@/pages/HomePage";
 import { PropertyDetail } from "@/pages/PropertyDetail";
 import { PropertyList } from "@/pages/PropertyList";
@@ -13,6 +12,7 @@ import HelpPage from "@/pages/HelpPage";
 import PageNotFound from "@/pages/PageNotFound";
 import UserProperties from "@/pages/UserProperties";
 import BecomingHostPage from "@/pages/BecomingHostPage";
+import { FavouristList } from "@/pages/FavouristList";
 
 export const routesGen = {
   home: "/",

@@ -6,12 +6,14 @@ import { useAuth } from "@/context/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useOnClickOutside } from "@/hooks/useClickOutside";
 import NotificationButton from "../notification/NotificationButton";
+import SettingNotiModal from "./modals/SettingNotiModal";
 
 export const UserMenu = () => {
   const navigate = useNavigate();
 
   const { user, isLoggedIn, logoutUser } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const [isNotiOpen, setIsNotiOpen] = useState(false);
 
   const toggleOpen = useCallback(() => {
     setIsOpen((prev) => !prev);
@@ -79,6 +81,13 @@ export const UserMenu = () => {
                 />
                 <DropdownItem
                   onClick={() => {
+                    setIsNotiOpen(true);
+                    setIsOpen(false);
+                  }}
+                  label="Setting"
+                />
+                <DropdownItem
+                  onClick={() => {
                     navigate("/help");
                     setIsOpen(false);
                   }}
@@ -112,6 +121,7 @@ export const UserMenu = () => {
           </div>
         </div>
       )}
+      <SettingNotiModal isOpen={isNotiOpen} setIsOpen={setIsNotiOpen} />
     </div>
   );
 };
