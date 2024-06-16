@@ -98,6 +98,7 @@ const ManageBookings: React.FC<Props> = ({}) => {
           {bookings?.map((booking: BookingResProps) => (
             <BookingItem
               key={booking.id}
+              booking={booking}
               id={BigInt(booking.id)}
               pid={booking.property_id}
               iid={booking.issuer_id}

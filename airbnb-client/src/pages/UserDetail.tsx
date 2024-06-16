@@ -3,7 +3,6 @@ import { Container } from "@/components/common/Container";
 import UserTopListings from "@/components/common/listings/UserTopListings";
 import { PropertyOverviewProps } from "@/types/properties.types";
 import { UserDetailProps, UserProps } from "@/types/users.types";
-import { getHostingTime } from "@/utils/hostingTime";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaFlag } from "react-icons/fa";
@@ -15,6 +14,7 @@ import { AvatarLarge } from "@/components/common/AvatarLarge";
 import UpdateModal from "@/components/common/inputs/UpdateModal";
 import userApi from "@/api/modules/user.api";
 import ReportModal from "@/components/common/inputs/ReportModal";
+import { Badge } from "@/components/ui/badge";
 
 const OPTIONS: EmblaOptionsType = { slidesToScroll: "auto" };
 
@@ -93,13 +93,15 @@ export const UserDetail = () => {
               <AvatarLarge path={userInfo?.avatar?.path} size="100%" />
             </div>
             <div className="w-full flex flex-col items-center">
-              <div className="text-3xl font-bold">
-                {userInfo?.firstname} {userInfo?.lastname}
+              <div className="text-3xl font-bold flex">
+                {userInfo?.firstname} {userInfo?.lastname} <div></div>
               </div>
               <div className=" text-neutral-600">{userInfo?.email}</div>
             </div>
-            <div className="text-lg font-semibold text-neutral-700">
-              {userInfo && getHostingTime(userInfo?.created_at)}
+            <div className="flex gap-2">
+              {user?.roles?.map((role) => (
+                <Badge className="text-base">{role}</Badge>
+              ))}
             </div>
           </div>
           {isUserAccount ? (
@@ -110,6 +112,7 @@ export const UserDetail = () => {
               >
                 Edit your profile
               </button>
+
               <UpdateModal
                 userId={Number(userId)}
                 isOpen={isOpen}

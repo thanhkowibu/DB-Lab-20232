@@ -10,8 +10,11 @@ import { DropdownItem } from "../navbar/DropdownItem";
 import { useOnClickOutside } from "@/hooks/useClickOutside";
 import toast from "react-hot-toast";
 import bookingApi from "@/api/modules/booking.api";
+import { BookingResProps } from "@/types/booking.types";
+import BookingModal from "../booking-detail/BookingModal";
 
 type Props = {
+  booking: BookingResProps;
   id: bigint;
   pid: number;
   iid: number;
@@ -57,6 +60,7 @@ const statusGradient = {
 };
 
 const BookingItem: React.FC<Props> = ({
+  booking,
   id,
   pid,
   iid,
@@ -76,6 +80,7 @@ const BookingItem: React.FC<Props> = ({
   const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
 
   const formattedStartDate = format(new Date(check_in_date), "MMM dd");
   const formattedEndDate = format(new Date(check_out_date), "MMM dd");
@@ -176,7 +181,7 @@ const BookingItem: React.FC<Props> = ({
             <div className="absolute z-50 rounded-xl shadow-md bg-white overflow-hidden right-0 top-8 text-nowrap text-start w-48 text-sm">
               <div className="flex flex-col cursor-pointer">
                 <DropdownItem
-                  onClick={() => alert(`booking detail modal of id ${id}`)}
+                  onClick={() => setShowDetail(true)}
                   label="See details"
                 />
                 {status === "PENDING" && (
@@ -212,6 +217,9 @@ const BookingItem: React.FC<Props> = ({
           )}
         </button>
       </div>
+      {showDetail && (
+        <BookingModal booking={booking} setShowPopup={setShowDetail} />
+      )}
     </div>
   );
 };

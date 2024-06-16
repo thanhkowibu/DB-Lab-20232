@@ -78,14 +78,12 @@ const HostedPropertyItem: React.FC<Props> = ({
         </div>
       </div>
 
-      {isDeleteOpen && (
-        <DeletePropertyModal
-          id={id}
-          isOpen={isDeleteOpen}
-          setIsOpen={setIsDeleteOpen}
-          onDeleteSuccess={handleDeleteSuccess}
-        />
-      )}
+      <DeletePropertyModal
+        id={id}
+        isOpen={isDeleteOpen}
+        setIsOpen={setIsDeleteOpen}
+        onDeleteSuccess={handleDeleteSuccess}
+      />
     </div>
   );
 };

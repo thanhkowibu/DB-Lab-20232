@@ -282,3 +282,23 @@ body,
   cursor: pointer;
   box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);
 }
+
+.star-container {
+  position: relative;
+  display: inline-block;
+  font-size: 1.25rem; /* Adjust size as needed */
+  color: #ccc; /* Color for empty star */
+}
+
+.star-container .full-star {
+  color: black; /* Color for full star */
+}
+
+.star-container .half-star {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  overflow: hidden;
+  color: black; /* Color for half star */
+}

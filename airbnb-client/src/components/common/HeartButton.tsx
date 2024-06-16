@@ -1,17 +1,16 @@
 import propertyApi from "@/api/modules/property.api";
 import { useAuth } from "@/context/useAuth";
 import { cn } from "@/lib/utils";
-import { useEffect } from "react";
-
 import toast from "react-hot-toast";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 
 type Props = {
   listingId: bigint;
+  onToggleFavourite?: (listingId: bigint, isFavourited: boolean) => void; // Add this prop
 };
 
-export const HeartButton = ({ listingId }: Props) => {
+export const HeartButton = ({ listingId, onToggleFavourite }: Props) => {
   const navigate = useNavigate();
 
   const { user, fav, setFav, logoutUser } = useAuth();
@@ -31,12 +30,14 @@ export const HeartButton = ({ listingId }: Props) => {
             prevFav ? prevFav.filter((id) => id !== Number(listingId)) : []
           );
           toast.success("Removed from favourites");
+          onToggleFavourite?.(listingId, false); // Notify parent
         } else {
           await propertyApi.like(user.id, listingId);
           setFav((prevFav) =>
             prevFav ? [...prevFav, Number(listingId)] : [Number(listingId)]
           );
           toast.success("Added to favourites");
+          onToggleFavourite?.(listingId, true); // Notify parent
         }
       }
     } catch (err: any) {

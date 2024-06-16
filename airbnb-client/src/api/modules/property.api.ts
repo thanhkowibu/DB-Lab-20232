@@ -10,7 +10,8 @@ const propertyEndpoints = {
   detail: (id: bigint) => `/properties/${id}`,
   like: (userId: number, propertyId: bigint) =>
     `/users/${userId}/properties/${propertyId}/like`,
-  listLiked: (userId: number) => `/users/${userId}/liked-properties`,
+  listLiked: (userId: number, page: number) =>
+    `/users/${userId}/liked-properties?page=${page}&page_size=8`,
 };
 
 const propertyApi = {
@@ -44,9 +45,9 @@ const propertyApi = {
     );
     return res;
   },
-  getLiked: async (userId: number) => {
+  getLiked: async (userId: number, page: number) => {
     const res: ResultProps = await privateClient.get(
-      propertyEndpoints.listLiked(userId)
+      propertyEndpoints.listLiked(userId, page)
     );
     return res;
   },
