@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { PaginationControl } from "../PaginationControl";
 import HostedPropertyItem from "./HostedPropertyItem";
+import { HostedPropertyItemSkeleton } from "../skeleton/HostedPropertySkeleton";
 
 type Props = {};
 
@@ -34,7 +35,7 @@ const ManageListings: React.FC<Props> = ({}) => {
       }
     };
     fetchData();
-  }, [page]);
+  }, [page, user?.id]);
 
   const handleDelete = (id: bigint) => {
     setListings((prev: any) =>
@@ -45,16 +46,22 @@ const ManageListings: React.FC<Props> = ({}) => {
   return (
     <div className="mx-auto px-8 pt-12 pb-16 flex flex-col gap-8">
       {isLoading ? (
-        <div>is loading</div>
+        <div className="flex flex-col items-center gap-6">
+          {[...Array(8)].map((_, idx) => (
+            <HostedPropertyItemSkeleton key={idx} />
+          ))}
+        </div>
       ) : listings?.length === 0 ? (
-        <div>Empty</div>
+        <div className="w-full h-36 flex justify-center items-center text-center text-lg italic">
+          You haven't had any hosted properties yet
+        </div>
       ) : (
         <div className="flex flex-col items-center gap-6">
           {listings?.map((listing: PropertyOverviewProps) => (
             <HostedPropertyItem
               key={listing.id}
               id={listing.id}
-              preview_img={listing.images[0].path}
+              preview_img={listing.images[0]?.path || undefined}
               pname={listing.name}
               lat={listing.latitude}
               long={listing.longitude}
@@ -65,13 +72,15 @@ const ManageListings: React.FC<Props> = ({}) => {
           ))}
         </div>
       )}
-      <div className="flex justify-center w-full">
-        <PaginationControl
-          lastPage={lastPage}
-          currentPage={page}
-          setCurrentPage={setPage}
-        />
-      </div>
+      {listings?.length !== 0 && (
+        <div className="flex justify-center w-full">
+          <PaginationControl
+            lastPage={lastPage}
+            currentPage={page}
+            setCurrentPage={setPage}
+          />
+        </div>
+      )}
     </div>
   );
 };

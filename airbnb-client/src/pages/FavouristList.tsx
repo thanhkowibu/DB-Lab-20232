@@ -77,7 +77,9 @@ export const FavouristList = () => {
             ))}
           </div>
         ) : listings?.length === 0 ? (
-          <div>Empty</div>
+          <div className="w-full h-48 flex justify-center items-center text-center text-lg italic">
+            You haven't liked any properties yet
+          </div>
         ) : (
           <div className="py-8 pb-8 px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {listings?.map((listing: PropertyOverviewProps) => (
@@ -89,13 +91,15 @@ export const FavouristList = () => {
             ))}
           </div>
         )}
-        <div className="flex justify-center pb-32 w-full">
-          <PaginationControl
-            lastPage={lastPage}
-            currentPage={page}
-            setCurrentPage={setPage}
-          />
-        </div>
+        {listings?.length !== 0 && (
+          <div className="flex justify-center pb-32 w-full">
+            <PaginationControl
+              lastPage={lastPage}
+              currentPage={page}
+              setCurrentPage={setPage}
+            />
+          </div>
+        )}
       </Container>
     </>
   );

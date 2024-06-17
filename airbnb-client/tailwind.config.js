@@ -21,7 +21,7 @@ module.exports = {
         2: "2 2 0%",
       },
       backgroundImage: {
-        custom: "url('/images/mika.jfif')",
+        custom: "url('/images/cover.webp')",
       },
       colors: {
         border: "hsl(var(--border))",
@@ -95,8 +95,7 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        shake:
-          "shake 2s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite",
+        shake: "shake 2s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite",
       },
     },
   },

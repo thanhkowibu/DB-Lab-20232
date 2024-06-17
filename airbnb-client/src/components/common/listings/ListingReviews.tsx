@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { PaginationControl } from "../PaginationControl";
 import ReviewItem from "./ReviewItem";
+import ReviewItemSkeleton from "../skeleton/ReviewItemSkeleton";
 
 type Props = {
   id: bigint;
@@ -34,28 +35,23 @@ const ListingReviews: React.FC<Props> = ({ id }) => {
     };
 
     fetchData();
-
-    if (page !== 1 && reviewSectionRef.current) {
-      const navbarHeight = 80;
-      const reviewsElement = reviewSectionRef.current;
-
-      if (reviewsElement) {
-        const yOffset =
-          reviewsElement.getBoundingClientRect().top + window.scrollY;
-        window.scrollTo({ top: yOffset - navbarHeight });
-      }
-    }
-  }, [page]);
+  }, [page, id]);
 
   return (
     <div className="flex flex-col gap-12" ref={reviewSectionRef}>
       <div className="text-3xl font-semibold mt-4">Review on this place</div>
-      {reviews?.length ? (
+      {isLoading ? (
+        <div className="w-full grid grid-cols-2 gap-16">
+          {[...Array(4)].map((_, idx) => (
+            <ReviewItemSkeleton key={idx} />
+          ))}
+        </div>
+      ) : reviews?.length ? (
         <>
           <div className="w-full grid grid-cols-2 gap-16">
             {reviews?.map((review) => (
               <ReviewItem
-                key={review.id} // Add a key here
+                key={review.id}
                 id={review.id}
                 content={review.content}
                 rating={review.rating}
@@ -66,13 +62,15 @@ const ListingReviews: React.FC<Props> = ({ id }) => {
               />
             ))}
           </div>
-          <div className="flex justify-center w-full pt-4">
-            <PaginationControl
-              lastPage={lastPage}
-              currentPage={page}
-              setCurrentPage={setPage}
-            />
-          </div>
+          {reviews?.length !== 0 && (
+            <div className="flex justify-center w-full pt-4">
+              <PaginationControl
+                lastPage={lastPage}
+                currentPage={page}
+                setCurrentPage={setPage}
+              />
+            </div>
+          )}
         </>
       ) : (
         <div className="flex flex-col gap-6 items-center">

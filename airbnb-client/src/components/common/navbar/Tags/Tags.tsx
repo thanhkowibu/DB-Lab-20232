@@ -23,6 +23,7 @@ export const Tags = () => {
             label={item.label}
             icon={item.icon}
             value={item.value}
+            desc={item.desc}
             selected={tag === item.value}
           />
         ))}

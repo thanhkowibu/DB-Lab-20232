@@ -31,7 +31,7 @@ export const UserMenu = () => {
           }}
           className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-200 transition cursor-pointer"
         >
-          Mikabnb your house
+          Airbnb your house
         </div>
         {user && <NotificationButton receiverId={user.id} />}
         <div

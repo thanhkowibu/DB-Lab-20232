@@ -11,6 +11,7 @@ const UpdateAvatar: React.FC<Props> = ({ userId }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [img, setImg] = useState<File | null>(null);
   const [imgUrl, setImgUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { user, updateUser } = useAuth();
 
@@ -39,6 +40,7 @@ const UpdateAvatar: React.FC<Props> = ({ userId }) => {
   };
 
   const onSubmit = async () => {
+    setIsLoading(true);
     if (img) {
       const formData = new FormData();
       formData.append("images", img);
@@ -60,6 +62,8 @@ const UpdateAvatar: React.FC<Props> = ({ userId }) => {
         onClose();
       } catch (err: any) {
         toast.error(err.message);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -106,6 +110,7 @@ const UpdateAvatar: React.FC<Props> = ({ userId }) => {
         secondaryLabel="Cancel"
         secondaryAction={onClose}
         body={bodyContent}
+        disabled={isLoading}
         sm
       />
     </>

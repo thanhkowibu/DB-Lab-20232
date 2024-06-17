@@ -7,11 +7,8 @@ import { BookingResProps } from "@/types/booking.types";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-
 const TripPage: React.FC = () => {
-  const [trips, setTrips] = useState<
-    BookingResProps[] | null
-  >(null);
+  const [trips, setTrips] = useState<BookingResProps[] | null>(null);
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,8 +23,7 @@ const TripPage: React.FC = () => {
           const { pagination_meta_data, bookings } = (
             await bookingApi.getTrips(user?.id, page)
           ).data;
-          if (pagination_meta_data)
-            setLastPage(pagination_meta_data.last_page);
+          if (pagination_meta_data) setLastPage(pagination_meta_data.last_page);
           if (bookings) setTrips(bookings);
         } catch (err: any) {
           toast.error(err.message);
@@ -43,9 +39,7 @@ const TripPage: React.FC = () => {
     setTrips((prevTrips: BookingResProps[] | null) => {
       if (!prevTrips) return null;
       return prevTrips?.map((trip: BookingResProps) =>
-        trip.id === id
-          ? { ...trip, status: "CANCEL" }
-          : trip
+        trip.id === id ? { ...trip, status: "CANCEL" } : trip
       );
     });
   };
@@ -55,11 +49,8 @@ const TripPage: React.FC = () => {
       if (!prevTrips) {
         return null;
       }
-      const newRes = prevTrips.map(
-        (trip: BookingResProps) =>
-          trip.id === id
-            ? { ...trip, is_rated: true }
-            : trip
+      const newRes = prevTrips.map((trip: BookingResProps) =>
+        trip.id === id ? { ...trip, is_rated: true } : trip
       );
       return newRes;
     });
@@ -73,7 +64,9 @@ const TripPage: React.FC = () => {
         {isLoading ? (
           <div>is loading</div>
         ) : trips?.length === 0 ? (
-          <div>Empty</div>
+          <div className="w-full h-48 flex justify-center items-center text-center text-lg italic">
+            You haven't booked any trips yet
+          </div>
         ) : (
           <div className="flex flex-col items-center gap-6">
             {trips?.map((trip: BookingResProps) => (
@@ -86,13 +79,15 @@ const TripPage: React.FC = () => {
             ))}
           </div>
         )}
-        <div className="flex justify-center w-full">
-          <PaginationControl
-            lastPage={lastPage}
-            currentPage={page}
-            setCurrentPage={setPage}
-          />
-        </div>
+        {trips?.length !== 0 && (
+          <div className="flex justify-center w-full">
+            <PaginationControl
+              lastPage={lastPage}
+              currentPage={page}
+              setCurrentPage={setPage}
+            />
+          </div>
+        )}
       </div>
     </Container>
   );

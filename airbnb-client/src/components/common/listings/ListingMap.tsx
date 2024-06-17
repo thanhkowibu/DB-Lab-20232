@@ -1,5 +1,11 @@
 import Map, { Marker } from "react-map-gl";
 import { FaHouse } from "react-icons/fa6";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const TOKEN = import.meta.env.VITE_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -24,9 +30,20 @@ const ListingMap: React.FC<Props> = ({ lat, long }) => {
         >
           <Marker latitude={lat} longitude={long}>
             <div className=" bg-rose-500/20 flex items-center justify-center rounded-full p-8 text-lg font-semibold cursor-pointer border shadow-lg">
-              <div className=" bg-rose-500 flex items-center justify-center rounded-full p-3 text-lg font-semibold cursor-pointer">
-                <FaHouse size={24} fill="white" />
-              </div>
+              <TooltipProvider delayDuration={200}>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <div className=" bg-rose-500 flex items-center justify-center rounded-full p-3 text-lg font-semibold cursor-pointer">
+                      <FaHouse size={24} fill="white" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" sideOffset={10}>
+                    <p className=" text-neutral-600">
+                      Exact location will be provided after booking
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </Marker>
         </Map>

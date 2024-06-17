@@ -7,7 +7,7 @@ import DeletePropertyModal from "./DeletePropertyModal";
 
 type Props = {
   id: bigint;
-  preview_img: string;
+  preview_img: string | undefined;
   pname: string;
   lat: number;
   long: number;

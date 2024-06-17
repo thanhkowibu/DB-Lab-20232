@@ -1,7 +1,11 @@
+import { cn } from "@/lib/utils";
+
 export const Confirmation = ({
   handleReview,
+  isLoading,
 }: {
   handleReview: () => void;
+  isLoading: boolean;
 }) => {
   return (
     <div className="flex flex-col gap-10 items-center justify-center h-full">
@@ -15,12 +19,18 @@ export const Confirmation = ({
         <button
           type="submit"
           className="bg-rose-500 py-3 mt-5 px-10 text-white text-base hover:bg-rose-600 font-medium rounded-lg cursor-pointer"
+          disabled={isLoading}
         >
-          Mikabnb my listing XD !
+          Airbnb my listing !
         </button>
         <button
           type="button"
-          className="bg-white py-3 mt-5 px-5 text-black border-2 border-black hover:bg-neutral-100 text-base font-medium rounded-lg cursor-pointer"
+          className={cn(
+            "bg-white py-3 mt-5 px-5 text-black border-2 border-black hover:bg-neutral-100 text-base font-medium rounded-lg cursor-pointer",
+            {
+              "opacity-50 hover:opacity-50 cursor-not-allowed": isLoading,
+            }
+          )}
           onClick={handleReview}
         >
           Review the settings again

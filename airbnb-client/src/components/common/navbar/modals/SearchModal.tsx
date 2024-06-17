@@ -11,6 +11,7 @@ import { Modal } from "./Modal";
 import PriceSlider from "../../inputs/PriceSlider";
 import CategoriesSelect from "../../inputs/CategoriesSelect";
 import SortingOptions from "../../inputs/SortingOptions";
+import toast from "react-hot-toast";
 
 const TOKEN = import.meta.env.VITE_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -71,6 +72,15 @@ const SearchModal: React.FC<Props> = ({}) => {
   const onSubmit = async () => {
     if (step !== STEPS.ADVANCED) {
       return onNext();
+    }
+
+    if (minPrice >= maxPrice) {
+      toast.error("Min price must be less than max price");
+      return;
+    }
+    if (maxPrice < 50) {
+      toast.error("Max price must be at least $50");
+      return;
     }
 
     let currentQuery = {};

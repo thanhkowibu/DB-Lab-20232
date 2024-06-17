@@ -3,11 +3,13 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/useAuth";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const HostStartForm = () => {
   const { user } = useAuth();
-  const [isLoading, setIsLoading] =
-    useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const alreadyHost = user?.roles?.includes("host");
 
@@ -15,17 +17,15 @@ const HostStartForm = () => {
     try {
       setIsLoading(true);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const res: any = await privateClient.post(
-        "/users/host-request"
-      );
+      const res: any = await privateClient.post("/users/host-request");
       if (res.flag === false) {
         throw new Error(res.message);
       } else {
-        toast.success(
-          "Your request to become host has been sent."
-        );
+        toast.success("Your request to become host has been sent.");
+
+        navigate("/properties");
       }
-    } catch (err) {
+    } catch (err: any) {
       toast.error(err?.message);
     } finally {
       setIsLoading(false);
@@ -37,7 +37,7 @@ const HostStartForm = () => {
   return (
     <div className="pb-48 flex items-center justify-center">
       <Button
-        className="w-1/3 h-[160px] rounded-md text-3xl"
+        className="w-1/3 h-[160px] rounded-full text-3xl"
         variant={"airbnbOutline"}
         onClick={handleRequestToBecomeHost}
         disabled={isLoading}

@@ -81,7 +81,7 @@ const UpdateModal: React.FC<Props> = ({ userId, isOpen, setIsOpen }) => {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     setIsLoading(true);
-    console.log(data.gender, user?.gender);
+    // console.log(data.gender, user?.gender);
     try {
       const filteredData = Object.fromEntries(
         Object.entries(data).filter(([key, value]) => {
@@ -197,6 +197,7 @@ const UpdateModal: React.FC<Props> = ({ userId, isOpen, setIsOpen }) => {
       secondaryAction={onClose}
       body={bodyContent}
       sm
+      disabled={isLoading}
     />
   );
 };

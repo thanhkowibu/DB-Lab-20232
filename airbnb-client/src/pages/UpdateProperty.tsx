@@ -20,6 +20,7 @@ import { PlaceDetails } from "@/components/common/create/PlaceDetails";
 import { Button } from "@/components/ui/button";
 import { PhotosUpdate } from "@/components/common/create/PhotosUpdate";
 import propertyApi from "@/api/modules/property.api";
+import { cn } from "@/lib/utils";
 
 const schema = yup.object().shape({
   nightly_price: yup.number(),
@@ -108,7 +109,10 @@ const UpdateProperty: React.FC<Props> = ({}) => {
   }, [listingId, setValue]);
 
   const onSubmit = async (form: PropertyReqProps) => {
-    // console.log(form);
+    if (form.categories.length === 0) {
+      toast.error("Please select at least one category.");
+      return;
+    }
 
     const formData = new FormData();
 
@@ -216,7 +220,14 @@ const UpdateProperty: React.FC<Props> = ({}) => {
         nooverflow
       />
       <div className="flex justify-center">
-        <Button type="submit" variant="airbnb" className="w-1/2">
+        <Button
+          disabled={isLoading}
+          type="submit"
+          variant="airbnb"
+          className={cn("w-1/2", {
+            "cursor-not-allowed opacity-50": isLoading,
+          })}
+        >
           Update your change
         </Button>
       </div>
