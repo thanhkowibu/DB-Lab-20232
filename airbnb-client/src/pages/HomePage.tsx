@@ -37,11 +37,11 @@ export const HomePage = () => {
         <span className="block mb-4 text-xs md:text-sm text-rose-500 font-medium">
           Discover Your Next Trip on
         </span>
-        <h3 className="text-4xl md:text-7xl font-bold">Mikabnb</h3>
+        <h3 className="text-4xl md:text-7xl font-bold">Airbnb</h3>
         <p className="text-base md:text-lg text-neutral-600 text-justify my-4 md:my-6 mr-6">
           A short-term rental platform for travel enthusiasts. Whether you're
           looking for a cozy apartment, a beachfront villa, or an urban loft,
-          Mikabnb has you covered.
+          Airbnb has you covered.
         </p>
         <button
           onClick={handleClick}

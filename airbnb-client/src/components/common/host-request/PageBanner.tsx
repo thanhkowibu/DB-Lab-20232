@@ -2,7 +2,7 @@ const PageBanner = () => {
   return (
     <div className="mt-32 mb-16 pb-16">
       <p className="text-center font-bold text-5xl mb-8">
-        Mikabnb it easily with Mikabnb Setup
+        Airbnb it easily with Airbnb Setup
       </p>
       <div className="w-full px-2">
         <img src="/images/banner.webp" alt="banner" />
@@ -25,12 +25,12 @@ const PageBanner = () => {
           <p>
             For your first booking, you can choose to welcome an experienced
             guest who has at least three stays and a good track record on
-            Mikabnb.
+            Airbnb.
           </p>
         </div>
         <div className="px-3 py-3">
           <h2 className="font-bold text-xl mb-2">
-            Specialized support from Mikabnb
+            Specialized support from Airbnb
           </h2>
           <p>
             New Hosts get one-tap access to specially trained Community Support
