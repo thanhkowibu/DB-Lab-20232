@@ -236,10 +236,10 @@ const BookingPage: React.FC<Props> = ({}) => {
                 <div className="text-sm">
                   By selecting the button below, I agree to the{" "}
                   <span className="underline font-semibold">
-                    Host's House Rules, Ground rules for guests, Mikabnb's
+                    Host's House Rules, Ground rules for guests, Airbnb's
                     Rebooking and Refund Policy,
                   </span>{" "}
-                  and that Mikabnb can{" "}
+                  and that Airbnb can{" "}
                   <span className="underline font-semibold">
                     charge my payment method
                   </span>{" "}

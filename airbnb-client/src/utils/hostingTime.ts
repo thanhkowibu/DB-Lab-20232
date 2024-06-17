@@ -14,15 +14,15 @@ export const getHostingTime = (hostCreatedAt: Date) => {
   let hostingTime;
 
   if (years > 0) {
-    hostingTime = `${years} years on Mikabnb`;
+    hostingTime = `${years} years on Airbnb`;
   } else if (months > 0) {
-    hostingTime = `${months} months on Mikabnb`;
+    hostingTime = `${months} months on Airbnb`;
   } else if (weeks > 0) {
-    hostingTime = `${weeks} weeks on Mikabnb`;
+    hostingTime = `${weeks} weeks on Airbnb`;
   } else if (days > 0) {
-    hostingTime = `${days} days on Mikabnb`;
+    hostingTime = `${days} days on Airbnb`;
   } else {
-    hostingTime = "Mikabnb newcomer";
+    hostingTime = "Airbnb newcomer";
   }
 
   return hostingTime;
