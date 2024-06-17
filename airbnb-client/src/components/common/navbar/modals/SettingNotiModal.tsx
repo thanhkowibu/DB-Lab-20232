@@ -20,6 +20,7 @@ type Props = {
 const SettingNotiModal: React.FC<Props> = ({ isOpen, setIsOpen }) => {
   const [preferences, setPreferences] =
     useState<NotificationPreferences | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { user } = useAuth();
 
@@ -35,6 +36,8 @@ const SettingNotiModal: React.FC<Props> = ({ isOpen, setIsOpen }) => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
+
     if (isOpen && user) {
       const fetchData = async () => {
         try {
@@ -46,6 +49,8 @@ const SettingNotiModal: React.FC<Props> = ({ isOpen, setIsOpen }) => {
           }
         } catch (err: any) {
           toast.error(err.message);
+        } finally {
+          setIsLoading(false);
         }
       };
 
@@ -106,6 +111,7 @@ const SettingNotiModal: React.FC<Props> = ({ isOpen, setIsOpen }) => {
       secondaryAction={onClose}
       body={bodyContent}
       sm
+      disabled={isLoading}
     />
   );
 };

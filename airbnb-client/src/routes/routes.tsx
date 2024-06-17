@@ -13,6 +13,7 @@ import PageNotFound from "@/pages/PageNotFound";
 import UserProperties from "@/pages/UserProperties";
 import BecomingHostPage from "@/pages/BecomingHostPage";
 import { FavouristList } from "@/pages/FavouristList";
+import HostRoute from "./HostRoute";
 
 export const routesGen = {
   home: "/",
@@ -44,7 +45,9 @@ const routes = [
     path: "/properties/create",
     element: (
       <ProtectedRoute>
-        <CreateProperty />
+        <HostRoute>
+          <CreateProperty />
+        </HostRoute>
       </ProtectedRoute>
     ),
   },
@@ -80,7 +83,9 @@ const routes = [
     path: "/hosting",
     element: (
       <ProtectedRoute>
-        <HostingPage />
+        <HostRoute>
+          <HostingPage />
+        </HostRoute>
       </ProtectedRoute>
     ),
     state: "hosting",

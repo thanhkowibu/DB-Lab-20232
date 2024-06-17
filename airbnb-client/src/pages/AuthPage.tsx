@@ -4,6 +4,7 @@ import { RegisterSection } from "@/components/common/auth/RegisterSection";
 import { LoginSection } from "@/components/common/auth/LoginSection";
 import { useLocation } from "react-router-dom";
 import { ActivateTokenModal } from "@/components/common/auth/ActivateTokenModal";
+import { motion } from "framer-motion";
 
 export const AuthPage = () => {
   const location = useLocation();
@@ -51,7 +52,15 @@ export const AuthPage = () => {
 
   return (
     <div className="bg-neutral-100 w-full h-screen flex flex-col items-center justify-center sm:p-4">
-      <div className="bg-white relative w-full max-w-xs md:max-w-2xl lg:max-w-4xl min-h-[540px] rounded-xl shadow-2xl drop-shadow-2xl overflow-hidden">
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{
+          opacity: 1,
+          y: 0,
+          transition: { ease: "easeInOut", duration: 0.5 },
+        }}
+        className="bg-white relative w-full max-w-xs md:max-w-2xl lg:max-w-4xl min-h-[540px] rounded-xl shadow-2xl drop-shadow-2xl overflow-hidden"
+      >
         <LoginSection
           isToggled={isToggled}
           isZIndexLowered={isZIndexLowered}
@@ -64,7 +73,7 @@ export const AuthPage = () => {
           />
         )}
         <OverlaySection handleToggle={handleToggle} isToggled={isToggled} />
-      </div>
+      </motion.div>
       <ActivateTokenModal
         isOpen={isOpen}
         handleCloseModal={handleCloseModal}

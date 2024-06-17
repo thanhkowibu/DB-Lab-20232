@@ -43,6 +43,7 @@ export const CreateProperty = () => {
   const [step, setStep] = useState(0);
   const [imgs, setImgs] = useState<File[]>([]);
   const [imgUrls, setImgUrls] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { logoutUser } = useAuth();
   const navigate = useNavigate();
@@ -65,6 +66,7 @@ export const CreateProperty = () => {
 
   const onSubmit = async (form: PropertyReqProps) => {
     // console.log(form);
+    setIsLoading(true);
 
     const formData = new FormData();
 
@@ -97,7 +99,7 @@ export const CreateProperty = () => {
     // Post data to API...
     try {
       const res = await createListing(formData);
-      console.log(res);
+      // console.log(res);
 
       toast.success("New listing created successfully");
       handleNext();
@@ -108,6 +110,8 @@ export const CreateProperty = () => {
         logoutUser();
         navigate("/auth");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -180,7 +184,7 @@ export const CreateProperty = () => {
     ),
     () => <StepThreeStarter />,
     () => <Price formPrice={getValues("nightly_price")} setValue={setValue} />,
-    () => <Confirmation handleReview={handleReview} />,
+    () => <Confirmation handleReview={handleReview} isLoading={isLoading} />,
     () => <ListingCreated />,
   ];
 

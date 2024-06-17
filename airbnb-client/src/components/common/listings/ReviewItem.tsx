@@ -61,11 +61,11 @@ const ReviewItem: React.FC<ReviewProps> = ({
         </div>
 
         {is_recommend ? (
-          <div className="flex font-semibold items-center gap-2">
+          <div className="flex font-semibold items-center gap-2 text-blue-600">
             Recommended <FaThumbsUp />
           </div>
         ) : (
-          <div className="flex font-semibold items-center gap-2">
+          <div className="flex font-semibold items-center gap-2 text-rose-600">
             Not recommended <FaThumbsDown />
           </div>
         )}

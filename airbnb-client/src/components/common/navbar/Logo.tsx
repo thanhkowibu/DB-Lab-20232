@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import LogoImg from "/images/Mika_Heart.png";
+import LogoImg from "/images/favicon.ico";
 
 export const Logo = () => {
   const navigate = useNavigate();

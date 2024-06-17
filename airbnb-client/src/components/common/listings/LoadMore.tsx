@@ -26,7 +26,7 @@ const LoadMore: React.FC<Props> = ({ params, lastpage }) => {
     const nextPage = state.page + 1;
 
     const newParams = params + `&page_size=${PAGE_SIZE}&page=${nextPage}`;
-    console.log(newParams);
+    // console.log(newParams);
     try {
       const { properties } = await getListings(newParams);
       const newListings = properties ?? [];

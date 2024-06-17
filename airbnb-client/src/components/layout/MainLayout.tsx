@@ -1,5 +1,4 @@
 import { Outlet, useLocation } from "react-router-dom";
-import { GlobalLoading } from "../common/GlobalLoading";
 import { Navbar } from "../common/navbar/Navbar";
 import { Footer } from "../common/Footer";
 import { ToasterProvider } from "@/providers/ToasterProvider";
@@ -16,7 +15,6 @@ export const MainLayout = () => {
 
   return (
     <>
-      {/* <GlobalLoading /> */}
       <ToasterProvider />
       <div className="">
         {shouldShowNavbar && <Navbar />}

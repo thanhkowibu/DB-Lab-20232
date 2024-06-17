@@ -35,10 +35,15 @@ export const LoginSection = ({
       await loginUser({ email: form.email, password: form.password });
       toast.success("Login successfully");
     } catch (err: any) {
+      // console.log(err);
       if (err.message === "User is disabled") {
         await resendToken(form.email);
         setShowMsg(true);
         setLoginFormData(form);
+      } else if (err.message === "User account is locked") {
+        toast.error(
+          "Your account has been banned. Please contact the admin for more details"
+        );
       } else if (err.data) {
         if (err.code === 401) toast.error(err.message);
         else toast.error(err.data.email || err.data.password);

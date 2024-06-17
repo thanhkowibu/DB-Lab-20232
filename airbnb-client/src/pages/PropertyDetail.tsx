@@ -7,6 +7,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import PageNotFound from "./PageNotFound";
 import UpdateProperty from "./UpdateProperty";
 import { useAuth } from "@/context/useAuth";
+import PropertyDetailSkeleton from "@/components/common/skeleton/PropertyDetailSkeleton";
 
 export const PropertyDetail = () => {
   const [listing, setListing] = useState<PropertyDetailProps | null>(null);
@@ -22,6 +23,7 @@ export const PropertyDetail = () => {
   const listingId = useLocation().pathname.split("/")[2];
 
   useEffect(() => {
+    window.scrollTo({ top: 0 });
     const fetchData = async () => {
       try {
         const { data } = await getListingDetail(BigInt(listingId));
@@ -40,6 +42,14 @@ export const PropertyDetail = () => {
 
   // console.log(listing);
   return (
-    <>{!listing ? <PageNotFound /> : <ListingClient listing={listing} />}</>
+    <>
+      {isLoading ? (
+        <PropertyDetailSkeleton />
+      ) : !listing ? (
+        <PageNotFound />
+      ) : (
+        <ListingClient listing={listing} />
+      )}
+    </>
   );
 };

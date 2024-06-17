@@ -1,5 +1,5 @@
 export const OverView = () => {
-  const mainTitle = "It's easy to get started on Mikabnb";
+  const mainTitle = "It's easy to get started on Airbnb";
   const data = [
     {
       title: "Tell us about your place",

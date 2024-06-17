@@ -18,6 +18,7 @@
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slider": "^1.1.2",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-tooltip": "^1.0.7",
     "@types/mapbox__mapbox-gl-geocoder": "^5.0.0",
     "axios": "^1.6.8",
     "canvas-confetti": "^1.9.3",

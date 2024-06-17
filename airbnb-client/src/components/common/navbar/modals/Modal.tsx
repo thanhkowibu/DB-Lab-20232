@@ -116,6 +116,10 @@ export const Modal = ({
                     onClick={handleSubmit}
                     disabled={disabled}
                     variant="airbnb"
+                    className={cn({
+                      "opacity-50 hover:opacity-50 cursor-not-allowed":
+                        disabled,
+                    })}
                   >
                     {actionLabel}
                   </Button>

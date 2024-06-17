@@ -75,67 +75,67 @@ const shuffle = (array: any) => {
 const squareData = [
   {
     id: 1,
-    src: "http://localhost:9000/airbnb-media/82286a55-a42f-4ba0-a7d5-f02c24361318.jpg",
+    src: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aG91c2V8ZW58MHx8MHx8fDA%3D",
   },
   {
     id: 2,
-    src: "http://localhost:9000/airbnb-media/3f2c024e-fec7-4174-90fe-da845763e20f.jpg",
+    src: "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8aG91c2V8ZW58MHx8MHx8fDA%3D",
   },
   {
     id: 3,
-    src: "http://localhost:9000/airbnb-media/48480027-86a3-484e-9aab-2c5959a55066.jpg",
+    src: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8aG91c2V8ZW58MHx8MHx8fDA%3D",
   },
   {
     id: 4,
-    src: "http://localhost:9000/airbnb-media/777d9717-9307-4ab9-b281-56dc9c8f0dbb.jpg",
+    src: "https://images.unsplash.com/photo-1575517111478-7f6afd0973db?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjJ8fGhvdXNlfGVufDB8fDB8fHww",
   },
   {
     id: 5,
-    src: "http://localhost:9000/airbnb-media/08a9a187-3cd9-4d55-9870-74c4effcba1d.jpg",
+    src: "https://images.unsplash.com/photo-1502005097973-6a7082348e28?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzV8fGhvdXNlfGVufDB8fDB8fHww",
   },
   {
     id: 6,
-    src: "http://localhost:9000/airbnb-media/ac314a0f-2abd-48ae-9e39-1f74e7101ec2.jpg",
+    src: "https://plus.unsplash.com/premium_photo-1661883964999-c1bcb57a7357?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDF8fGhvdXNlfGVufDB8fDB8fHww",
   },
   {
     id: 7,
-    src: "http://localhost:9000/airbnb-media/bdf95a30-e790-46e0-8583-0d73452d8086.jpg",
+    src: "https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHBvb2x8ZW58MHx8MHx8fDA%3D",
   },
   {
     id: 8,
-    src: "http://localhost:9000/airbnb-media/342b5678-14e0-4483-8aaf-cb89c930f61c.jpg",
+    src: "https://plus.unsplash.com/premium_photo-1670076513880-f58e3c377903?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZnVybml0dXJlfGVufDB8fDB8fHww",
   },
   {
     id: 9,
-    src: "http://localhost:9000/airbnb-media/50eacca5-d297-4540-b537-2f3e88fa196e.jpg",
+    src: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8ZnVybml0dXJlfGVufDB8fDB8fHww",
   },
   {
     id: 10,
-    src: "http://localhost:9000/airbnb-media/b4334ff3-f013-45ca-9712-89bd43b6d423.jpg",
+    src: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGZ1cm5pdHVyZXxlbnwwfHwwfHx8MA%3D%3D",
   },
   {
     id: 11,
-    src: "http://localhost:9000/airbnb-media/82068c75-d8aa-4c95-9ee5-5f46ec70f9fd.jpg",
+    src: "https://plus.unsplash.com/premium_photo-1678402545077-7a9ec2b5e5b8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGZ1cm5pdHVyZXxlbnwwfHwwfHx8MA%3D%3D",
   },
   {
     id: 12,
-    src: "http://localhost:9000/airbnb-media/f4be7cb7-4ff1-4ad9-968e-518a131940a6.jpg",
+    src: "https://images.unsplash.com/photo-1544727219-d2ff78f0f148?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z2FyZGVufGVufDB8fDB8fHww",
   },
   {
     id: 13,
-    src: "http://localhost:9000/airbnb-media/c7916334-7501-4982-8255-1870360fdd90.jpg",
+    src: "https://images.unsplash.com/photo-1571192776145-9f563c1df686?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Z2FyZGVufGVufDB8fDB8fHww",
   },
   {
     id: 14,
-    src: "http://localhost:9000/airbnb-media/57d1c2d8-5a9d-4313-beff-cc2a392968a9.jpg",
+    src: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhY2h8ZW58MHx8MHx8fDA%3D",
   },
   {
     id: 15,
-    src: "http://localhost:9000/airbnb-media/9929110b-5033-4a43-ab1d-70ef663548ac.jpg",
+    src: "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGJlYWNofGVufDB8fDB8fHww",
   },
   {
     id: 16,
-    src: "http://localhost:9000/airbnb-media/b7db8a1a-2073-4f31-b203-b015b00d0ca0.jpg",
+    src: "https://plus.unsplash.com/premium_photo-1686090448422-de8536066f64?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2FiaW58ZW58MHx8MHx8fDA%3D",
   },
 ];
 

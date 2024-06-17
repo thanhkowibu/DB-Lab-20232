@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import bookingApi from "@/api/modules/booking.api";
 import { BookingCompleted } from "@/components/common/booking/BookingCompleted";
+import { cn } from "@/lib/utils";
 
 type Props = {};
 
@@ -31,6 +32,7 @@ const BookingPage: React.FC<Props> = ({}) => {
   const [cleanFee, setCleanFee] = useState(true);
   const [serviceFee, setServiceFee] = useState(true);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     totalPrice,
@@ -54,6 +56,8 @@ const BookingPage: React.FC<Props> = ({}) => {
   }, [adults, children, pet]);
 
   const handleBooking = async () => {
+    setIsLoading(true);
+
     const input = {
       check_in_date: startDate,
       check_out_date: endDate,
@@ -72,7 +76,10 @@ const BookingPage: React.FC<Props> = ({}) => {
         setIsCompleted(true);
       }
     } catch (err: any) {
+      // console.log(err);
       toast.error(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -243,7 +250,10 @@ const BookingPage: React.FC<Props> = ({}) => {
                   onClick={handleBooking}
                   variant="airbnb"
                   size="lg"
-                  className="rounded-xl"
+                  className={cn("rounded-xl", {
+                    "opacity-50 hover:opacity-50 cursor-not-allowed": isLoading,
+                  })}
+                  disabled={isLoading}
                 >
                   Request to book
                 </Button>

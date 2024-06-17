@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { PaginationControl } from "../PaginationControl";
 import BookingItem from "./BookingItem";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton component
 
 type FilterType = "All" | "Pending" | "Upcoming" | "Past" | "Cancel";
 
@@ -50,7 +51,7 @@ const ManageBookings: React.FC<Props> = ({}) => {
       }
     };
     fetchData(filter);
-  }, [page, filter]);
+  }, [page, filter, user?.id]);
 
   const handleUpdate = (id: bigint, status: string) => {
     setBookings((prev: any) =>
@@ -80,9 +81,65 @@ const ManageBookings: React.FC<Props> = ({}) => {
         ))}
       </div>
       {isLoading ? (
-        <div>is loading</div>
+        <div className="flex flex-col items-center gap-6">
+          <div className="flex justify-between items-center gap-4 w-full border-b-2 pb-6 px-2 text-xl font-semibold">
+            <div className="w-14 h-14 rounded-xl overflow-hidden"></div>
+            <div className=" w-48 text-center flex justify-center">
+              <Skeleton className="w-20 h-6" />
+            </div>
+            <div className="w-24 text-center">
+              <Skeleton className="w-full h-6" />
+            </div>
+            <div className="w-16 text-center">
+              <Skeleton className="w-full h-6" />
+            </div>
+            <div className="w-32 text-center">
+              <Skeleton className="w-full h-6" />
+            </div>
+            <div className="w-32 text-center">
+              <Skeleton className="w-full h-6" />
+            </div>
+            <div className="w-24 text-center">
+              <Skeleton className="w-full h-6" />
+            </div>
+            <div className="w-10"></div>
+          </div>
+          {[...Array(5)].map((_, idx) => (
+            <div
+              key={idx}
+              className="flex justify-between items-center gap-4 w-full py-4"
+            >
+              <div className="w-14 h-14 rounded-xl overflow-hidden">
+                <Skeleton className="w-full h-full" />
+              </div>
+              <div className=" w-48 text-center">
+                <Skeleton className="w-full h-6" />
+              </div>
+              <div className="w-24 text-center">
+                <Skeleton className="w-full h-6" />
+              </div>
+              <div className="w-16 text-center">
+                <Skeleton className="w-full h-6" />
+              </div>
+              <div className="w-32 text-center">
+                <Skeleton className="w-full h-6" />
+              </div>
+              <div className="w-32 text-center">
+                <Skeleton className="w-full h-6" />
+              </div>
+              <div className="w-24 text-center">
+                <Skeleton className="w-full h-6" />
+              </div>
+              <div className="w-10">
+                <Skeleton className="w-full h-6" />
+              </div>
+            </div>
+          ))}
+        </div>
       ) : bookings?.length === 0 ? (
-        <div>Empty</div>
+        <div className="w-full h-36 flex justify-center items-center text-center text-lg italic">
+          There's no requested bookings yet
+        </div>
       ) : (
         <div className="flex flex-col items-center gap-6">
           <div className="flex justify-between items-center gap-4 w-full border-b-2 pb-6 px-2 text-xl font-semibold">
@@ -118,13 +175,15 @@ const ManageBookings: React.FC<Props> = ({}) => {
           ))}
         </div>
       )}
-      <div className="flex justify-center w-full">
-        <PaginationControl
-          lastPage={lastPage}
-          currentPage={page}
-          setCurrentPage={setPage}
-        />
-      </div>
+      {bookings?.length !== 0 && (
+        <div className="flex justify-center w-full">
+          <PaginationControl
+            lastPage={lastPage}
+            currentPage={page}
+            setCurrentPage={setPage}
+          />
+        </div>
+      )}
     </div>
   );
 };

@@ -73,7 +73,7 @@ const bookingApi = {
     return res;
   },
   getHosted: async (id: number, page: number, filter: string = "") => {
-    let queryParams = `?page_size=${PAGE_SIZE}&page=${page}`;
+    let queryParams = `?page_size=5&page=${page}`;
     if (filter) {
       queryParams += `&filter=${filter}`;
     }

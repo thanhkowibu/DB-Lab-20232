@@ -15,6 +15,7 @@ import UpdateModal from "@/components/common/inputs/UpdateModal";
 import userApi from "@/api/modules/user.api";
 import ReportModal from "@/components/common/inputs/ReportModal";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const OPTIONS: EmblaOptionsType = { slidesToScroll: "auto" };
 
@@ -56,7 +57,7 @@ export const UserDetail = () => {
       setIsLoading(false);
     };
     fetchData();
-  }, [userId, isUserAccount, user]);
+  }, [userId, isUserAccount, user, navigate]);
 
   const handleOpen = async () => {
     try {
@@ -85,77 +86,102 @@ export const UserDetail = () => {
 
   return (
     <Container>
-      <div className="max-w-[1150px] mx-auto pt-16 grid grid-cols-3 gap-6">
-        <div className="col-span-1 flex flex-col gap-8">
-          <div className="w-full px-12 py-4 flex flex-col items-center gap-6 rounded-2xl shadow-neutral-300 shadow-lg">
-            <div className="relative w-full aspect-square">
-              {isUserAccount && <UpdateAvatar userId={Number(userId)} />}
-              <AvatarLarge path={userInfo?.avatar?.path} size="100%" />
+      {isLoading ? (
+        <div className="max-w-[1150px] mx-auto pt-16 grid grid-cols-3 gap-6">
+          <div className="col-span-1 flex flex-col gap-8">
+            <div className="w-full px-12 py-4 flex flex-col items-center gap-6 rounded-2xl shadow-neutral-300 shadow-lg">
+              <Skeleton className="relative w-full aspect-square rounded-full" />
+              <Skeleton className="w-full h-8" />
+              <Skeleton className="w-full h-4" />
+              <Skeleton className="w-full h-4" />
             </div>
-            <div className="w-full flex flex-col items-center">
-              <div className="text-3xl font-bold flex">
-                {userInfo?.firstname} {userInfo?.lastname} <div></div>
-              </div>
-              <div className=" text-neutral-600">{userInfo?.email}</div>
-            </div>
-            <div className="flex gap-2">
-              {user?.roles?.map((role) => (
-                <Badge className="text-base">{role}</Badge>
-              ))}
+            <Skeleton className="w-full h-10" />
+          </div>
+          <div className="col-span-2 h-20 flex flex-col gap-6">
+            <div className="flex flex-col gap-8 pl-24 w-full">
+              <Skeleton className="w-96 h-12" />
+              <Skeleton className="w-full h-48" />
             </div>
           </div>
-          {isUserAccount ? (
-            <div className="flex justify-center px-6 gap-4 w-full">
-              <button
-                onClick={handleOpen}
-                className="font-semibold text-sm w-36 rounded-lg py-2 border-2 border-neutral-700 hover:bg-neutral-100"
-              >
-                Edit your profile
-              </button>
-
-              <UpdateModal
-                userId={Number(userId)}
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
-              />
-            </div>
-          ) : (
-            <>
-              <div
-                onClick={handleReportOpen}
-                className="flex items-center px-6 gap-4 cursor-pointer"
-              >
-                <FaFlag />
-                <div className="text-lg font-semibold underline">
-                  Report this user
+        </div>
+      ) : (
+        <div className="max-w-[1150px] mx-auto pt-16 grid grid-cols-3 gap-6">
+          <div className="col-span-1 flex flex-col gap-8">
+            <div className="w-full px-12 py-4 flex flex-col items-center gap-6 rounded-2xl shadow-neutral-300 shadow-lg">
+              <div className="relative w-full aspect-square">
+                {isUserAccount && <UpdateAvatar userId={Number(userId)} />}
+                <AvatarLarge path={userInfo?.avatar?.path} size="100%" />
+              </div>
+              <div className="w-full flex flex-col items-center">
+                <div className="text-3xl font-bold flex">
+                  {userInfo?.firstname} {userInfo?.lastname} <div></div>
                 </div>
+                <div className=" text-neutral-600">{userInfo?.email}</div>
               </div>
-              <ReportModal
-                userId={Number(userId)}
-                isOpen={isReportOpen}
-                setIsOpen={setIsReportOpen}
-              />
-            </>
-          )}
-        </div>
-        <div className=" col-span-2 h-20 flex flex-col gap-6">
-          <div className="flex flex-col gap-8 pl-24 w-full">
-            <div className="flex justify-between w-full px-2">
-              <div className="text-3xl font-semibold">
-                {userInfo?.lastname}'s top listings
+              <div className="flex gap-2">
+                {userInfo?.roles?.map((role, index) => (
+                  <Badge key={index} className="text-base">
+                    {role}
+                  </Badge>
+                ))}
               </div>
-              <button
-                onClick={() => navigate(`/users/${userId}/properties`)}
-                className="font-semibold rounded-xl text-sm px-6 border-[1px] border-neutral-700 hover:bg-neutral-100"
-              >
-                See all
-              </button>
             </div>
+            {isUserAccount ? (
+              <div className="flex justify-center px-6 gap-4 w-full">
+                <button
+                  onClick={handleOpen}
+                  className="font-semibold text-sm w-36 rounded-lg py-2 border-2 border-neutral-700 hover:bg-neutral-100"
+                >
+                  Edit your profile
+                </button>
 
-            <UserTopListings topProperties={topProperties} options={OPTIONS} />
+                <UpdateModal
+                  userId={Number(userId)}
+                  isOpen={isOpen}
+                  setIsOpen={setIsOpen}
+                />
+              </div>
+            ) : (
+              <>
+                <div
+                  onClick={handleReportOpen}
+                  className="flex items-center px-6 gap-4 cursor-pointer"
+                >
+                  <FaFlag />
+                  <div className="text-lg font-semibold underline">
+                    Report this user
+                  </div>
+                </div>
+                <ReportModal
+                  userId={Number(userId)}
+                  isOpen={isReportOpen}
+                  setIsOpen={setIsReportOpen}
+                />
+              </>
+            )}
+          </div>
+          <div className=" col-span-2 h-20 flex flex-col gap-6">
+            <div className="flex flex-col gap-8 pl-24 w-full">
+              <div className="flex justify-between w-full px-2">
+                <div className="text-3xl font-semibold">
+                  {userInfo?.lastname}'s top listings
+                </div>
+                <button
+                  onClick={() => navigate(`/users/${userId}/properties`)}
+                  className="font-semibold rounded-xl text-sm px-6 border-[1px] border-neutral-700 hover:bg-neutral-100"
+                >
+                  See all
+                </button>
+              </div>
+
+              <UserTopListings
+                topProperties={topProperties}
+                options={OPTIONS}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </Container>
   );
 };

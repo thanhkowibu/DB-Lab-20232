@@ -71,6 +71,10 @@ export const ListingClient = ({ listing }: Props) => {
 
   const reviewsRef = useRef<HTMLDivElement>(null);
 
+  const today = new Date();
+
+  const disabledDatesWithToday = [today, ...listing.booking_date];
+
   return (
     <Container>
       <div className="max-w-[1150px] mx-auto pb-48">
@@ -104,7 +108,7 @@ export const ListingClient = ({ listing }: Props) => {
                 onChangeDate={(value) => setDateRange(value)}
                 dateRange={dateRange}
                 onSubmit={handleBooking}
-                disabledDates={listing.booking_date}
+                disabledDates={disabledDatesWithToday}
               />
             </div>
           </div>

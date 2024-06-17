@@ -13,19 +13,13 @@ const RevenueEstimate = () => {
 
   return (
     <div className="flex flex-col items-center justify-start w-full">
-      <p className="text-[#FF385C] font-bold text-6xl mt-8">
-        Airbnb it.
-      </p>
-      <p className="text-black text-4xl font-semibold mt-1">
-        You could earn
-      </p>
+      <p className="text-[#FF385C] font-bold text-6xl mt-8">Mikabnb it.</p>
+      <p className="text-black text-4xl font-semibold mt-1">You could earn</p>
       <p className="text-6xl font-bold my-6 tracking-tighter">
         ${night * nightlyPrice}
       </p>
       <p className="text-lg">
-        <span className="underline font-semibold text-xl">
-          {night} nights
-        </span>{" "}
+        <span className="underline font-semibold text-xl">{night} nights</span>{" "}
         at an estimated ${nightlyPrice} a night
       </p>
 
