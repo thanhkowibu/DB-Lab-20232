@@ -114,7 +114,12 @@ export const UserMenu = () => {
                   }}
                   label="Login"
                 />
-                <DropdownItem onClick={() => {}} label="Mikabnb your house" />
+                <DropdownItem
+                  onClick={() => {
+                    navigate("/properties/create");
+                  }}
+                  label="Airbnb your house"
+                />
                 <DropdownItem onClick={() => {}} label="Help" />
               </>
             )}

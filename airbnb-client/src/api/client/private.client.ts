@@ -24,9 +24,9 @@ privateClient.interceptors.response.use(
     return response;
   },
   (err) => {
-    if (err.response && err.response.status === 403) {
-      toast.error("Your login session has expired");
-    }
+    // if (err.response && err.response.status === 403) {
+    //   toast.error("Your login session has expired");
+    // }
     throw err.response.data;
   }
 );
