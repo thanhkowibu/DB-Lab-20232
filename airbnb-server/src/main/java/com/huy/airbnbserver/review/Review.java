@@ -2,7 +2,6 @@ package com.huy.airbnbserver.review;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.huy.airbnbserver.booking.Booking;
-import com.huy.airbnbserver.report.ReportableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -21,7 +20,7 @@ import java.util.Date;
 @Table(name = "review", indexes = {
         @Index(name = "idx_review_booking_id", columnList = "booking_id")
 })
-public class Review implements ReportableEntity {
+public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -54,15 +53,5 @@ public class Review implements ReportableEntity {
     public void registerBooking(Booking booking) {
         this.booking = booking;
         booking.setReview(this);
-    }
-
-    @Override
-    public Long getEntityId() {
-        return this.id;
-    }
-
-    @Override
-    public String getType() {
-        return "Comment";
     }
 }

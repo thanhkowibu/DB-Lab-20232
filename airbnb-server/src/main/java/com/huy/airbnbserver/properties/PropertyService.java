@@ -9,6 +9,7 @@ import com.huy.airbnbserver.properties.enm.*;
 import com.huy.airbnbserver.properties.dto.PropertyOverviewProjection;
 import com.huy.airbnbserver.system.common.SortDirection;
 import com.huy.airbnbserver.system.event.EventPublisher;
+import com.huy.airbnbserver.system.event.ui.NotificationRefType;
 import com.huy.airbnbserver.system.exception.EntityAlreadyExistException;
 import com.huy.airbnbserver.system.exception.ObjectNotFoundException;
 import com.huy.airbnbserver.user.model.User;
@@ -33,6 +34,7 @@ public class PropertyService {
     private final AWSBucketService awsBucketService;
     private final NativePropertyRepository nativePropertyRepository;
     private final ImageRepository imageRepository;
+    private final EventPublisher eventPublisher;
 
     public Property findById(Long id) {
         List<Object[]> res = propertyRepository.findDetailByIdNative(id);
@@ -77,7 +79,57 @@ public class PropertyService {
             }
             throw e;
         }
+    }
 
+    @Transactional
+    public void procedureSave(Property property, Integer userId, List<MultipartFile> images) throws IOException {
+        List<Image> savedImages = new ArrayList<>();
+
+        try {
+            if (images != null) {
+                for (MultipartFile image : images) {
+                    var saveImage = awsBucketService.uploadFile(image, property);
+                    savedImages.add(saveImage);
+                }
+            }
+
+            // Convert image names and URLs to comma-separated strings
+            String imageNames = savedImages.stream()
+                    .map(Image::getName)
+                    .collect(Collectors.joining(","));
+            String imageUrls = savedImages.stream()
+                    .map(Image::getUrl)
+                    .collect(Collectors.joining(","));
+
+            // Convert categories to comma-separated string
+            String categories = property.getCategories().stream()
+                    .map(Objects::toString)
+                    .collect(Collectors.joining(","));
+
+
+            propertyRepository.savePropertyWithImagesAndCategories(
+                    userId,
+                    property.getAddressLine(),
+                    property.getDescription(),
+                    property.getLatitude(),
+                    property.getLongitude(),
+                    property.getMaxGuests(),
+                    property.getName(),
+                    property.getNightlyPrice(),
+                    property.getNumBathrooms(),
+                    property.getNumBedrooms(),
+                    property.getNumBeds(),
+                    property.getTag().toString(),
+                    imageNames,
+                    imageUrls,
+                    categories
+            );
+        } catch (Exception exception) {
+            for (Image image : savedImages) {
+                awsBucketService.deleteFile(image);
+            }
+            throw exception;
+        }
     }
 
     @Transactional
@@ -135,12 +187,12 @@ public class PropertyService {
             savedProperty.setAddressLine(property.getAddressLine());
 
             propertyRepository.save(savedProperty);
-            // Commit Firebase changes only after successful database transaction
+            // Commit changes only after successful database transaction
             for (Image image : imagesToMarkForDeletion) {
                 awsBucketService.deleteFile(image);
             }
         } catch (Exception e) {
-            // Rollback Firebase actions if saving the property fails
+            // Rollback actions if saving the property fails
             for (Image image : newlySavedImages) {
                 awsBucketService.deleteFile(image);
             }
@@ -149,11 +201,19 @@ public class PropertyService {
 
 
     @Transactional
-    public void delete(Long id, Integer userId) throws IOException {
+    public void delete(Long id, Integer userId){
         var deletedProperty = propertyRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("property", id));
 
         if (!userId.equals(deletedProperty.getHost().getId()) && userId != -1) {
             throw new AccessDeniedException("This user dont have access to this resource");
+        }
+
+        // admin delete then publish a notification
+        if (userId.equals(-1)) {
+            eventPublisher.publishSendingNotificationEvent(deletedProperty.getHost().getId(),
+                    id,
+                    "Your property has been removed by admin due to policy validation",
+                    NotificationRefType.PROPERTY.name());
         }
 
         for (Image image: deletedProperty.getImages()){

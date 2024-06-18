@@ -1,4 +1,4 @@
-package com.huy.airbnbserver.report.dto;
+package com.huy.airbnbserver.admin.dto;
 
 import com.huy.airbnbserver.system.common.PageMetadata;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,8 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ReportPageDto {
+public class RoleRequestPage {
     PageMetadata pagination_meta_data;
-    List<ReportDto> reports;
+    List<RoleRequestDto> reports;
 }
+

@@ -56,6 +56,7 @@ const BookingPage: React.FC<Props> = ({}) => {
   }, [adults, children, pet]);
 
   const handleBooking = async () => {
+    if (isLoading) return;
     setIsLoading(true);
 
     const input = {

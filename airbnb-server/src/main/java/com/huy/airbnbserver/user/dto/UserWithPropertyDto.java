@@ -11,6 +11,6 @@ import java.util.List;
 @Getter
 @Setter
 public class UserWithPropertyDto {
-    private UserDto user_info;
+    private UserDetailDto user_info;
     private List<PropertyOverviewProjectionDto> top_properties;
 }

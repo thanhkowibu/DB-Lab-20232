@@ -109,6 +109,8 @@ const UpdateProperty: React.FC<Props> = ({}) => {
   }, [listingId, setValue]);
 
   const onSubmit = async (form: PropertyReqProps) => {
+    if (isLoading) return;
+    setIsLoading(true);
     if (form.categories.length === 0) {
       toast.error("Please select at least one category.");
       return;
@@ -162,6 +164,8 @@ const UpdateProperty: React.FC<Props> = ({}) => {
     } catch (err: any) {
       console.error(err);
       toast.error(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 

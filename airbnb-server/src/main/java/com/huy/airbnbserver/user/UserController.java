@@ -1,16 +1,16 @@
 package com.huy.airbnbserver.user;
 
+import com.huy.airbnbserver.admin.AdminService;
 import com.huy.airbnbserver.image.ImageDto;
 import com.huy.airbnbserver.image.converter.ImageToImageDtoConverter;
-import com.huy.airbnbserver.notification.model.NotificationPreferences;
 import com.huy.airbnbserver.properties.PropertyService;
 import com.huy.airbnbserver.properties.converter.PropertyOverProjectionToPropertyOverProjectionDto;
 import com.huy.airbnbserver.properties.dto.PropertyOverviewPageDto;
 import com.huy.airbnbserver.properties.dto.PropertyOverviewProjection;
 import com.huy.airbnbserver.properties.dto.PropertyOverviewProjectionDto;
-import com.huy.airbnbserver.report.Issue;
-import com.huy.airbnbserver.report.ReportService;
-import com.huy.airbnbserver.report.dto.ReportDto;
+import com.huy.airbnbserver.admin.report.Issue;
+import com.huy.airbnbserver.admin.report.ReportService;
+import com.huy.airbnbserver.admin.report.dto.ReportDto;
 import com.huy.airbnbserver.system.*;
 import com.huy.airbnbserver.system.common.Page;
 import com.huy.airbnbserver.system.common.PageMetadata;
@@ -46,6 +46,7 @@ public class UserController {
     private final PropertyOverProjectionToPropertyOverProjectionDto converter;
     private final ReportService reportService;
     private final ImageToImageDtoConverter imageToImageDtoConverter;
+    private final AdminService adminService;
 
     @PreAuthorize("hasRole('ROLE_admin')")
     @GetMapping
@@ -85,7 +86,7 @@ public class UserController {
                 .stream()
                 .map(converter::convert)
                 .toList();
-        var userDto = userToUserDtoConverter.convert(user);
+        var userDto = userToUserDetailDtoConverter.convert(user);
         return new Result(true, StatusCode.SUCCESS, "Success",
                 new UserWithPropertyDto(userDto,topProperties));
     }
@@ -183,9 +184,7 @@ public class UserController {
                 Utils.extractAuthenticationId(authentication),
                 issue,
                 reportDto.detail(),
-                reportedUser.getEntityId(),
-                reportedUser.getType()
-        );
+                reportedUser.getId());
 
         return new Result(true, 200, "Success");
     }
@@ -210,5 +209,12 @@ public class UserController {
                 "Fetching user notification preference",
                 userService.getNotificationPreference(userId)
         );
+    }
+
+    @PostMapping("/host-request")
+    @PreAuthorize("!hasRole('ROLE_host')")
+    public Result requestToBeHost(Authentication authentication) {
+        adminService.hostRequest(Utils.extractAuthenticationId(authentication));
+        return new Result(true, 200, "Request success, please comeback again while admin review your request");
     }
 }

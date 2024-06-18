@@ -128,7 +128,7 @@ public class BookingService {
         bookingDetail.setLatitude((BigDecimal) res[21]);
         bookingDetail.setProperty_name((String) res[22]);
         bookingDetail.setBooking_preview_img((String) res[23]);
-        bookingDetail.setIs_rated((Long) res[24] == 1L);
+        bookingDetail.setIs_rated(res[24] != null);
 
         return bookingDetail;
     }
@@ -183,11 +183,12 @@ public class BookingService {
                 throw new NotModifiedException("Please way until the last day of check out date");
             }
             // update status to no show
-            bookingRepository.updateStatus(BookingStatus.NO_SHOW.toString(),bookingId);
-            bookingRepository.log(
-                    BookingStatus.NO_SHOW.toString(),
-                    bookingId,
-                    BookingLogDes.NO_SHOW.getDescription());
+//            bookingRepository.updateStatus(BookingStatus.NO_SHOW.toString(),bookingId);
+//            bookingRepository.log(
+//                    BookingStatus.NO_SHOW.toString(),
+//                    bookingId,
+//                    BookingLogDes.NO_SHOW.getDescription());
+            bookingRepository.updateBookingStatusAndLog(bookingId, BookingStatus.NO_SHOW.toString(), BookingLogDes.NO_SHOW.getDescription());
             // send a notification to user
             eventPublisher.publishSendingNotificationEvent(
                     bookingDetail.getIssuer_id(),
@@ -196,11 +197,12 @@ public class BookingService {
                     NotificationRefType.BOOKING.name()
             );
         } else {
-            bookingRepository.checkOut(bookingId);
-            bookingRepository.log(
-                    BookingStatus.CHECK_OUT.toString(),
-                    bookingId,
-                    BookingLogDes.CHECKED_OUT.getDescription());
+//            bookingRepository.checkOut(bookingId);
+//            bookingRepository.log(
+//                    BookingStatus.CHECK_OUT.toString(),
+//                    bookingId,
+//                    BookingLogDes.CHECKED_OUT.getDescription());
+            bookingRepository.updateBookingStatusAndLog(bookingId, BookingStatus.CHECK_OUT.toString(),BookingLogDes.CHECKED_OUT.getDescription());
             // send a notification to user ask for giving a review
             eventPublisher.publishSendingNotificationEvent(
                     bookingDetail.getIssuer_id(),
@@ -223,10 +225,14 @@ public class BookingService {
 
         String status = bookingDetail.getStatus();
         if (status.equals("PENDING") || status.equals("SUCCESS") ) {
-            bookingRepository.updateStatus(BookingStatus.CANCEL.toString(), bookingDetail.getId());
-            bookingRepository.log(
+//            bookingRepository.updateStatus(BookingStatus.CANCEL.toString(), bookingDetail.getId());
+//            bookingRepository.log(
+//                    BookingStatus.CANCEL.toString(),
+//                    bookingDetail.getId(),
+//                    BookingLogDes.CANCEL.getDescription());
+            bookingRepository.updateBookingStatusAndLog(
+                    bookingId,
                     BookingStatus.CANCEL.toString(),
-                    bookingDetail.getId(),
                     BookingLogDes.CANCEL.getDescription());
         } else {
             throw new NotModifiedException("This booking can not be cancel anymore");

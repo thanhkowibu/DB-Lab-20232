@@ -33,22 +33,17 @@ public class NativePropertyRepository {
             p.created_at AS createdAt,
             p.updated_at AS updatedAt,
             p.num_beds AS numBeds,
-            img.imageIds AS imageIds,
-            img.imageUrls AS imageUrls,
-            img.imageNames AS imageNames,
-            COALESCE((SELECT AVG(r.rating)
-                      FROM booking b
-                               LEFT JOIN review r ON r.booking_id = b.id
-                      WHERE b.property_id = p.id), 0) AS averageRating
+            (SELECT GROUP_CONCAT(DISTINCT i.id ORDER BY i.id)
+                 FROM image i
+                 WHERE i.property_id = p.id) AS imageIds,
+            (SELECT GROUP_CONCAT(DISTINCT i.url ORDER BY i.id)
+                 FROM image i
+                 WHERE i.property_id = p.id) AS imageUrls,
+            (SELECT GROUP_CONCAT(DISTINCT i.name ORDER BY i.id)
+                 FROM image i
+                 WHERE i.property_id = p.id) AS imageNames,
+            p.average_rating AS averageRating
         FROM property p
-        LEFT JOIN (
-            SELECT i.property_id,
-                   GROUP_CONCAT(DISTINCT i.id) AS imageIds,
-                   GROUP_CONCAT(DISTINCT i.url) AS imageUrls,
-                   GROUP_CONCAT(DISTINCT i.name) AS imageNames
-            FROM image i
-            GROUP BY i.property_id
-                        ) AS img ON img.property_id = p.id
         WHERE (:category1 IS NULL OR EXISTS
             (SELECT 1 FROM property_categories pc1 WHERE pc1.property_id = p.id AND pc1.categories = :category1))
         AND (:category2 IS NULL OR EXISTS
@@ -79,16 +74,14 @@ public class NativePropertyRepository {
                     GROUP_CONCAT(DISTINCT i.id ORDER BY i.id) AS imageIds,
                     GROUP_CONCAT(DISTINCT i.url ORDER BY i.id) AS imageUrls,
                     GROUP_CONCAT(DISTINCT i.name ORDER BY i.id) AS imageNames,
-                    COALESCE(t.averageRating, 0) AS averageRating
+                    t.averageRating AS averageRating
                 FROM property p
                 LEFT JOIN image i ON i.property_id = p.id
                 JOIN (
                     SELECT
-                        b.property_id,
-                        AVG(r.rating) AS averageRating
-                    FROM booking b
-                             JOIN review r ON r.booking_id = b.id
-                             JOIN property p ON p.id = b.property_id
+                        p.id,
+                        p.average_rating AS averageRating
+                    FROM property p
                     WHERE (:category1 IS NULL OR EXISTS
                         (SELECT 1 FROM property_categories pc1 WHERE pc1.property_id = p.id AND pc1.categories = :category1))
                     AND (:category2 IS NULL OR EXISTS
@@ -103,11 +96,10 @@ public class NativePropertyRepository {
                     AND (:minBathrooms IS NULL OR p.num_bathrooms >= :minBathrooms)
                     AND (:minBedrooms IS NULL OR p.num_bedrooms >= :minBedrooms)
                     AND (:maxGuest IS NULL OR p.max_guests >= :maxGuest)
-                    GROUP BY b.property_id
                     ORDER BY averageRating"""+" "+sortDirection+" "+ """
                 LIMIT :limit OFFSET :offset
-                ) t ON p.id = t.property_id
-                GROUP BY p.id
+                ) t ON p.id = t.id
+                GROUP BY p.id, t.averageRating
                 ORDER BY t.averageRating"""+" "+sortDirection;
 
         String sql;

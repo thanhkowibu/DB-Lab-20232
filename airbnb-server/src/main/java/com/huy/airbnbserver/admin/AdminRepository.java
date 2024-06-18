@@ -2,10 +2,12 @@ package com.huy.airbnbserver.admin;
 
 import com.huy.airbnbserver.admin.dto.BookingStatusCountProjection;
 import com.huy.airbnbserver.booking.Booking;
+import com.huy.airbnbserver.user.model.RoleRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -76,11 +78,51 @@ public interface AdminRepository extends JpaRepository<Booking, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "UPDATE user_account SET roles = 'user admin' WHERE id = :userId",nativeQuery = true)
+    @Query(value = "UPDATE user_account SET roles = 'user host admin' WHERE id = :userId",nativeQuery = true)
     void setAdminPrivilege(@NonNull Integer userId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE user_account SET roles = 'user host' WHERE id = :userId",nativeQuery = true)
+    void setHostPrivilege(@NonNull Integer userId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE role_request SET " +
+            "reviewed_by = :reviewerId, " +
+            "reviewed_at = CURRENT_TIMESTAMP, " +
+            "status = :status " +
+            "WHERE id = :requestId", nativeQuery = true)
+    void reviewRoleRequest(@NonNull Long requestId, @NonNull Integer reviewerId, @NonNull String status);
+
+    @Procedure(name = "ReviewRoleRequestAndSetPrivilege")
+    void reviewRoleRequestAndSetPrivilege(Long roleRequestId, Integer userId, Boolean isConfirm, Integer reviewerId);
+
+    @Procedure(name = "ResolveReportAndConditionalBanUser")
+    void resolveReportAndConditionalBanUser(Long reportId, Boolean banUser);
 
     @Modifying
     @Transactional
     @Query(value = "UPDATE user_account SET roles = 'user' WHERE id = :userId", nativeQuery = true)
     void setUserPrivilege(@NonNull Integer userId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO role_request (created_at, status, requested_role, user_id) VALUES " +
+            "(CURRENT_TIMESTAMP, 'pending' , 'HOST', :userId)",nativeQuery = true)
+    void saveRoleRequest(@NonNull Integer userId);
+
+    @Query(value = "SELECT " +
+            "id, " +
+            "user_id, " +
+            "requested_role, " +
+            "created_at, " +
+            "status, " +
+            "reviewed_by, " +
+            "reviewed_at," +
+            "COUNT(*) OVER() " +
+            "FROM role_request " +
+            "ORDER BY id DESC " +
+            "LIMIT :limit OFFSET :offset", nativeQuery = true)
+    List<Object[]> findAllHostRequest(long limit, long offset);
 }
