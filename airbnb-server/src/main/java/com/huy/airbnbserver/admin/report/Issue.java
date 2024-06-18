@@ -1,4 +1,4 @@
-package com.huy.airbnbserver.report;
+package com.huy.airbnbserver.admin.report;
 
 import lombok.Getter;
 

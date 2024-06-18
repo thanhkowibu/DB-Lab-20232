@@ -28,12 +28,16 @@ public class BookingEventListener {
         try {
             if (event.getIsConfirm()) {
                 LOG.info("HOST CONFIRM BOOKING {}", booking.getId());
-                bookingRepository.confirmBooking(booking.getId());
-                bookingRepository.log(
-                        BookingStatus.CONFIRMED.toString(),
+//                bookingRepository.confirmBooking(booking.getId());
+//                bookingRepository.log(
+//                        BookingStatus.CONFIRMED.toString(),
+//                        booking.getId(),
+//                        BookingLogDes.CONFIRMED.getDescription()
+//                );
+                bookingRepository.updateBookingStatusAndLog(
                         booking.getId(),
-                        BookingLogDes.CONFIRMED.getDescription()
-                );
+                        BookingStatus.CONFIRMED.toString(),
+                        BookingLogDes.CONFIRMED.getDescription());
                 eventPublisher.publishPaymentProcessedEvent(booking);
             } else {
                 LOG.info("HOST REJECT BOOKING {}", booking.getId());
@@ -79,12 +83,16 @@ public class BookingEventListener {
     @Transactional
     public void handleBookingSuccessEvent(BookingSuccessEvent event) {
         var booking = event.getBooking();
-        bookingRepository.updateStatus(BookingStatus.SUCCESS.toString(), booking.getId());
-        bookingRepository.log(
-                BookingStatus.SUCCESS.toString(),
+//        bookingRepository.updateStatus(BookingStatus.SUCCESS.toString(), booking.getId());
+//        bookingRepository.log(
+//                BookingStatus.SUCCESS.toString(),
+//                booking.getId(),
+//                BookingLogDes.SUCCESS.getDescription()
+//        );
+        bookingRepository.updateBookingStatusAndLog(
                 booking.getId(),
-                BookingLogDes.SUCCESS.getDescription()
-        );
+                BookingStatus.SUCCESS.toString(),
+                BookingLogDes.SUCCESS.getDescription());
         LOG.info("Booking {} successful", booking.getId());
         eventPublisher.publishSendingBookingEmailEvent(booking);
         eventPublisher.publishSendingNotificationEvent(
@@ -98,12 +106,15 @@ public class BookingEventListener {
     @Transactional
     public void handleBookingRejectEvent(BookingRejectEvent event) {
         var booking = event.getBooking();
-        bookingRepository.updateStatus(BookingStatus.REJECTED.toString(), booking.getId());
-        bookingRepository.log(
+//        bookingRepository.updateStatus(BookingStatus.REJECTED.toString(), booking.getId());
+//        bookingRepository.log(
+//                BookingStatus.REJECTED.toString(),
+//                booking.getId(),
+//                BookingLogDes.REJECTED.getDescription() + event.getReason()
+//        );
+        bookingRepository.updateBookingStatusAndLog(booking.getId(),
                 BookingStatus.REJECTED.toString(),
-                booking.getId(),
-                BookingLogDes.REJECTED.getDescription() + event.getReason()
-        );
+                BookingLogDes.REJECTED.getDescription() + event.getReason());
         LOG.info("Booking {} rejected:, Reason: {}" ,booking.getId(),event.getReason());
         eventPublisher.publishSendingNotificationEvent(
                 booking.getIssuer_id(),

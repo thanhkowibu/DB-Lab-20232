@@ -51,6 +51,7 @@ public class BookingController {
     }
 
     @GetMapping("/users/{hostId}/hosted-booking")
+    @PreAuthorize("hasRole('ROLE_host')")
     public Result getHostedBooking(@PathVariable Integer hostId,
                                    @RequestParam(value = "page", required = false) Long page,
                                    @RequestParam(value = "page_size", required = false) Long pageSize,
@@ -126,6 +127,7 @@ public class BookingController {
     }
 
     @GetMapping("/properties/{propertyId}/bookings")
+    @PreAuthorize("hasRole('ROLE_host')")
     public Result getAllBookingsForPropertyHost(
             @PathVariable Long propertyId,
             Authentication authentication,
@@ -159,6 +161,7 @@ public class BookingController {
     }
 
     @PutMapping("/bookings/{id}")
+    @PreAuthorize("hasRole('ROLE_host')")
     public Result confirmBooking(
             @PathVariable Long id,
             Authentication authentication,
@@ -181,6 +184,7 @@ public class BookingController {
     }
 
     @PutMapping("/bookings/{id}/check-out")
+    @PreAuthorize("hasRole('ROLE_host')")
     public Result checkoutBooking(
             @PathVariable Long id,
             Authentication authentication,

@@ -1,4 +1,4 @@
-package com.huy.airbnbserver.report.dto;
+package com.huy.airbnbserver.admin.report.dto;
 
 import java.util.Date;
 
@@ -8,8 +8,7 @@ public interface ReportProjection {
     String getDetail();
     Boolean getIsResolved();
     String getIssue();
-    Long getReportEntityId();
-    String getReportType();
+    Integer getReportedUserId();
     Integer getUserId();
     Long getTotalCount();
 }

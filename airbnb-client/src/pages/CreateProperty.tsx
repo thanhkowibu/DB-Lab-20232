@@ -65,6 +65,7 @@ export const CreateProperty = () => {
   };
 
   const onSubmit = async (form: PropertyReqProps) => {
+    if (isLoading) return;
     // console.log(form);
     setIsLoading(true);
 

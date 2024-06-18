@@ -8,18 +8,19 @@ import com.huy.airbnbserver.properties.dto.*;
 import com.huy.airbnbserver.properties.enm.*;
 import com.huy.airbnbserver.properties.converter.PropertyDetailDtoToPropertyConverter;
 import com.huy.airbnbserver.properties.converter.PropertyToPropertyDetailDtoConverter;
-import com.huy.airbnbserver.report.Issue;
-import com.huy.airbnbserver.report.ReportService;
-import com.huy.airbnbserver.report.dto.ReportDto;
 import com.huy.airbnbserver.system.*;
 import com.huy.airbnbserver.system.common.*;
 import com.huy.airbnbserver.system.exception.InvalidSearchQueryException;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
+import jakarta.validation.Validator;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +29,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -37,7 +40,7 @@ public class PropertyController {
     private final PropertyToPropertyDetailDtoConverter propertyToPropertyDetailDtoConverter;
     private final PropertyDetailDtoToPropertyConverter propertyDetailDtoToPropertyConverter;
     private final PropertyOverProjectionToPropertyOverProjectionDto propertyOverProjectionToPropertyOverProjectionDto;
-    private final ReportService reportService;
+    private final Validator validator;
 
     @GetMapping("/properties/{propertyId}")
     public Result findById(@NotNull @PathVariable Long propertyId) {
@@ -181,6 +184,7 @@ public class PropertyController {
     @PostMapping(path = "/properties",
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ROLE_host')")
     public Result save(@RequestParam(value = "images", required = false) List<MultipartFile> images,
                        @Valid @RequestParam(value = "propertyDetailDto") String propertyDetailDtoString,
                        Authentication authentication) throws IOException {
@@ -190,10 +194,18 @@ public class PropertyController {
         ObjectMapper objectMapper = new ObjectMapper();
         PropertyDetailDto propertyDetailDto = objectMapper.readValue(propertyDetailDtoString, PropertyDetailDto.class);
 
+        Set<ConstraintViolation<PropertyDetailDto>> violations = validator.validate(propertyDetailDto);
+        if (!violations.isEmpty()) {
+            String errorMessage = violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .collect(Collectors.joining(", "));
+            return new Result(false, StatusCode.INVALID_ARGUMENT, errorMessage, null);
+        }
+
         Property property = propertyDetailDtoToPropertyConverter.convert(propertyDetailDto);
         assert images != null;
         assert property != null;
-        propertyService.save(property, Utils.extractAuthenticationId(authentication), images);
+        propertyService.procedureSave(property, Utils.extractAuthenticationId(authentication), images);
 //        var savedProperty = propertyService.save(property, Utils.extractAuthenticationId(authentication), images);
 
         return new Result(true,
@@ -206,6 +218,7 @@ public class PropertyController {
     }
 
     @PutMapping("/properties/{propertyId}")
+    @PreAuthorize("hasRole('ROLE_host')")
     public Result update(@RequestParam(value = "images", required = false) List<MultipartFile> images,
                          @RequestParam(value = "propertyDetailDto") String propertyDetailDtoString,
                          @RequestParam(value = "instruction", required = false) String instructionString,
@@ -216,6 +229,14 @@ public class PropertyController {
         List<ImageInstruction> instructions = objectMapper.
                 readValue(instructionString, new TypeReference<>() {
                 });
+
+        Set<ConstraintViolation<PropertyDetailDto>> violations = validator.validate(propertyDetailDto);
+        if (!violations.isEmpty()) {
+            String errorMessage = violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .collect(Collectors.joining(", "));
+            throw new HttpMessageNotReadableException(errorMessage);
+        }
 
         if (images != null && Utils.imageValidationFailed(images)) {
             return new Result(false, StatusCode.INVALID_ARGUMENT, "Invalid image files were provided", null);
@@ -235,6 +256,7 @@ public class PropertyController {
 
 
     @DeleteMapping("/properties/{propertyId}")
+    @PreAuthorize("hasRole('ROLE_host')")
     public Result delete(@Valid @PathVariable Long propertyId, Authentication authentication) throws IOException {
         propertyService.delete(propertyId, Utils.extractAuthenticationId(authentication));
         return new Result(true, StatusCode.SUCCESS, "delete successful");
@@ -303,24 +325,5 @@ public class PropertyController {
                 pageData,
                 propertyDetailDtos
         ));
-    }
-
-    @PostMapping("/properties/{propertyId}/report")
-    public Result reportProperty(@PathVariable Long propertyId,
-                                 @Valid @RequestBody ReportDto reportDto,
-                                 Authentication authentication) {
-        System.out.println(reportDto.detail() +" "+ reportDto.issue());
-        Issue issue = Issue.valueOf(reportDto.issue());
-        Property reportedProperty = propertyService.findByIdLazy(propertyId);
-
-        reportService.createReport(
-                Utils.extractAuthenticationId(authentication),
-                issue,
-                reportDto.detail(),
-                reportedProperty.getEntityId(),
-                reportedProperty.getType()
-        );
-
-        return new Result(true, 200, "Success");
     }
  }

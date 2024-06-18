@@ -1,4 +1,4 @@
-package com.huy.airbnbserver.report;
+package com.huy.airbnbserver.admin.report;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.huy.airbnbserver.user.model.User;
@@ -40,9 +40,7 @@ public class Report {
     @JsonManagedReference
     private User reporter;
 
-    @Column(nullable = false)
-    private String report_type;
-
-    @Column(nullable = false)
-    private Long report_entity_id;
+    @JoinColumn(name = "reported_user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User reportedUser;
 }

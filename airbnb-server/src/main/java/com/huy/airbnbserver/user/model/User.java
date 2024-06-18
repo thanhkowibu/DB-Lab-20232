@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.huy.airbnbserver.notification.model.Notification;
 import com.huy.airbnbserver.notification.model.NotificationPreferences;
-import com.huy.airbnbserver.report.Report;
-import com.huy.airbnbserver.report.ReportableEntity;
+import com.huy.airbnbserver.admin.report.Report;
 import com.huy.airbnbserver.booking.Booking;
 import com.huy.airbnbserver.image.Image;
 import com.huy.airbnbserver.properties.Property;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -29,7 +27,7 @@ import java.util.List;
 @Table(name = "user_account", indexes = {
         @Index(name = "email_index", columnList = "email")
 })
-public class User implements ReportableEntity {
+public class User{
     @Id
     @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -109,15 +107,5 @@ public class User implements ReportableEntity {
 
     public String getFullname() {
         return firstname + " " + lastname;
-    }
-
-    @Override
-    public Long getEntityId() {
-        return Long.valueOf(this.id);
-    }
-
-    @Override
-    public String getType() {
-        return "User";
     }
 }

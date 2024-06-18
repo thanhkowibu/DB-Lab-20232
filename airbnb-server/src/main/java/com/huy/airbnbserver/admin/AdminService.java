@@ -3,10 +3,15 @@ package com.huy.airbnbserver.admin;
 import com.huy.airbnbserver.admin.dto.BookingStatusCountProjection;
 import com.huy.airbnbserver.admin.dto.DailyRevenueDto;
 import com.huy.airbnbserver.admin.dto.MonthlyRevenueDto;
+import com.huy.airbnbserver.admin.dto.RoleRequestDto;
+import com.huy.airbnbserver.admin.report.dto.ReportDto;
+import com.huy.airbnbserver.system.event.EventPublisher;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +21,7 @@ import java.util.Map;
 @Service
 public class AdminService {
     private final AdminRepository adminRepository;
+    private final EventPublisher eventPublisher;
 
     public void setAdminPrivilege(Integer userId) {
         adminRepository.setAdminPrivilege(userId);
@@ -68,5 +74,42 @@ public class AdminService {
         res.put("last_month_booking", lastMonthBookingCount);
 
         return res;
+    }
+
+    @Transactional
+    public void setHostPrivilege(Long roleRequestId, Integer userId, Boolean isConfirm, Integer reviewerId) {
+        adminRepository.reviewRoleRequestAndSetPrivilege(roleRequestId, userId, isConfirm, reviewerId);
+        if (isConfirm) {
+            eventPublisher.publishSendingNotificationEvent(userId, userId.longValue(), "Congratulations, you are now a host, please login again for this to take effect!" , "USER");
+        }
+    }
+
+    @Transactional
+    public void hostRequest(Integer userId) {
+        adminRepository.saveRoleRequest(userId);
+    }
+
+    public List<RoleRequestDto> findAllHostRequest(long limit, long offset) {
+        return adminRepository.findAllHostRequest(limit, offset)
+                .stream()
+                .map(this::mapToRoleRequestDto)
+                .toList();
+    }
+
+    private RoleRequestDto mapToRoleRequestDto(Object[] source) {
+        return new RoleRequestDto(
+                (Long) source[0],
+                (Integer) source[1],
+                (String) source[2],
+                (Date) source[3],
+                (String) source[4],
+                (Integer) source[5],
+                (Date) source[6],
+                (Long) source[7]
+        );
+    }
+
+    public void resolveReport(Long reportId, Boolean isBan) {
+        adminRepository.resolveReportAndConditionalBanUser(reportId, isBan);
     }
 }

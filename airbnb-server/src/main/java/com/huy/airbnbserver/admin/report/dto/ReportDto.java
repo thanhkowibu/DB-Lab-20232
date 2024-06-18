@@ -1,7 +1,6 @@
-package com.huy.airbnbserver.report.dto;
+package com.huy.airbnbserver.admin.report.dto;
 
-import com.huy.airbnbserver.report.Issue;
-import com.huy.airbnbserver.report.ReportableEntity;
+import com.huy.airbnbserver.admin.report.Issue;
 import com.huy.airbnbserver.system.annotation.NotEmpty;
 import com.huy.airbnbserver.system.annotation.ValueOfEnum;
 import jakarta.validation.constraints.NotNull;
@@ -17,7 +16,7 @@ public record ReportDto(
         @ValueOfEnum(enumClass = Issue.class) @NotNull
         String issue,
         Boolean is_resolved,
-        ReportableEntity reported_entity,
+        Integer reported_id,
         Long total_count
 ) {
 }
