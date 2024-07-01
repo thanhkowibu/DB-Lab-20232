@@ -29,12 +29,13 @@ services:
       MYSQL_PASSWORD: password
       TZ: 'UTC'
     volumes:
+      #- ./init-db.sql:/docker-entrypoint-initdb.d/1.sql
       - ./data/mysql:/var/lib/mysql
     ports:
       - 3306:3306
     networks:
       - app-network
-    command: ["--log_bin_trust_function_creators=1"]
+    #command: ["--log_bin_trust_function_creators=1"]
     restart: unless-stopped
 
   mail-dev:

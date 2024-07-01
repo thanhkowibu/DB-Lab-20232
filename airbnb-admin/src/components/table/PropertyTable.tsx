@@ -1,4 +1,5 @@
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+// import { Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 import ListSkeleton from "../common/ListSkeleton";
 
@@ -7,6 +8,7 @@ const PropertyTable = () => {
   const [pagination, setPagination] =
     useState<PaginationType | null>(null);
   const [page, setPage] = useState(1);
+
   const axios = useAxiosPrivate();
 
   useEffect(() => {
@@ -21,21 +23,14 @@ const PropertyTable = () => {
     fetchData();
   }, [axios, page]);
 
-  const handleDelete = async (id: number) => {
-    if (confirm("Are you sure to remove this property?")) {
-      try {
-        await axios.delete(`/admin/properties/${id}`);
-        setData((prevData) =>
-          prevData.filter((property) => property.id !== id)
-        );
-      } catch (error) {
-        console.error(
-          "Failed to delete the property:",
-          error
-        );
-      }
-    }
-  };
+  // const [showPopup, setShowPopup] = useState(false);
+  // const [selectedProperty, setSelectedProperty] =
+  //   useState<PropertyType | null>(null);
+
+  // const handleRowClick = (property: PropertyType) => {
+  //   setSelectedProperty(property);
+  //   setShowPopup(true);
+  // };
 
   if (!data || !pagination) {
     return <ListSkeleton />;
@@ -70,9 +65,7 @@ const PropertyTable = () => {
             <th scope="col" className="px-4 py-3">
               Updated At
             </th>
-            <th scope="col" className="px-4 py-3">
-              Delete
-            </th>
+            {/* <th scope="col" className="px-4 py-3"></th> */}
           </tr>
         </thead>
         <tbody>
@@ -103,17 +96,17 @@ const PropertyTable = () => {
               <td className="px-4 py-4">
                 {property.updated_at.substring(0, 10)}
               </td>
-              <td className="px-4 py-4">
+              {/* <td className="px-4 py-4">
                 <button
-                  className="bg-red-500 text-white p-1 rounded-md hover:bg-red-600"
+                  className="bg-blue-500 text-white p-1 rounded-md hover:bg-blue-600"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleDelete(property.id);
+                    handleRowClick(property);
                   }}
                 >
-                  Delete
+                  <Pencil size={12} />
                 </button>
-              </td>
+              </td> */}
             </tr>
           ))}
         </tbody>
@@ -162,5 +155,4 @@ const PropertyTable = () => {
     </div>
   );
 };
-
 export default PropertyTable;

@@ -26,18 +26,21 @@ const ResolveReport = ({
       return;
     }
     try {
-
+      if (selectedAction === "ban") {
         // Call API to ban
         const res: any = await axios.put(
-          `/admin/report/${selectedReport.id}?ban=${
-            selectedAction === "ban"
-          }`
+          `/admin/users/${selectedReport.reported_id}/ban`
         );
         if (res.flag === false) {
           throw new Error(res.message);
         }
-      
-      
+      }
+      const res: any = await axios.put(
+        `/admin/report/${selectedReport.id}`
+      );
+      if (res.flag === false) {
+        throw new Error(res.message);
+      }
       onResolveSuccess(selectedReport.id);
       setIsLoading(false);
       setShowPopup(false);
