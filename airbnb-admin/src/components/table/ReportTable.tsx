@@ -106,17 +106,15 @@ const ReportTable = ({
               </td>
 
               <td className="px-4 py-4">
-                {type === "PENDING" && (
-                  <button
-                    className="bg-blue-500 text-white p-1 rounded-md hover:bg-blue-600"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRowClick(report);
-                    }}
-                  >
-                    <MoreVertical size={12} />
-                  </button>
-                )}
+                <button
+                  className="bg-blue-500 text-white p-1 rounded-md hover:bg-blue-600"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRowClick(report);
+                  }}
+                >
+                  <MoreVertical size={12} />
+                </button>
               </td>
             </tr>
           ))}
