@@ -1,6 +1,7 @@
 import { Range } from "react-date-range";
 import Calendar from "../inputs/Calendar";
-import { Button } from "@/components/ui/button";
+import MotionButton from "@/components/ui/MotionButton";
+
 type Props = {
   price: number;
   totalPrice: number;
@@ -36,9 +37,14 @@ const ListingReservation: React.FC<Props> = ({
       />
       <hr />
       <div className="p-4">
-        <Button disabled={disabled} onClick={onSubmit} variant="airbnb">
+        <MotionButton
+          whileHover={{ scale: 1.03 }}
+          disabled={disabled}
+          onClick={onSubmit}
+          variant="airbnb"
+        >
           Reserve
-        </Button>
+        </MotionButton>
       </div>
       <div className="pb-4 px-6 flex items-center justify-between font-semibold text-lg">
         <div>Total : </div>
