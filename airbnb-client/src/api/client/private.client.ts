@@ -1,5 +1,4 @@
 import axios from "axios";
-import toast from "react-hot-toast";
 
 const baseURL = "http://localhost:8080/api/v1/";
 
@@ -24,9 +23,6 @@ privateClient.interceptors.response.use(
     return response;
   },
   (err) => {
-    // if (err.response && err.response.status === 403) {
-    //   toast.error("Your login session has expired");
-    // }
     throw err.response.data;
   }
 );

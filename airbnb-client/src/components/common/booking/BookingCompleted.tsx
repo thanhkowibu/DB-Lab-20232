@@ -1,3 +1,4 @@
+import MotionButton from "@/components/ui/MotionButton";
 import { celebrate } from "@/utils/confetti/celebrate";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";

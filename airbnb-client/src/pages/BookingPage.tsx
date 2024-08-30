@@ -1,6 +1,5 @@
 import { Container } from "@/components/common/Container";
 import { Image } from "@/components/common/image/Image";
-import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { IoIosArrowBack } from "react-icons/io";
 import { LuCalendarClock } from "react-icons/lu";
@@ -18,6 +17,7 @@ import toast from "react-hot-toast";
 import bookingApi from "@/api/modules/booking.api";
 import { BookingCompleted } from "@/components/common/booking/BookingCompleted";
 import { cn } from "@/lib/utils";
+import MotionButton from "@/components/ui/MotionButton";
 
 type Props = {};
 
@@ -247,7 +247,7 @@ const BookingPage: React.FC<Props> = ({}) => {
                   if I’m responsible for damage. I agree to pay the total amount
                   shown if the Host accepts my booking request.
                 </div>
-                <Button
+                <MotionButton
                   onClick={handleBooking}
                   variant="airbnb"
                   size="lg"
@@ -257,7 +257,7 @@ const BookingPage: React.FC<Props> = ({}) => {
                   disabled={isLoading}
                 >
                   Request to book
-                </Button>
+                </MotionButton>
               </div>
             </div>
 
