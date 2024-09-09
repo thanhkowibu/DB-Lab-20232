@@ -155,7 +155,7 @@ For setting up the admin dashboard, please refer to [this guide](https://github.
 - **Backend:** Built with Java Spring, ensuring robust server-side performance and scalability.
 - **API Integration:** Utilizes RESTful APIs for efficient communication between frontend and backend.
 - **Friendly and Interactive UI/UX:** Using **Framer Motion** and **Shadcn UI** library to create visually stunning components with dynamic animations that enhance user interaction.
-<!-- - **Responsive Design:** Optimized for mobile and desktop, providing a seamless experience across all devices. -->
+- **Responsive Design:** Optimized for mobile and desktop, providing a seamless experience across all devices.
 
 <p align="right">(<a href="#readme">back to top</a>)</p>
 
