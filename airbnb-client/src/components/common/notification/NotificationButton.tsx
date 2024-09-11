@@ -4,6 +4,7 @@ import NotificationDropDown from "./NotificationDropDown";
 import { useOnClickOutside } from "@/hooks/useClickOutside";
 import publicClient from "@/api/client/public.client";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 export type Notification = {
   is_read: boolean;
@@ -14,14 +15,8 @@ export type Notification = {
   receiver_id: number;
 };
 
-const NotificationButton = ({
-  receiverId,
-}: {
-  receiverId: number;
-}) => {
-  const [notifications, setNotifications] = useState<
-    Notification[] | []
-  >([]);
+const NotificationButton = ({ receiverId }: { receiverId: number }) => {
+  const [notifications, setNotifications] = useState<Notification[] | []>([]);
   const [isOpen, setIsOpen] = useState(false);
   const unReadMessageCount = notifications.filter(
     (notification) => !notification.is_read
@@ -58,10 +53,7 @@ const NotificationButton = ({
     );
     eventSource.onmessage = function (event) {
       const newEvent = JSON.parse(event.data);
-      setNotifications((prevNotifications) => [
-        newEvent,
-        ...prevNotifications,
-      ]);
+      setNotifications((prevNotifications) => [newEvent, ...prevNotifications]);
     };
 
     eventSource.onerror = function (err) {
@@ -79,9 +71,7 @@ const NotificationButton = ({
         `http://localhost:8080/api/v1/notifications/${receiverId}/read`
       );
     }
-    setNotifications((prev) =>
-      prev.map((n) => ({ ...n, is_read: true }))
-    );
+    setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
   };
 
   const handleOpenDropDown = () => {
@@ -91,7 +81,8 @@ const NotificationButton = ({
 
   return (
     <div className="relative " ref={dropdownRef}>
-      <div
+      <motion.div
+        whileHover={{ scale: 1.1 }}
         className="rounded-full p-2 flex items-center justify-center hover:bg-neutral-200 transition duration-150 cursor-pointer mr-2 relative group"
         onClick={() => handleOpenDropDown()}
       >
@@ -103,17 +94,11 @@ const NotificationButton = ({
               unReadMessageCount > 9 && "px-1"
             )}
           >
-            {unReadMessageCount > 9
-              ? "9+"
-              : unReadMessageCount}
+            {unReadMessageCount > 9 ? "9+" : unReadMessageCount}
           </div>
         )}
-      </div>
-      {isOpen && (
-        <NotificationDropDown
-          notifications={notifications}
-        />
-      )}
+      </motion.div>
+      {isOpen && <NotificationDropDown notifications={notifications} />}
     </div>
   );
 };
