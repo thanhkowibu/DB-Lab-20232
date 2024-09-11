@@ -3,6 +3,8 @@ import { cn } from "@/lib/utils";
 import { formatArea } from "@/utils/formatArea";
 import { BiSearch } from "react-icons/bi";
 import { useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
+
 export const Searchbar = () => {
   const { onSearchOpen } = useAuth();
 
@@ -26,7 +28,8 @@ export const Searchbar = () => {
   return (
     <>
       {shouldShowSearchbar && (
-        <div
+        <motion.div
+          whileTap={{ scale: 0.95 }}
           onClick={onSearchOpen}
           className="border-2 w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer"
         >
@@ -54,7 +57,7 @@ export const Searchbar = () => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
     </>
   );

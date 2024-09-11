@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { Button } from "../ui/button";
 import { Heading } from "./Heading";
+import MotionButton from "../ui/MotionButton";
 
 type Props = {
   title?: string;
@@ -19,12 +19,12 @@ export const EmptyState = ({
       <Heading center title={title} subtitle={subtitle} />
       <div className="w-48 mt-4">
         {showReset && (
-          <Button
+          <MotionButton
             onClick={() => navigate("/properties")}
             variant="airbnbOutline"
           >
             Remove all filters
-          </Button>
+          </MotionButton>
         )}
       </div>
     </div>

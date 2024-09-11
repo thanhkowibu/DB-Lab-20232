@@ -8,6 +8,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { motion } from "framer-motion";
 
 export const TagItem = ({
   label,
@@ -54,8 +55,9 @@ export const TagItem = ({
     <TooltipProvider delayDuration={200}>
       <Tooltip>
         <TooltipTrigger>
-          <div
+          <motion.div
             onClick={handleClick}
+            whileTap={{ scale: 0.85 }}
             className={cn(
               "flex flex-col items-center justify-center gap-2 p-3 border-b-2 border-transparent text-neutral-500 hover:text-neutral-900 transition cursor-pointer select-none",
               { "border-b-neutral-800 border-b-[3px] text-slate-900": selected }
@@ -63,7 +65,7 @@ export const TagItem = ({
           >
             <Icon size={24} />
             <div className="text-xs font-medium">{label}</div>
-          </div>
+          </motion.div>
         </TooltipTrigger>
         <TooltipContent side="bottom" sideOffset={-10}>
           <p className="font-semibold">{desc}</p>

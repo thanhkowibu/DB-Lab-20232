@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import MotionButton from "@/components/ui/MotionButton";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
@@ -104,25 +105,29 @@ export const Modal = ({
               <div className="flex flex-col gap-2 p-6">
                 <div className="w-full gap-4 flex items-center">
                   {secondaryAction && secondaryLabel && (
-                    <Button
+                    <MotionButton
                       onClick={handleSecondaryAction}
                       disabled={disabled}
                       variant="airbnbOutline"
+                      whileHover={{ scale: 1.01 }}
+                      whileTap={{ scale: 0.98 }}
                     >
                       {secondaryLabel}
-                    </Button>
+                    </MotionButton>
                   )}
-                  <Button
+                  <MotionButton
                     onClick={handleSubmit}
                     disabled={disabled}
                     variant="airbnb"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.98 }}
                     className={cn({
                       "opacity-50 hover:opacity-50 cursor-not-allowed":
                         disabled,
                     })}
                   >
                     {actionLabel}
-                  </Button>
+                  </MotionButton>
                 </div>
               </div>
             </div>
