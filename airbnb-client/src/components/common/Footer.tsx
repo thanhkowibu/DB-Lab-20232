@@ -7,7 +7,7 @@ export const Footer = () => {
         <span className="hover:underline">Terms</span>
         <span className="hover:underline">Sitemap</span>
       </div>
-      <div className="flex items-center space-x-4">
+      <div className="hidden md:flex items-center space-x-4">
         <div className="flex items-center space-x-1">
           <span className="material-icons">language</span>
           <span>English (US)</span>
@@ -16,9 +16,7 @@ export const Footer = () => {
         <div className="relative">
           <button className="flex items-center space-x-1 hover:underline">
             <span>Support & Resources</span>
-            <span className="material-icons">
-              expand_more
-            </span>
+            <span className="material-icons">expand_more</span>
           </button>
         </div>
       </div>

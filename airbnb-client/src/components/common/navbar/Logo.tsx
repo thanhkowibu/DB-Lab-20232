@@ -13,9 +13,7 @@ export const Logo = () => {
         window.scrollTo({ top: 0 });
       }}
       alt="Logo"
-      className="hidden md:block cursor-pointer"
-      height="50"
-      width="50"
+      className="cursor-pointer size-10 md:size-12"
       src={LogoImg}
     />
   );

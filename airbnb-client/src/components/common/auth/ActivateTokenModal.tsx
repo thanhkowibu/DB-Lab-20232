@@ -110,7 +110,7 @@ export const ActivateTokenModal = ({
               {/* BODY */}
               <div className="relative px-6 py-4 flex-auto flex flex-col items-center justify-between">
                 {/* <div>We've sent you the OTP code via your email</div> */}
-                <div className="font-semibold text-center text-neutral-600 text-lg mb-4">
+                <div className="font-semibold text-center text-neutral-600 md:text-lg mb-4">
                   The verification code has been sent to your email
                   <br />
                   {censorEmail(account.email)} Enter the code to activate your
@@ -119,7 +119,7 @@ export const ActivateTokenModal = ({
                 <div className="min-w-fit flex">
                   <AuthCode
                     onChange={handleOnChange}
-                    inputClassName="size-16 border-2 border-neutral-400 rounded-xl mx-2 my-2 text-center text-xl font-semibold align-middle"
+                    inputClassName="size-12 md:size-16 border-2 border-neutral-400 rounded-xl mx-2 my-2 text-center text-xl font-semibold align-middle"
                   />
                 </div>
                 <div className="mt-6 text-neutral-800">

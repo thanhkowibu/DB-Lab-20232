@@ -5,6 +5,7 @@ import { LoginSection } from "@/components/common/auth/LoginSection";
 import { useLocation } from "react-router-dom";
 import { ActivateTokenModal } from "@/components/common/auth/ActivateTokenModal";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 export const AuthPage = () => {
   const location = useLocation();
@@ -72,6 +73,14 @@ export const AuthPage = () => {
             handleOpenModal={handleOpenModal}
           />
         )}
+        <Button
+          onClick={handleToggle}
+          variant="airbnbOutline"
+          size="sm"
+          className="block md:hidden absolute top-2 left-2 w-auto rounded-3xl text-sm flex items-center z-50"
+        >
+          {isToggled ? "Login" : "Register"}
+        </Button>
         <OverlaySection handleToggle={handleToggle} isToggled={isToggled} />
       </motion.div>
       <ActivateTokenModal
