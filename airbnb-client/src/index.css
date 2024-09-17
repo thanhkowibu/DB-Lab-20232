@@ -252,7 +252,12 @@ body,
 .utl {
   --slide-height: 19rem;
   --slide-spacing: 1rem;
-  --slide-size: 33.4%;
+  --slide-size: 50%;
+}
+@media (min-width: 768px) {
+  .utl {
+    --slide-size: 33.4%;
+  }
 }
 .utl__viewport {
   overflow: hidden;

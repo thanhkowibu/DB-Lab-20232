@@ -51,7 +51,7 @@ const HostedPropertyItem: React.FC<Props> = ({
           <div className="flex flex-col gap-[0.25rem] justify-center">
             <div
               onClick={() => navigate(`/properties/${id}`)}
-              className="text-lg font-semibold truncate hover:underline cursor-pointer"
+              className="text-lg font-semibold truncate w-60 md:w-auto hover:underline cursor-pointer"
             >
               {longTitle}
             </div>
@@ -65,15 +65,17 @@ const HostedPropertyItem: React.FC<Props> = ({
         <div className="flex items-center gap-4 select-none">
           <button
             onClick={() => navigate(`/properties/${id}?update=true`)}
-            className="rounded-full border-2 border-neutral-200 hover:shadow-md w-24 py-1 text-center text-slate-600 font-semibold text-base transition duration-300"
+            className="rounded-full border-2 border-neutral-200 hover:shadow-md w-8 md:w-24 py-1 text-center text-slate-600 font-semibold text-base transition duration-300"
           >
-            Update
+            <span className="block md:hidden">U</span>
+            <span className="hidden md:block">Update</span>
           </button>
           <button
             onClick={() => setIsDeleteOpen(true)}
-            className="rounded-full border-2 border-neutral-200 hover:shadow-md w-24 py-1 text-red-500 text-center text-base font-semibold transition duration-300"
+            className="rounded-full border-2 border-neutral-200 hover:shadow-md w-8 md:w-24 py-1 text-red-500 text-center text-base font-semibold transition duration-300"
           >
-            Delete
+            <span className="block md:hidden">D</span>
+            <span className="hidden md:block">Delete</span>
           </button>
         </div>
       </div>

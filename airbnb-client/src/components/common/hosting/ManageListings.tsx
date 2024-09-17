@@ -44,7 +44,7 @@ const ManageListings: React.FC<Props> = ({}) => {
   };
 
   return (
-    <div className="mx-auto px-8 pt-12 pb-16 flex flex-col gap-8">
+    <div className="mx-auto md:px-8 pt-12 pb-16 flex flex-col gap-8">
       {isLoading ? (
         <div className="flex flex-col items-center gap-6">
           {[...Array(8)].map((_, idx) => (
