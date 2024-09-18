@@ -307,3 +307,43 @@ body,
   overflow: hidden;
   color: black; /* Color for half star */
 }
+
+.glow {
+  @apply relative border-none bg-rose-500 text-white transition-opacity duration-300;
+}
+
+.glow:hover {
+  @apply border-none text-white;
+  background: linear-gradient(90deg, #fa7199, #e6c05b, #e73c08, #fa7199);
+  background-size: 400%;
+  z-index: 1;
+  animation: glow 10s linear infinite;
+}
+
+@keyframes glow {
+  0% {
+    background-position: 0%;
+  }
+  100% {
+    background-position: 400%;
+  }
+}
+
+.glow:before {
+  content: "";
+  position: absolute;
+  background: inherit;
+  top: -5px;
+  bottom: -5px;
+  left: -5px;
+  right: -5px;
+  border-radius: 70px;
+  filter: blur(20px);
+  opacity: 0;
+  transition: opacity 0.5s;
+  z-index: -10;
+}
+
+.glow:hover:before {
+  opacity: 1;
+}
