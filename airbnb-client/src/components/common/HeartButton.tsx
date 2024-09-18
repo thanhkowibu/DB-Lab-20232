@@ -53,7 +53,7 @@ export const HeartButton = ({ listingId, onToggleFavourite }: Props) => {
   return (
     <div
       onClick={toggleFavourite}
-      className="relative hover:opacity-80 transition cursor-pointer"
+      className="relative hover:opacity-80 transition cursor-pointer hover:scale-110 duration-300"
     >
       <AiOutlineHeart
         size={28}

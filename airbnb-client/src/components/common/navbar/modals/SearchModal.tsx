@@ -221,7 +221,7 @@ const SearchModal: React.FC<Props> = ({}) => {
 
   if (step === STEPS.ADVANCED) {
     bodyContent = (
-      <div className="flex flex-col gap-8 h-[63vh] overflow-y-scroll no-scrollbar">
+      <div className="flex flex-col gap-8 h-[72vh] md:h-[63vh] overflow-y-scroll no-scrollbar">
         <Heading title="More information" subtitle="Find your perfect place!" />
         <PriceSlider
           title="Price range"

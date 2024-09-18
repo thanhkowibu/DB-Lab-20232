@@ -105,7 +105,7 @@ export const UserDetail = () => {
           </div>
         </div>
       ) : (
-        <div className="max-w-[1150px] mx-auto pt-16 grid grid-cols-3 gap-6">
+        <div className="max-w-[1150px] mx-auto pt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="col-span-1 flex flex-col gap-8">
             <div className="w-full px-12 py-4 flex flex-col items-center gap-6 rounded-2xl shadow-neutral-300 shadow-lg">
               <div className="relative w-full aspect-square">
@@ -160,8 +160,8 @@ export const UserDetail = () => {
               </>
             )}
           </div>
-          <div className=" col-span-2 h-20 flex flex-col gap-6">
-            <div className="flex flex-col gap-8 pl-24 w-full">
+          <div className=" md:col-span-2 h-20 flex flex-col gap-6">
+            <div className="flex flex-col gap-8 md:pl-24 w-full">
               <div className="flex justify-between w-full px-2">
                 <div className="text-3xl font-semibold">
                   {userInfo?.lastname}'s top listings

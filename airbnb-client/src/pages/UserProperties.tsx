@@ -51,7 +51,9 @@ const UserProperties = () => {
       <Container>
         <div className="pt-6 px-12 text-3xl font-bold text-neutral-700 flex items-center gap-4">
           <div>All properties hosted by {userInfo?.lastname}</div>
-          <Avatar path={userInfo?.avatar?.path} />
+          <div className="hidden md:block">
+            <Avatar path={userInfo?.avatar?.path} />
+          </div>
         </div>
         {isLoading ? (
           <div className="py-8 px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">

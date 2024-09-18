@@ -37,8 +37,7 @@ const HostStartForm = () => {
   return (
     <div className="pb-48 flex items-center justify-center">
       <Button
-        className="w-1/3 h-[160px] rounded-full text-3xl"
-        variant={"airbnbOutline"}
+        className="w-1/3 h-[160px] rounded-full text-3xl glow"
         onClick={handleRequestToBecomeHost}
         disabled={isLoading}
       >

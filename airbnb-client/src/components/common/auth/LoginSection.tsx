@@ -59,7 +59,7 @@ export const LoginSection = ({
   return (
     <div
       className={cn(
-        "absolute top-0 left-0 bg-white w-1/2 h-full transition-all duration-1000 ease-in-out",
+        "absolute top-0 left-0 bg-white w-full md:w-1/2 h-full transition-all duration-1000 ease-in-out",
         {
           "translate-x-full z-10 fade-out-delay": isToggled,
           "z-50": isZIndexLowered,

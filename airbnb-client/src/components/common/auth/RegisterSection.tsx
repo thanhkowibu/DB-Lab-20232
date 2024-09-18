@@ -60,8 +60,8 @@ export const RegisterSection = ({
   return (
     <div
       className={cn(
-        "absolute top-0 left-0 bg-white w-1/2 z-20 h-full transition-all duration-1000 ease-in-out",
-        { "translate-x-full": isToggled }
+        "absolute top-0 left-0 bg-white w-full md:w-1/2 z-20 h-full transition-all duration-1000 ease-in-out",
+        { "md:translate-x-full": isToggled }
       )}
     >
       <form

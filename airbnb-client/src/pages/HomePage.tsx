@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 export const HomePage = () => {
   const [code, setCode] = useState(403);
   const navigate = useNavigate();
-
   const { logoutUser } = useAuth();
 
   useEffect(() => {
@@ -32,20 +31,20 @@ export const HomePage = () => {
   };
 
   return (
-    <section className="w-full px-8 py-12 grid grid-cols-1 md:grid-cols-2 items-center gap-8 max-w-6xl mx-auto">
+    <section className="w-full px-4 py-6 md:px-8 md:py-12 grid grid-cols-1 md:grid-cols-2 items-center gap-8 max-w-6xl mx-auto">
       <div>
-        <span className="block mb-4 text-xs md:text-sm text-rose-500 font-medium">
+        <span className="block mb-2 text-xs md:text-sm text-rose-500 font-medium">
           Discover Your Next Trip on
         </span>
-        <h3 className="text-4xl md:text-7xl font-bold">Airbnb</h3>
-        <p className="text-base md:text-lg text-neutral-600 text-justify my-4 md:my-6 mr-6">
+        <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold">Airbnb</h3>
+        <p className="text-sm md:text-base lg:text-lg text-neutral-600 text-justify my-4 md:my-6 mr-6">
           A short-term rental platform for travel enthusiasts. Whether you're
           looking for a cozy apartment, a beachfront villa, or an urban loft,
           Airbnb has you covered.
         </p>
         <button
           onClick={handleClick}
-          className="bg-rose-500 text-white text-lg font-medium py-3 px-6 rounded-lg transition-all hover:bg-rose-600 active:scale-95"
+          className="bg-rose-500 text-white text-base md:text-lg font-medium py-2 md:py-3 px-4 md:px-6 rounded-lg transition-all hover:bg-rose-600 active:scale-95"
         >
           Book a trip now
         </button>
@@ -171,7 +170,7 @@ const ShuffleGrid = () => {
   };
 
   return (
-    <div className="grid grid-cols-4 grid-rows-4 h-[450px] gap-1">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 grid-rows-4 gap-1 h-[450px]">
       {squares.map((sq: any) => sq)}
     </div>
   );

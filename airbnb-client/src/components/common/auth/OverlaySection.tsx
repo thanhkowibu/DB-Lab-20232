@@ -11,7 +11,7 @@ export const OverlaySection = ({
   return (
     <div
       className={cn(
-        "absolute top-0 left-1/2 w-1/2 h-full z-50 overflow-hidden transition-transform duration-1000 ease-in-out",
+        "absolute top-0 left-1/2 hidden md:block w-1/2 h-full z-50 overflow-hidden transition-transform duration-1000 ease-in-out",
         { "-translate-x-full": isToggled }
       )}
     >

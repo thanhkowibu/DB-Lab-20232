@@ -7,7 +7,7 @@ interface NotificationDropDownProps {
 
 const NotificationDropDown = ({ notifications }: NotificationDropDownProps) => {
   return (
-    <div className="absolute z-[99999] bg-white border-2 w-96 max-h-[70vh] top-10 -left-[650%] rounded-lg overflow-y-auto text-neutral-800">
+    <div className="absolute z-[99999] bg-white border-2 w-72 md:w-96 max-h-[70vh] top-10 -left-[480%] md:-left-[650%] rounded-lg overflow-y-auto text-neutral-800">
       {notifications.length === 0 ? (
         <div className="flex items-center justify-center h-[40vh] flex-col gap-3">
           <img

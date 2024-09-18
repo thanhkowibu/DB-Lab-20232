@@ -62,7 +62,7 @@ export const PropertyList = () => {
             className={cn(
               "pt-20 pb-8 px-8 col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8",
               {
-                "col-span-3": isShowMap,
+                "lg:col-span-3": isShowMap,
               }
             )}
           >
@@ -75,7 +75,7 @@ export const PropertyList = () => {
             <LoadMore params={tag} lastpage={lastpage} />
           </div>
           {isShowMap && (
-            <div className="w-full aspect-square sticky top-44 rounded-xl bg-neutral-200 col-span-2 flex justify-center pb-8 overflow-hidden">
+            <div className="w-full aspect-square sticky top-44 rounded-xl bg-neutral-200 lg:col-span-2 hidden lg:flex justify-center pb-8 overflow-hidden">
               <div className="text-5xl text-black bg-red-300/0 size-full">
                 <MapView listings={listings} isVisible={isShowMap} />
               </div>
