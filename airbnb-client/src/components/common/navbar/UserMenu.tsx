@@ -93,7 +93,7 @@ export const UserMenu = () => {
                   }}
                   label="Help"
                 />
-                <DropdownItem onClick={logoutUser} label="Logout" />
+                <DropdownItem isRed onClick={logoutUser} label="Logout" />
               </>
             ) : (
               <>
